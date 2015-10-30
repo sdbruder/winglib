@@ -145,6 +145,18 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        /*
+         * CGCalc service providers...
+         */
+        Collective\Html\HtmlServiceProvider::class,
+        Barryvdh\Debugbar\ServiceProvider::class,
+        Cviebrock\EloquentSluggable\SluggableServiceProvider::class,
+        Laracasts\Generators\GeneratorsServiceProvider::class,
+        Laracasts\Flash\FlashServiceProvider::class,
+        Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
+        Creativeorange\Gravatar\GravatarServiceProvider::class,
+        Intervention\Image\ImageServiceProvider::class,
+
     ],
 
     /*
@@ -193,6 +205,16 @@ return [
         'URL'       => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View'      => Illuminate\Support\Facades\View::class,
+
+        /*
+         * CGCalc aliases...
+         */
+        'Form'     => Collective\Html\FormFacade::class,
+        'Html'     => Collective\Html\HtmlFacade::class,
+        'Debugbar' => Barryvdh\Debugbar\Facade::class,
+        'Flash'    => Laracasts\Flash\Flash::class,
+        'Gravatar' => Creativeorange\Gravatar\Facades\Gravatar::class,
+        'Image'    => Intervention\Image\Facades\Image::class,
 
     ],
 
