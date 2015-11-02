@@ -8,3 +8,5 @@ Homestead.json
 /storage/framework/* 
 /storage/logs/*
 .DS_Store
+/public/css/*
+/public/js/*

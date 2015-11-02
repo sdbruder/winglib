@@ -12,5 +12,7 @@ var elixir = require('laravel-elixir');
  */
 
 elixir(function(mix) {
+    mix.copy('node_modules/bootstrap-sass/assets/javascripts/bootstrap.js',
+             'public/js/bootstrap.js');
     mix.sass('app.scss');
 });
