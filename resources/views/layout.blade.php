@@ -35,7 +35,7 @@
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="/">Home</a></li>
+            <li><a href="/">Home</a></li>
             <li><a href="/wings/create">Create a wing</a></li>
             <li><a href="/wings">Library</a></li>
           </ul>
@@ -59,6 +59,8 @@
       </div>
     </nav>
 
+    @yield('before-content')
+
     <div class="container">
       @yield('content')
     </div><!-- /.container -->
@@ -69,6 +71,17 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="/js/bootstrap.js"></script>
+    <script>
+        $(document).ready(function() {
+            var url = window.location;
+            // Will only work if string in href matches with location
+            $('ul.nav a[href="' + url + '"]').parent().addClass('active');
+            // Will also work for relative and absolute hrefs
+            $('ul.nav a').filter(function() {
+                return this.href == url;
+            }).parent().addClass('active');
+        });
+    </script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <!-- <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script> -->
     @yield('javascript')
