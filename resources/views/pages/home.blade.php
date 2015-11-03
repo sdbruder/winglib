@@ -1,24 +1,33 @@
 @extends('layout')
 
-@section('content')
-    <div class="bg"></div>
-    <div class="jumbotron">
-        <h1>Wing Library</h1>
-        <p class="lead">
-            Wing Library started as a flexible flying wing CG calculator for complex
-            wings with multiple panels, forward swept and configurable MAC and
-            CG positions and evolved to a public library for wing formats.
-        </p>
-        <div class="row">
-            <div class="col-md-6">
-            <a href="/wings/create" class="btn btn-lg btn-block btn-success">Create a wing</a>
-            </div>
-            <div class="col-md-6">
-            <a href="/wings/"       class="btn btn-lg btn-block btn-warning">Search the library</a>
+@section('before-content')
+    <div class="parallax">
+        <div class="bg parallax-layer parallax-back">
+        </div>
+        <div class="container parallax-layer parallax-front">
+            <div class="jumbotron">
+                <h1>Wing Library</h1>
+                <p class="lead">
+                    Wing Library started as a flexible flying wing CG calculator for complex
+                    wings with multiple panels, forward swept and configurable MAC and
+                    CG positions and evolved to a public library for wing formats.
+                </p>
+                <div class="row">
+                    <div class="col-md-6">
+                    <a href="/wings/create" class="btn btn-lg btn-block btn-success">Create a wing</a>
+                    </div>
+                    <div class="col-md-6">
+                    <a href="/wings/"       class="btn btn-lg btn-block btn-warning">Search the library</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+@stop
+
+@section('content')
     <div class="container">
+        <br/>
         <p class="lead">
             All started with a need: calculate the CG of a complex (multiple
             panel) wing.
@@ -66,18 +75,39 @@
 
 @section('css')
     <style>
+        .parallax {
+            perspective: 1px;
+            height: 350px;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+        .parallax-layer {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+        }
+        .parallax-front {
+            transform: translateZ(0);
+        }
+        .parallax-back {
+            transform: translateZ(-1px) scale(2);
+        }
         .bg {
-             background: url('/img/B2_Flying_Wing.jpg') no-repeat center center;
+            background: url('/img/flyingwing-parallax.jpg') repeat center;
+            /*top: -250px;*/
             /*background: url('/img/flyingwing-nasa.jpg') no-repeat center center;*/
-            position: fixed;
+            /*height: 350px;*/
+/*            position: fixed;
             width: 100%;
-            height: 350px; /*same height as jumbotron */
+            height: 350px; same height as jumbotron
             top: 50px;
             left:0;
-            z-index: -1;
+            z-index: -1;*/
         }
         .jumbotron {
-            height: 350px;
+            /*height: 350px;*/
             background:transparent;
         }
         .jumbotron h1, .jumbotron p {
@@ -96,10 +126,10 @@
                 $('.bg').css('height', (jumboHeight-$(window).scrollTop()) + 'px');
             }
 
-            $(window).scroll(function(e){
-                // window.requestAnimationFrame(parallax);
-                parallax();
-            });
+            // $(window).scroll(function(e){
+            //     window.requestAnimationFrame(parallax);
+            //     // parallax();
+            // });
         });
     </script>
 @stop
