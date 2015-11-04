@@ -10,3 +10,4 @@ Homestead.json
 .DS_Store
 /public/css/*
 /public/js/*
+/resources/assets/js/*

@@ -2,10 +2,23 @@
 
 @section('content')
     <div class="container">
-        <h1>Wing #{{$wing->id}}</h1>
-        <p class="lead">Use this document as a way to quickly start any new project.<br>
-        All you get is this text and a mostly barebones HTML document.</p>
-
+        <div class="row">
+            <div class="col-md-11">
+                <h1>Wing #{{$wing->id}}
+                    <a href="/wings/{{$wing->id}}/edit" class="btn btn-primary">Edit</a>
+                    {!! Form::model($wing, [
+                        'method' => 'DELETE',
+                        'url'    => 'wings/'.$wing->id,
+                        'class'  => 'form-inline',
+                        'style'  => 'display: inline'
+                    ]) !!}
+                    {!! Form::submit('Delete',['class' => 'btn btn-danger']); !!}
+                    {!! Form::close(); !!}
+                </h1>
+            </div>
+            <div class="col-md-1">
+            </div>
+        </div>
         <table class="table table-condensed table-hover">
         <thead>
             <tr>
@@ -14,7 +27,7 @@
         </thead>
         <tbody>
                 <tr>
-                <th>{{$wing->title}}</th>
+                <th>{{$wing->name}}</th>
                  </tr>
         </tbody>
         </table>

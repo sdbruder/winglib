@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\WingRequest;
 
 class WingsController extends Controller
 {
@@ -33,10 +34,10 @@ class WingsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Requests\WingRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(WingRequest $request)
     {
         $wing = \App\Wing::create($request->all());
         return redirect('wings');
@@ -51,7 +52,7 @@ class WingsController extends Controller
     public function show($id)
     {
         $wing = \App\Wing::findOrFail($id);
-        return view('wings.show',compact('wing'));
+        return view('wings.show', compact('wing'));
     }
 
     /**
@@ -62,19 +63,24 @@ class WingsController extends Controller
      */
     public function edit($id)
     {
-        //
+        $wing = \App\Wing::findOrFail($id);
+        return view('wings.edit', compact('wing'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Requests\WingRequest  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(WingRequest $request, $id)
     {
-        //
+        $wing = \App\Wing::findOrFail($id);
+
+        $wing->update($request->all());
+
+        return redirect('/wings');
     }
 
     /**
@@ -85,6 +91,10 @@ class WingsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $wing = \App\Wing::findOrFail($id);
+
+        $wing->delete();
+
+        return redirect('/wings');
     }
 }

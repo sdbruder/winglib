@@ -6,12 +6,10 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" href="/favicon.ico">
-
     <title>Wing Library</title>
 
     <!-- Bootstrap core CSS -->
     <link href="/css/app.css" rel="stylesheet">
-
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
@@ -65,25 +63,8 @@
       @yield('content')
     </div><!-- /.container -->
 
-
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="/js/bootstrap.js"></script>
-    <script>
-        $(document).ready(function() {
-            var url = window.location;
-            // Will only work if string in href matches with location
-            $('ul.nav a[href="' + url + '"]').parent().addClass('active');
-            // Will also work for relative and absolute hrefs
-            $('ul.nav a').filter(function() {
-                return this.href == url;
-            }).parent().addClass('active');
-        });
-    </script>
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <!-- <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script> -->
+    <!-- Javascript stuff -->
+    <script src="/js/all.js"></script>
     @yield('javascript')
 
 </body></html>
