@@ -14,8 +14,10 @@ class CreateWingsTable extends Migration
     {
         Schema::create('wings', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('user_id')->unsigned();
             $table->string('name',100);
             $table->timestamps();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
@@ -26,6 +28,10 @@ class CreateWingsTable extends Migration
      */
     public function down()
     {
+        // Schema::table('wings', function (Blueprint $table) {
+        //     $table->dropForeign('wings_user_id_foreign');
+        //     $table->dropColumn('user_id');
+        // });
         Schema::drop('wings');
     }
 }
