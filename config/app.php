@@ -156,6 +156,7 @@ return [
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         Creativeorange\Gravatar\GravatarServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
+        Laravel\Socialite\SocialiteServiceProvider::class,
 
     ],
 
@@ -209,12 +210,13 @@ return [
         /*
          * CGCalc aliases...
          */
-        'Form'     => Collective\Html\FormFacade::class,
-        'Html'     => Collective\Html\HtmlFacade::class,
-        'Debugbar' => Barryvdh\Debugbar\Facade::class,
-        'Flash'    => Laracasts\Flash\Flash::class,
-        'Gravatar' => Creativeorange\Gravatar\Facades\Gravatar::class,
-        'Image'    => Intervention\Image\Facades\Image::class,
+        'Form'      => Collective\Html\FormFacade::class,
+        'Html'      => Collective\Html\HtmlFacade::class,
+        'Debugbar'  => Barryvdh\Debugbar\Facade::class,
+        'Flash'     => Laracasts\Flash\Flash::class,
+        'Gravatar'  => Creativeorange\Gravatar\Facades\Gravatar::class,
+        'Image'     => Intervention\Image\Facades\Image::class,
+        'Socialite' => Laravel\Socialite\Facades\Socialite::class
 
     ],
 

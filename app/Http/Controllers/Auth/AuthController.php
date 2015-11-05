@@ -23,6 +23,8 @@ class AuthController extends Controller
 
     use AuthenticatesAndRegistersUsers, ThrottlesLogins;
 
+    protected $redirectTo = '/';
+
     /**
      * Create a new authentication controller instance.
      *
@@ -61,5 +63,59 @@ class AuthController extends Controller
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
         ]);
+    }
+
+    /**
+     * Redirect the user to the Facebook authentication page.
+     *
+     * @return Response
+     */
+    public function redirectToProvider($driver)
+    {
+        if(!config("services.$driver")) {
+            abort('404'); //just to handle providers that doesn't exist
+        }
+
+        return \Socialite::driver($driver)->redirect();
+    }
+
+    /**
+     * Obtain the user information from Facebook.
+     *
+     * @return Response
+     */
+    public function handleProviderCallback($driver)
+    {
+        $u = \Socialite::driver($driver)->user();
+        \Log::info('Socialite user', ['provider'=> $driver, 'user' => (array) $u ]);
+        if ($u) {
+            $user = User::where('provider_id', '=', $u->id)->first();
+            if (!$user) {
+                if (array_key_exists('tokenSecret', (array) $u)) {
+                    $tokenSecret = $u->tokenSecret;
+                } else {
+                    $tokenSecret = NULL;
+                }
+                $user = User::create([
+                    'name'         => $u->name,
+                    'username'     => $u->nickname,
+                    'email'        => $u->email,
+                    'avatar'       => $u->avatar,
+                    'provider'     => $driver,
+                    'provider_id'  => $u->id,
+                    'token'        => $u->token,
+                    'token_secret' => $tokenSecret
+                ]);
+                \Log::info('Created new user.', ['provider'=> $driver, 'user' => (array) $u ]);
+            } else {
+                \Log::info('Login.', ['provider'=> $driver, 'user' => (array) $user ]);
+            }
+            \Auth::login($user, true);
+
+            return redirect('/');
+        } else {
+            abort('404');
+        }
+
     }
 }

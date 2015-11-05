@@ -28,14 +28,24 @@ class User extends Model implements AuthenticatableContract,
      *
      * @var array
      */
-    protected $fillable = ['name', 'email', 'password'];
+    protected $fillable = [
+        'name',
+        'username',
+        'email',
+        'avatar',
+        'provider',
+        'provider_id',
+        'token',
+        'token_secret',
+        'password',
+    ];
 
     /**
      * The attributes excluded from the model's JSON form.
      *
      * @var array
      */
-    protected $hidden = ['password', 'remember_token'];
+    protected $hidden = ['password', 'remember_token', 'token_secret'];
 
     /**
      * A user can have many wings

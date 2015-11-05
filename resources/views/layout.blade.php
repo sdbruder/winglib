@@ -8,7 +8,6 @@
     <link rel="icon" href="/favicon.ico">
     <title>Wing Library</title>
 
-    <!-- Bootstrap core CSS -->
     <link href="/css/app.css" rel="stylesheet">
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -38,12 +37,32 @@
             <li><a href="/wings">Library</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">Log In</a></li>
-            <form class="navbar-form navbar-right" role="search">
-              <button type="submit" class="btn btn-danger">Create an account</button>
-            </form>
+            @if (Auth::user())
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                  {{ Auth::user()->name }} <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a href="#">Action</a></li>
+                  <li><a href="#">Another action</a></li>
+                  <li><a href="#">Something else here</a></li>
+                  <li role="separator" class="divider"></li>
+                  <li><a href="/auth/logout">Logout</a></li>
+                </ul>
+              </li>
+              <p class="navbar-text avatar">
+              <img src="{{ Auth::user()->avatar }}" alt="{{ Auth::user()->name }}" class="img-circle" height="48" width="48">
+              </p>
+            @else
+              <li><a href="/auth/login">Log In</a></li>
+              <form action="/auth/register" class="navbar-form navbar-right" role="search">
+                <button type="submit" class="btn btn-danger">Create an account</button>
+              </form>
+            @endif
             <!-- <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                Dropdown <span class="caret"></span>
+              </a>
               <ul class="dropdown-menu">
                 <li><a href="#">Action</a></li>
                 <li><a href="#">Another action</a></li>

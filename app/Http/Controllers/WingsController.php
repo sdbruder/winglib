@@ -8,6 +8,9 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\WingRequest;
 
+use Illuminate\Support\Facades\Auth;
+use App\Wing;
+
 class WingsController extends Controller
 {
     /**
@@ -17,7 +20,7 @@ class WingsController extends Controller
      */
     public function index()
     {
-        $wings = \App\Wing::all();
+        $wings = Wing::all();
         return view('wings.index', compact('wings'));
     }
 
@@ -39,7 +42,9 @@ class WingsController extends Controller
      */
     public function store(WingRequest $request)
     {
-        $wing = \App\Wing::create($request->all());
+        $wing = new Wing($request->all());
+        Auth::user()->wings()->save($wing);
+
         return redirect('wings');
     }
 
@@ -51,7 +56,7 @@ class WingsController extends Controller
      */
     public function show($id)
     {
-        $wing = \App\Wing::findOrFail($id);
+        $wing = Wing::findOrFail($id);
         return view('wings.show', compact('wing'));
     }
 
@@ -63,7 +68,7 @@ class WingsController extends Controller
      */
     public function edit($id)
     {
-        $wing = \App\Wing::findOrFail($id);
+        $wing = Wing::findOrFail($id);
         return view('wings.edit', compact('wing'));
     }
 
@@ -76,11 +81,11 @@ class WingsController extends Controller
      */
     public function update(WingRequest $request, $id)
     {
-        $wing = \App\Wing::findOrFail($id);
+        $wing = Wing::findOrFail($id);
 
         $wing->update($request->all());
 
-        return redirect('/wings');
+        return redirect('wings');
     }
 
     /**
@@ -91,7 +96,7 @@ class WingsController extends Controller
      */
     public function destroy($id)
     {
-        $wing = \App\Wing::findOrFail($id);
+        $wing = Wing::findOrFail($id);
 
         $wing->delete();
 

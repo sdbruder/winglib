@@ -16,7 +16,8 @@
         "barryvdh/laravel-ide-helper": "~2.0",
         "creativeorange/gravatar": "~1.0",
         "intervention/image": "~2.2",
-        "components/jquery": "^2.1"
+        "components/jquery": "^2.1",
+        "laravel/socialite": "^2.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
