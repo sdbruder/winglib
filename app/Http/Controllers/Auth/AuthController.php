@@ -4,7 +4,10 @@ namespace App\Http\Controllers\Auth;
 
 use App\User;
 use Validator;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 
@@ -76,7 +79,7 @@ class AuthController extends Controller
             abort('404'); //just to handle providers that doesn't exist
         }
 
-        return \Socialite::driver($driver)->redirect();
+        return Socialite::driver($driver)->redirect();
     }
 
     /**
@@ -86,8 +89,8 @@ class AuthController extends Controller
      */
     public function handleProviderCallback($driver)
     {
-        $u = \Socialite::driver($driver)->user();
-        \Log::info('Socialite user', ['provider'=> $driver, 'user' => (array) $u ]);
+        $u = Socialite::driver($driver)->user();
+        Log::info('Socialite user', ['provider'=> $driver, 'user' => (array) $u ]);
         if ($u) {
             $user = User::where('provider_id', '=', $u->id)->first();
             if (!$user) {
@@ -106,11 +109,11 @@ class AuthController extends Controller
                     'token'        => $u->token,
                     'token_secret' => $tokenSecret
                 ]);
-                \Log::info('Created new user.', ['provider'=> $driver, 'user' => (array) $u ]);
+                Log::info('Created new user.', ['provider'=> $driver, 'user' => (array) $u ]);
             } else {
-                \Log::info('Login.', ['provider'=> $driver, 'user' => (array) $user ]);
+                Log::info('Login.', ['provider'=> $driver, 'user' => (array) $user ]);
             }
-            \Auth::login($user, true);
+            Auth::login($user, true);
 
             return redirect('/');
         } else {

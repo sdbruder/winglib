@@ -2,6 +2,7 @@
 
 $(document).ready(function() {
 
+    // NavBar auto-selection --------------------------------------
     var url = window.location;
 
     // Will only work if string in href matches with location
@@ -9,9 +10,14 @@ $(document).ready(function() {
 
     // Will also work for relative and absolute hrefs
     $('ul.nav a').filter(function() {
-	return this.href == url;
+        return this.href == url;
     }).parent().addClass('active');
 
+    // Bootstrap Tooltips, Popovers
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+        $('[data-toggle="popover"]').popover()
+    });
 });
 
 
