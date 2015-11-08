@@ -29,3 +29,4 @@ Route::post('auth/register', 'Auth\AuthController@postRegister');
 // OAuth Authentication routes...
 Route::get('auth/{driver}', 'Auth\AuthController@redirectToProvider');
 Route::get('auth/{driver}/callback', 'Auth\AuthController@handleProviderCallback');
+

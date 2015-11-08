@@ -37,7 +37,7 @@ class WingsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Requests\WingRequest  $request
+     * @param  \App\Http\Requests\WingRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function store(WingRequest $request)
@@ -75,7 +75,7 @@ class WingsController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Requests\WingRequest  $request
+     * @param  \App\Http\Requests\WingRequest  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
