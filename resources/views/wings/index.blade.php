@@ -9,6 +9,7 @@
         <thead>
             <tr>
                 <th>Wing</th>
+                <th width="60px">Likes</th>
                 <th width="60px">Author</th>
             </tr>
         </thead>
@@ -35,41 +36,11 @@
                         </div>
                     </th>
                     <th width="60px">
-                        <a href=""
-                            data-toggle="popover"
-                            data-trigger="hover"
-                            data-content="{{$w->user->name}}"
-                            data-placement="left"
-                        >
-                        <img src="{{$w->user->avatar}}"
-                            alt="{{$w->user->name}} "
-                            class="img-thumbnail img-circle"
-                            height="56" width="56">
+                        <a href="">
+                            {{ $w->likedby->count() }} <span class="glyphicon glyphicon-heart" aria-hidden="true"></span>
+
                         </a>
                     </th>
-                </tr>
-            @endforeach
-        </tbody>
-        </table>
-
-
-        <table class="table table-hover">
-        <thead>
-            <tr>
-                <th width="100px">Wing</th>
-                <th>Description</th>
-                <th width="60px">Author</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($wings as $w)
-                <tr onclick="document.location = '/wings/{{$w->id}}';">
-                    <th width="100px">
-                        <img src="/img/wing.png"
-                            height="60">
-                        <!-- <b><a href="/wings/{{$w->id}}">{{$w->id}}</a></b> -->
-                    </th>
-                    <th>{{$w->name}}</th>
                     <th width="60px">
                         <a href=""
                             data-toggle="popover"
@@ -88,40 +59,6 @@
         </tbody>
         </table>
 
-        <table class="table table-condensed table-hover">
-        <thead>
-            <tr>
-            <th>Id</th>
-            <th>Title</th>
-            <th>User</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($wings as $w)
-                <tr onclick="document.location = '/wings/{{$w->id}}';">
-                    <th width="100px">
-                        <img src="/img/wing.png"
-                            height="60">
-                        <!-- <b><a href="/wings/{{$w->id}}">{{$w->id}}</a></b> -->
-                    </th>
-                    <th>{{$w->name}}</th>
-                    <th width="60px">
-                        <a href=""
-                            data-toggle="popover"
-                            data-trigger="hover"
-                            data-content="{{$w->user->name}}"
-                            data-placement="left"
-                        >
-                        <img src="{{$w->user->avatar}}"
-                            alt="{{$w->user->name}} "
-                            class="img-thumbnail img-circle"
-                            height="56" width="56">
-                        </a>
-                    </th>
-                </tr>
-            @endforeach
-        </tbody>
-        </table>
 
     </div>
 @stop
