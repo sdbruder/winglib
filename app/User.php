@@ -55,4 +55,13 @@ class User extends Model implements AuthenticatableContract,
     public function wings() {
         return $this->hasMany('App\Wing');
     }
+
+    /**
+     * A user likes many wings (many to many)
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function likes() {
+        return $this->belongsToMany('App\Wing','users_likes_wings');
+    }
 }

@@ -20,4 +20,14 @@ class Wing extends Model
     {
         return $this->belongsTo('App\User');
     }
+
+    /**
+     * A wing was liked by many users (many to many)
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function likedBy()
+    {
+        return $this->belongsToMany('App\User', 'users_likes_wings');
+    }
 }
