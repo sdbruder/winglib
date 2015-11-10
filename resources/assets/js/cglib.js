@@ -18,6 +18,17 @@ $(document).ready(function() {
         $('[data-toggle="tooltip"]').tooltip()
         $('[data-toggle="popover"]').popover()
     });
+
+    $.ajaxSetup({
+        type: "POST",
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        dataType: "json",
+        error: function(e) {
+            console.log(e.responseText);
+        }
+    });
 });
 
 

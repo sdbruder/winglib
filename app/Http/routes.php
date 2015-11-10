@@ -15,6 +15,9 @@ Route::get('/', function () {
     return view('pages.home');
 });
 
+// AJAX method to a user like a wing
+Route::post('wings/likeit', 'WingsController@likeit');
+
 Route::resource('wings', 'WingsController');
 
 // Authentication routes...
