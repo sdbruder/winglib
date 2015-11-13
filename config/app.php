@@ -157,6 +157,7 @@ return [
         Creativeorange\Gravatar\GravatarServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
         Laravel\Socialite\SocialiteServiceProvider::class,
+        Infinety\SweetAlert\AlertServiceProvider::class,
 
     ],
 

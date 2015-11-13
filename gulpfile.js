@@ -16,10 +16,19 @@ elixir(function(mix) {
         'public/fonts/bootstrap/')
     .copy('node_modules/bootstrap-sass/assets/fonts/bootstrap/glyphicons-halflings-regular.woff2',
         'public/fonts/bootstrap/')
+    .copy('vendor/infinety/sweetalert/src/libraries/sweetalert.css',
+        'resources/assets/css')
+    .copy('vendor/infinety/sweetalert/src/libraries/sweetalert.js',
+        'resources/assets/js')
     .scripts([
         'jquery.js',
         'bootstrap.js',
+        'sweetalert.js',
         'cglib.js'
         ])
-    .sass('app.scss');
+    .sass('app.scss','resources/assets/css')
+    .styles([
+        'app.css',
+        'sweetalert.css'
+    ], 'public/css/winglib.css');
 });

@@ -11,6 +11,7 @@ Homestead.json
 /public/css/*
 /public/js/*
 /resources/assets/js/*
+/resources/assets/css/*
 .tags
 .tags1
 tags

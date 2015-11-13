@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "9b74aa612b0151d5b756a885deeeb03c",
-    "content-hash": "039d8716cf8b7a7c73d745870fba634d",
+    "hash": "47b70707356f83915711be28ba9eeb49",
+    "content-hash": "946bba3dfc39adf97c7fe07dfc35b3e1",
     "packages": [
         {
             "name": "barryvdh/laravel-debugbar",
@@ -1199,6 +1199,45 @@
                 "uri"
             ],
             "time": "2015-08-15 19:32:36"
+        },
+        {
+            "name": "infinety/sweetalert",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Infinety/laravel-sweet-alert.git",
+                "reference": "dcf62d76a9acce413d83a4147f96cbe424ab0f96"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Infinety/laravel-sweet-alert/zipball/dcf62d76a9acce413d83a4147f96cbe424ab0f96",
+                "reference": "dcf62d76a9acce413d83a4147f96cbe424ab0f96",
+                "shasum": ""
+            },
+            "type": "package",
+            "autoload": {
+                "psr-4": {
+                    "Infinety\\SweetAlert\\": "/src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Infinety",
+                    "email": "hello@infinety.co.uk"
+                }
+            ],
+            "description": "A package for using SweetAlert with Laravel 5.1 >",
+            "keywords": [
+                "alert",
+                "laravel",
+                "laravel sweet alert",
+                "sweet-alert"
+            ],
+            "time": "2015-10-19 21:24:12"
         },
         {
             "name": "intervention/image",
@@ -4400,7 +4439,8 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "cviebrock/eloquent-sluggable": 15
+        "cviebrock/eloquent-sluggable": 15,
+        "infinety/sweetalert": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
