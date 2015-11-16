@@ -158,6 +158,7 @@ return [
         Intervention\Image\ImageServiceProvider::class,
         Laravel\Socialite\SocialiteServiceProvider::class,
         Infinety\SweetAlert\AlertServiceProvider::class,
+        App\Providers\AppServiceProvider::class,
 
     ],
 
