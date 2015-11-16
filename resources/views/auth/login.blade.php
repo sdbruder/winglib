@@ -5,10 +5,6 @@
 
         <h3>Login</h3>
 
-        <a href="/auth/twitter">Twitter</a><br/>
-        <a href="/auth/facebook">Facebook</a><br/>
-        <a href="/auth/google">Google</a><br/>
-
         {!! Form::open(array('url' => '/auth/login')); !!}
 
         <div class="form-group">

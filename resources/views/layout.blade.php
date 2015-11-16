@@ -54,7 +54,7 @@
               <img src="{{ Auth::user()->avatar }}" alt="{{ Auth::user()->name }}" class="img-circle" height="48" width="48">
               </p>
             @else
-              <li><a href="/auth/login">Log In</a></li>
+              <li><a data-toggle="modal" data-target="#loginModal">Log In</a></li>
               <form action="/auth/register" class="navbar-form navbar-right" role="search">
                 <button type="submit" class="btn btn-danger">Create an account</button>
               </form>
@@ -81,6 +81,59 @@
     <div class="container">
       @yield('content')
     </div><!-- /.container -->
+
+    <!-- Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Login</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <a href="/auth/twitter" class="btn btn-lg btn-block btn-social btn-twitter">
+                                <span class="fa fa-twitter"></span>
+                                Login with Twitter
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="/auth/facebook" class="btn btn-lg btn-block btn-social btn-facebook">
+                                <span class="fa fa-facebook"></span>
+                                Login with Facebook
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="/auth/google" class="btn btn-lg btn-block btn-social btn-google">
+                                <span class="fa fa-google"></span>
+                                Login with Google
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="strike"><span>or</span></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4"></div>
+                        <div class="col-md-4">
+                            <a href="/auth/login" class="btn btn-lg btn-block btn-social btn-github">
+                                <span class="glyphicon glyphicon-user"></span>
+                                Login with email
+                            </a>
+                        </div>
+                        <div class="col-md-4"></div>
+                    </div>
+                </div>
+                <!-- <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div> -->
+            </div>
+        </div>
+    </div>
 
     <!-- Javascript stuff -->
     <script src="/js/all.js"></script>
