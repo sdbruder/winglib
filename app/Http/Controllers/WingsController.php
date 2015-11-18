@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace app\Http\Controllers;
 
 use Illuminate\Http\Request;
-
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\WingRequest;
@@ -109,12 +108,12 @@ class WingsController extends Controller
      */
     public function likeit(Request $request)
     {
-        $wing = Wing::findOrFail( $request->input('id') );
+        $wing = Wing::findOrFail($request->input('id'));
         $user_id = Auth::id();
 
         $count = $wing->likedby->count();
-        if ( !$wing->likedby->contains( $user_id )) {
-            $wing->likedby()->attach( $user_id );
+        if (!$wing->likedby->contains($user_id)) {
+            $wing->likedby()->attach($user_id);
             $count += 1;
         }
 

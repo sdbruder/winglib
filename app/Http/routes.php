@@ -22,7 +22,7 @@ Route::post('wings/likeit', 'WingsController@likeit');
 Route::resource('wings', 'WingsController');
 
 // User settings
-Route::get('user/settings','UsersController@settings');
+Route::get('user/settings', 'UsersController@settings');
 
 // Authentication routes...
 Route::get('auth/login', 'Auth\AuthController@getLogin');
@@ -36,4 +36,3 @@ Route::post('auth/register', 'Auth\AuthController@postRegister');
 // OAuth Authentication routes...
 Route::get('auth/{driver}', 'Auth\AuthController@redirectToProvider');
 Route::get('auth/{driver}/callback', 'Auth\AuthController@handleProviderCallback');
-

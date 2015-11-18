@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace app;
 
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
@@ -52,7 +52,8 @@ class User extends Model implements AuthenticatableContract,
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function wings() {
+    public function wings()
+    {
         return $this->hasMany('App\Wing');
     }
 
@@ -61,7 +62,8 @@ class User extends Model implements AuthenticatableContract,
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function likes() {
-        return $this->belongsToMany('App\Wing','users_likes_wings');
+    public function likes()
+    {
+        return $this->belongsToMany('App\Wing', 'users_likes_wings');
     }
 }

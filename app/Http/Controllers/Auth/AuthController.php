@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace app\Http\Controllers\Auth;
 
 use App\User;
 use Validator;
@@ -75,7 +75,7 @@ class AuthController extends Controller
      */
     public function redirectToProvider($driver)
     {
-        if(!config("services.$driver")) {
+        if (!config("services.$driver")) {
             abort('404'); //just to handle providers that doesn't exist
         }
 
@@ -97,7 +97,7 @@ class AuthController extends Controller
                 if (array_key_exists('tokenSecret', (array) $u)) {
                     $tokenSecret = $u->tokenSecret;
                 } else {
-                    $tokenSecret = NULL;
+                    $tokenSecret = null;
                 }
                 $user = User::create([
                     'name'         => $u->name,
@@ -119,6 +119,5 @@ class AuthController extends Controller
         } else {
             abort('404');
         }
-
     }
 }
