@@ -43,15 +43,19 @@
                   {{ Auth::user()->name }} <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu">
-                  <li><a href="#">Action</a></li>
-                  <li><a href="#">Another action</a></li>
-                  <li><a href="#">Something else here</a></li>
+                  <li><a href="/user/settings">
+                    <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+                    Settings
+                  </a></li>
                   <li role="separator" class="divider"></li>
-                  <li><a href="/auth/logout">Logout</a></li>
+                  <li><a href="/auth/logout">
+                    <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+                    Logout
+                  </a></li>
                 </ul>
               </li>
               <p class="navbar-text avatar">
-              <img src="{{ Auth::user()->avatar }}" alt="{{ Auth::user()->name }}" class="img-circle" height="48" width="48">
+              <img src="{{ Auth::user()->avatar }}" alt="" class="img-circle" height="48" width="48">
               </p>
             @else
               <li><a data-toggle="modal" data-target="#loginModal">Log In</a></li>

@@ -18,7 +18,11 @@ Route::get('/', function () {
 // AJAX method to a user like a wing
 Route::post('wings/likeit', 'WingsController@likeit');
 
+// Wings resource (CRUD, etcetera)
 Route::resource('wings', 'WingsController');
+
+// User settings
+Route::get('user/settings','UsersController@settings');
 
 // Authentication routes...
 Route::get('auth/login', 'Auth\AuthController@getLogin');
