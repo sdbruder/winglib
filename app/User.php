@@ -48,6 +48,27 @@ class User extends Model implements AuthenticatableContract,
     protected $hidden = ['password', 'remember_token', 'token_secret'];
 
     /**
+     * boot method
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        // When saving user, make sure:
+        // - provider, provider_id and token fields àre filled in
+        static::saving(function (User $user) {
+            if (empty($user->provider)) {
+                $user->provider = 'email';
+                $user->provider_id = $user->email;
+            }
+            if (empty($user->token)) {
+                $user->token = bcrypt($user->provider . '::' . $user->provider_id);
+            }
+            return true;
+        });
+    }
+
+    /**
      * A user can have many wings
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
