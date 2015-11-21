@@ -4,7 +4,7 @@
     <div class="container">
         <h1>Wing edit: {{ $wing->name }}</h1>
 
-        {!! Form::model($wing, ['method' => 'PUT','url' => 'wings/'.$wing->id]) !!}
+        {!! Form::model($wing, ['method' => 'PUT','url' => 'wings/'.$wing->id, 'class' => 'form-horizontal']) !!}
         @include('wings.form', ['submitButton' => 'Update'])
         {!! Form::close(); !!}
 
