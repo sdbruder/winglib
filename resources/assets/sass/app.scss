@@ -2,7 +2,7 @@
 @import "bootstrap-social";
 
 body {
-    padding-top: 50px;
+    padding-top: 80px;
 }
 
 .navbar, .navbar * {
@@ -10,8 +10,27 @@ body {
 }
 .avatar {
     margin: 0px;
-    margin-top: 2px;
+    margin-top: 15px;
 }
+
+.navbar-brand,
+.navbar-nav li a {
+    line-height: 80px;
+    height: 80px;
+    padding-top: 0;
+}
+.navbar-nav li p {
+    line-height: 80px;
+    height: 80px;
+    padding-top: 10px;
+    margin: 0;
+}
+@media only screen and (max-width : 1200px){
+   /* Hiding elements for this device  */
+      .navbar-nav li p {
+         display: none;
+      }
+ }
 
 div.media-body {
     font-weight: normal;

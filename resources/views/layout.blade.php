@@ -35,6 +35,17 @@
             <li><a href="/">Home</a></li>
             <li><a href="/wings/create">Create a wing</a></li>
             <li><a href="/wings">Library</a></li>
+            <li><p class="navbar-text">
+              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+              <!-- winglib-468x60 -->
+              <ins class="adsbygoogle"
+                   style="display:inline-block;width:468px;height:60px"
+                   data-ad-client="ca-pub-8746171184192742"
+                   data-ad-slot="8864272650"></ins>
+              <script>
+              (adsbygoogle = window.adsbygoogle || []).push({});
+              </script>
+            </p></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
             @if (Auth::user())
