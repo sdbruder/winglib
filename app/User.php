@@ -2,6 +2,7 @@
 
 namespace app;
 
+use Gravatar;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Auth\Passwords\CanResetPassword;
@@ -64,6 +65,13 @@ class User extends Model implements AuthenticatableContract,
             if (empty($user->token)) {
                 $user->token = bcrypt($user->provider . '::' . $user->provider_id);
             }
+
+            if (Gravatar::exists($user->email)) {
+                $user->avatar = Gravatar::get($user->email);
+            } else {
+                $user->avatar = '/img/default-avatar.jpg';
+            }
+
             return true;
         });
     }
