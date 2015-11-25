@@ -132,11 +132,6 @@ class Wing extends Model
                         'sweep' => $wing->attributes['panel6sweep'],
                         'angle' => $wing->attributes['panel6angle']]
             ];
-            foreach($wing->attributes as $key => $value) {
-                if (in_array($key,$wing->appends)) {
-                    unset($wing->attributes[$key]);
-                }
-            }
             if ( ! $wing->slug ) {
                 $slug_str = str_slug($wing->name);
                 $latest = Wing::whereRaw("slug_str = '{$slug_str}'")->latest("slug_id")->get()->first();
@@ -150,8 +145,36 @@ class Wing extends Model
                     $wing->attributes['slug'] = $slug_str;
                 }
             }
+            $wing->attributes['totalspan'] =
+                ($wing->panels['1']['span'] +
+                $wing->panels['2']['span'] +
+                $wing->panels['3']['span'] +
+                $wing->panels['4']['span'] +
+                $wing->panels['5']['span'] +
+                $wing->panels['6']['span']) * 2;
+
+            foreach($wing->attributes as $key => $value) {
+                if (in_array($key,$wing->appends)) {
+                    unset($wing->attributes[$key]);
+                }
+            }
+
             return true;
-        });
+        }); // static::saving
+    }
+
+    public function endsWith($haystack, $needle) {
+        // search forward starting from end minus needle length characters
+        return $needle === "" || (($temp = strlen($haystack) - strlen($needle)) >= 0 && strpos($haystack, $needle, $temp) !== FALSE);
+    }
+
+    public function getCGPosAttribute()
+    {
+        $cgpos = $this->attributes['cgpos'];
+        if ($this->endsWith($cgpos,'.00')) {
+            $cgpos = str_replace('.00', '', $cgpos);
+        }
+        return $cgpos;
     }
 
     public function getPanel1SpanAttribute()

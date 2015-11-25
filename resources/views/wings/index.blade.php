@@ -23,15 +23,19 @@
                                     <img class="media-object" src="/img/wing.png" height="60px">
                                 </a>
                             </div>
-                            <div class="media-body">
+                            <div class="media-body row">
+                                <div class="col-md-6">
                                 <h4 class="media-heading">{{$w->name}}</h4>
-
-                                Nullam id dolor id nibh ultricies vehicula ut id
-                                elit. Cras justo odio, dapibus ac facilisis in,
-                                egestas eget quam. Lorem ipsum dolor sit amet,
-                                consectetur adipiscing elit. Nullam quis risus
-                                eget urna mollis ornare vel eu leo.
-
+                                {{$w->description}}
+                                </div>
+                                <div class="col-md-3">
+                                <b>Total Span:</b> {{$w->totalspan}} <br/>
+                                <b>Wing Area:</b> {{$w->wingarea}} <br/>
+                                </div>
+                                <div class="col-md-3">
+                                <b>CG&commat;{{$w->cgpos}}%:</b> {{$w->cg}} <br/>
+                                <b>Wing Load:</b> {{$w->wingload}} <br/>
+                                </div>
                             </div>
                         </div>
                     </th>
@@ -64,6 +68,7 @@
         </tbody>
         </table>
 
+        {!! $wings->render() !!}
 
     </div>
 @stop

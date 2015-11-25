@@ -19,7 +19,7 @@ class WingsController extends Controller
      */
     public function index()
     {
-        $wings = Wing::all();
+        $wings = Wing::paginate(10);
         return view('wings.index', compact('wings'));
     }
 

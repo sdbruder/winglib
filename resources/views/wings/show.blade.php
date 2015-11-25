@@ -4,7 +4,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-11">
-                <h1>Wing #{{$wing->id}}
+                <h1>{{$wing->name}}
                     <a href="/wings/{{$wing->id}}/edit" class="btn btn-primary">Edit</a>
                     {!! Form::model($wing, [
                         'method' => 'DELETE',
@@ -19,7 +19,35 @@
             <div class="col-md-1">
             </div>
         </div>
-        <table class="table table-condensed table-hover">
+
+        <div class="media" onclick="document.location = '/wing/{{$wing->slug}}';">
+            <div class="media-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        {{$wing->description}}
+                    </div>
+                </div>
+                <div class="row">
+                &nbsp;
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                    <b>Total Span:</b> {{$wing->totalspan}} <br/>
+                    <b>Wing Area:</b> {{$wing->wingarea}} <br/>
+                    </div>
+                    <div class="col-md-6">
+                    <b>CG&commat;{{$wing->cgpos}}%:</b> {{$wing->cg}} <br/>
+                    <b>Wing Load:</b> {{$wing->wingload}} <br/>
+                    </div>
+                </div>
+            </div>
+            <div class="media-right media-middle">
+                <img class="media-object" src="/img/wing.png" height="350px">
+            </div>
+        </div>
+
+
+{{--        <table class="table table-condensed table-hover">
         <thead>
             <tr>
             <th>Title</th>
@@ -31,5 +59,5 @@
                  </tr>
         </tbody>
         </table>
-    </div>
+    </div> --}}
 @stop
