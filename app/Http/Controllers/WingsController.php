@@ -60,6 +60,18 @@ class WingsController extends Controller
     }
 
     /**
+     * Display the specified resource by the slug
+     *
+     * @param  string  $slug
+     * @return \Illuminate\Http\Response
+     */
+    public function showSlug($slug)
+    {
+        $wing = Wing::where('slug', $slug)->firstorfail();
+        return view('wings.show', compact('wing'));
+    }
+
+    /**
      * Show the form for editing the specified resource.
      *
      * @param  int  $id

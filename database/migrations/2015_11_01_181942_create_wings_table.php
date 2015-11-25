@@ -15,6 +15,9 @@ class CreateWingsTable extends Migration
         Schema::create('wings', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned();
+            $table->string('slug')->unique();
+            $table->string('slug_str');
+            $table->integer('slug_id')->unsigned();
             $table->string('name', 100);
             $table->string('description');
 
@@ -35,6 +38,8 @@ class CreateWingsTable extends Migration
 
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->unique(['slug_str', 'slug_id']);
+            $table->index('slug_str');
         });
     }
 

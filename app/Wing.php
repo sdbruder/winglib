@@ -6,7 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Wing extends Model
 {
+
     protected $fillable = [
+        'slug',
         'user_id',
         'name',
         'description',
@@ -133,6 +135,19 @@ class Wing extends Model
             foreach($wing->attributes as $key => $value) {
                 if (in_array($key,$wing->appends)) {
                     unset($wing->attributes[$key]);
+                }
+            }
+            if ( ! $wing->slug ) {
+                $slug_str = str_slug($wing->name);
+                $latest = Wing::whereRaw("slug_str = '{$slug_str}'")->latest("slug_id")->get()->first();
+                if ($latest) {
+                    $slug_id = $latest['slug_id'] + 1;
+                    $wing->attributes['slug_str'] = $slug_str;
+                    $wing->attributes['slug_id'] = $slug_id;
+                    $wing->attributes['slug'] = $slug_str . '-' . $slug_id;
+                } else {
+                    $wing->attributes['slug_str'] = $slug_str;
+                    $wing->attributes['slug'] = $slug_str;
                 }
             }
             return true;

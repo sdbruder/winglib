@@ -150,7 +150,6 @@ return [
          */
         Collective\Html\HtmlServiceProvider::class,
         Barryvdh\Debugbar\ServiceProvider::class,
-        Cviebrock\EloquentSluggable\SluggableServiceProvider::class,
         Laracasts\Generators\GeneratorsServiceProvider::class,
         Laracasts\Flash\FlashServiceProvider::class,
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,

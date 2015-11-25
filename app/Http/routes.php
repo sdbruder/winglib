@@ -19,6 +19,7 @@ Route::get('/', function () {
 Route::post('wings/likeit', 'WingsController@likeit');
 
 // Wings resource (CRUD, etcetera)
+Route::get('wing/{slug}', 'WingsController@showSlug');
 Route::resource('wings', 'WingsController');
 
 // User settings
