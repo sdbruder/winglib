@@ -168,13 +168,16 @@ class Wing extends Model
         return $needle === "" || (($temp = strlen($haystack) - strlen($needle)) >= 0 && strpos($haystack, $needle, $temp) !== FALSE);
     }
 
+    public function clearDotZeroes($value) {
+        if ($this->endsWith($value,'.00')) {
+            $value = str_replace('.00', '', $value);
+        }
+        return $value;
+    }
+
     public function getCGPosAttribute()
     {
-        $cgpos = $this->attributes['cgpos'];
-        if ($this->endsWith($cgpos,'.00')) {
-            $cgpos = str_replace('.00', '', $cgpos);
-        }
-        return $cgpos;
+        return $this->clearDotZeroes($this->attributes['cgpos']);
     }
 
     public function getPanel1SpanAttribute()
