@@ -26,6 +26,10 @@ elixir(function(mix) {
         'sweetalert.js',
         'cglib.js'
         ])
+    .scripts([
+        'winglib/base64.js',
+        'winglib/canvas2image.js',
+        'winglib/winglib.js'],  'public/js/winglib.js')
     .sass('app.scss','resources/assets/css')
     .styles([
         'app.css',
