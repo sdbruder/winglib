@@ -41,7 +41,12 @@ class WingsController extends Controller
      */
     public function store(WingRequest $request)
     {
+        // saves the image and return the URL for it.
+        $image_url = Wing::createImage($request->image_base64);
+
         $wing = new Wing($request->all());
+        $wing->image_file = $image_url;
+
         Auth::user()->wings()->save($wing);
 
         return redirect('wings');
@@ -93,6 +98,9 @@ class WingsController extends Controller
     public function update(WingRequest $request, $id)
     {
         $wing = Wing::findOrFail($id);
+
+        // saves the image using the URL in the Model.
+        $wing->saveImage($request->image_base64);
 
         $wing->update($request->all());
 

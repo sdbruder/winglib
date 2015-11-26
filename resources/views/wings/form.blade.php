@@ -1,4 +1,5 @@
 <input type="hidden" id="unitValue" name="unitValue" value="metric">
+<input type="hidden" id="image_base64" name="image_base64">
 <div class="row">
     <div class="col-md-10" id="canvasdiv">
         <canvas id="wingcanvas" width="940" height="400"></canvas>
@@ -78,13 +79,13 @@
         <div class="form-group">
             {!! Form::label('name', 'Wing&nbsp;Name', ['class' => 'col-sm-3 control-label']); !!}
             <div class="col-sm-9">
-                {!! Form::text('name', 'Zagi wing 1200mm', ['class'=>'form-control', 'placeholder'=>'Wing name']);  !!}
+                {!! Form::text('name', null, ['class'=>'form-control', 'placeholder'=>'Wing name']);  !!}
             </div>
         </div>
         <div class="form-group">
             {!! Form::label('description', 'Description', ['class' => 'col-sm-3 control-label']);  !!}
             <div class="col-sm-9">
-                {!! Form::textarea('description', 'classic 1200mm zagi plan', [
+                {!! Form::textarea('description', null, [
                         'rows'        => '4',
                         'class'       => 'form-control',
                         'placeholder' => 'description / details of the wing'
@@ -111,7 +112,7 @@
             <div class="col-sm-9">
                 <div class="btn-group" data-toggle="buttons" id="UnitsystemRadios">
                     <label class="btn btn-primary" id="btn_metric">
-                        {!! Form::radio('unitsystem', 'metric', true, []); !!} Metric
+                        {!! Form::radio('unitsystem', 'metric', false, []); !!} Metric
                     </label>
                     <label class="btn btn-primary" id="btn_imperial">
                         {!! Form::radio('unitsystem', 'imperial', false, []); !!} Imperial
@@ -123,7 +124,7 @@
             {!! Form::label('cgpos', 'CG&nbsp;Position', ['class' => 'col-sm-3 control-label']);  !!}
             <div class="col-sm-9">
                 <div class="input-group">
-                    {!! Form::text('cgpos', '20', ['class'=>'form-control redraw']);  !!}
+                    {!! Form::text('cgpos', null, ['class'=>'form-control redraw']);  !!}
                     <span class="input-group-addon nommin-addon" id="cgpos-addon">%</span>
                 </div>
             </div>
@@ -132,7 +133,7 @@
             {!! Form::label('weight', 'Weight', ['class' => 'col-sm-3 control-label']);  !!}
             <div class="col-sm-9">
                 <div class="input-group">
-                    {!! Form::text('weight', '650', ['class'=>'form-control']);  !!}
+                    {!! Form::text('weight', null, ['class'=>'form-control']);  !!}
                     <span class="input-group-addon nommin-addon" id="weight-addon">g</span>
                 </div>
             </div>
@@ -141,7 +142,7 @@
             {!! Form::label('rootchord', 'Root Chord', ['class' => 'col-sm-3 control-label']);  !!}
             <div class="col-sm-9">
                 <div class="input-group">
-                    {!! Form::text('rootchord', '340.00', ['class'=>'form-control redraw']);  !!}
+                    {!! Form::text('rootchord', null, ['class'=>'form-control redraw']);  !!}
                     <span class="input-group-addon" id="rootchord-addon">mm</span>
                 </div>
             </div>
@@ -158,7 +159,8 @@
                 {!! Form::label("panel{$p}span", 'Span', ['class' => 'col-sm-3 control-label']);  !!}
                 <div class="col-sm-9">
                     <div class="input-group">
-                        {!! Form::text("panel{$p}span", (($p==1) ? 600 : null), [
+                        {{--  (($p==1) ? 600 : null)  --}}
+                        {!! Form::text("panel{$p}span", null, [
                             'class'=>'form-control redraw']);  !!}
                         <span class="input-group-addon" id="panel{{$p}}span-addon">mm</span>
                     </div>
@@ -168,7 +170,7 @@
                 {!! Form::label("panel{$p}chord", 'Chord', ['class' => 'col-sm-3 control-label']);  !!}
                 <div class="col-sm-9">
                     <div class="input-group">
-                        {!! Form::text("panel{$p}chord", (($p==1) ? 180 : null), [
+                        {!! Form::text("panel{$p}chord", null, [
                             'class'=>'form-control redraw']);  !!}
                         <span class="input-group-addon" id="panel{{$p}}chord-addon">mm</span>
                     </div>
@@ -178,7 +180,7 @@
                 {!! Form::label("panel{$p}sweep", 'Sweep', ['class' => 'col-sm-3 control-label']);  !!}
                 <div class="col-sm-9">
                     <div class="input-group">
-                        {!! Form::text("panel{$p}sweep", (($p==1) ? 300 : null), [
+                        {!! Form::text("panel{$p}sweep", null, [
                             'class' => 'form-control redraw recalcangle',
                             'panel' => $p ]);  !!}
                         <span class="input-group-addon" id="panel{{$p}}sweep-addon">mm</span>
@@ -189,7 +191,7 @@
                 {!! Form::label("panel{$p}angle", 'Angle', ['class' => 'col-sm-3 control-label']);  !!}
                 <div class="col-sm-9">
                     <div class="input-group">
-                        {!! Form::text("panel{$p}angle", (($p==1) ? 26.57 : null), [
+                        {!! Form::text("panel{$p}angle", null, [
                             'class' => 'form-control redraw recalcsweep',
                             'panel' => $p ]);  !!}
                         <span class="input-group-addon nommin-addon" id="panel{{$p}}angle-addon">&deg;</span>
@@ -201,7 +203,7 @@
     @endfor
 </div>
 
-{!! Form::submit($submitButton, ['class' => 'btn btn-primary form-control']); !!}
+{!! Form::submit($submitButton, ['class' => 'btn btn-primary form-control', 'id' => 'submit_button']); !!}
 
 @section('javascript')
     <script src="/js/winglib.js"></script>

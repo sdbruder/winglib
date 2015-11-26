@@ -12,6 +12,7 @@ class Wing extends Model
         'user_id',
         'name',
         'description',
+        'image_file',
         'unitsystem',
         'cgpos',
         'weight',
@@ -161,6 +162,35 @@ class Wing extends Model
 
             return true;
         }); // static::saving
+    }
+
+    public static function createImage($base64_image) {
+        define('URL_SEPARATOR', '/');
+
+        $subdir = substr(microtime(),4,2);
+        $storage_path = join(DIRECTORY_SEPARATOR, [storage_path(), 'app', 'wingimg', $subdir]);
+        $url_path = join(URL_SEPARATOR, ['wingimg', $subdir]);
+        $filename = uniqid('') . '.png';
+
+        $image_filename = join(DIRECTORY_SEPARATOR, [ $storage_path, $filename]);
+        $image_url      = URL_SEPARATOR . join(URL_SEPARATOR, [ $url_path, $filename]);
+
+        //get the base-64 from data
+        $base64_str = substr($base64_image, strpos($base64_image, ",")+1);
+        //decode base64 string and write it down.
+        $image = base64_decode($base64_str);
+        file_put_contents($image_filename, $image);
+
+        // return the URL made above.
+        return $image_url;
+    }
+
+    public function saveImage($base64_image) {
+        $image_filename = join(DIRECTORY_SEPARATOR, [ storage_path(), 'app']) . $this->image_file;
+        //get the base-64 from data
+        $base64_str = substr($base64_image, strpos($base64_image, ",")+1);
+        //decode base64 string and write it down.
+        file_put_contents($image_filename, base64_decode($base64_str));
     }
 
     public function endsWith($haystack, $needle) {

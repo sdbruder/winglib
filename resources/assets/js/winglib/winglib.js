@@ -443,7 +443,7 @@ function sweep2angle(panelnumber) {
 }
 
 
-function draw_wing() {
+function draw_wing(forcesize) {
     var panels = load_panels(6);
     var panel_qty = window.panels[0].qty;
     var canvas_max_width;
@@ -453,15 +453,21 @@ function draw_wing() {
     var canvasdiv = $('#canvasdiv');
     var drawmeasurement = $('#drawvalues').prop('checked');
 
-    if (canvasdiv.width() == 945) {
-        canvas_max_width  = 940;
-        canvas_max_height = 400;
-    } else if (Math.floor(canvasdiv.width()) == 778) {
-        canvas_max_width  = 770;
-        canvas_max_height = 327;
-    } else  {
-        canvas_max_width  = canvasdiv.width()-5;
-        canvas_max_height = Math.ceil(((canvasdiv.width()-5)/940)*400);
+    if (forcesize) {
+            canvas_max_width  = 940;
+            canvas_max_height = 400;
+            drawmeasurement = false;
+    } else {
+        if (canvasdiv.width() == 945) {
+            canvas_max_width  = 940;
+            canvas_max_height = 400;
+        } else if (Math.floor(canvasdiv.width()) == 778) {
+            canvas_max_width  = 770;
+            canvas_max_height = 327;
+        } else  {
+            canvas_max_width  = canvasdiv.width()-5;
+            canvas_max_height = Math.ceil(((canvasdiv.width()-5)/940)*400);
+        }
     }
 
     if (canvas.getContext){
@@ -623,38 +629,33 @@ function savepng() {
     Canvas2Image.saveAsPNG(canvas);
 }
 
+function save_image() {
+    var canvas = document.getElementById('wingcanvas');
+    draw_wing("FORCE_940x400");
+    $("#image_base64").val(canvas.toDataURL())
+    draw_wing();
+    return true;
+}
 
 function wingcgcalc_setup() {
     // event linking
-    // $("#addPanelBtn").click(function(event){    addPanel();    draw_wing(); event.preventDefault();});
-    // $("#removePanelBtn").click(function(event){ removePanel(); draw_wing(); event.preventDefault();});
-    // $("#calc").click(function(event){           draw_wing();                event.preventDefault();});
     $("#btn_metric").click(function(event){     systemunits_to_metric();   });
     $("#btn_imperial").click(function(event){   systemunits_to_imperial(); });
-    // $("#btn_shortit").click(function(event){    shortit();                  event.preventDefault();});
     $("#btn_savepng").click(function(event){    savepng();                  event.preventDefault();});
     $(window).resize(function(){                draw_wing(); });
     $(".redraw").change(function(){             draw_wing(); });
     $(".recalcsweep").change(function(){        angle2sweep($(this).attr('panel')); draw_wing(); });
     $(".recalcangle").change(function(){        sweep2angle($(this).attr('panel')); draw_wing(); });
+    $("#submit_button").click(function(event){  save_image(); })
 
     // global variables setup
+    if ($("#btn_metric").filter(':checked').val()) {
+        $("#unitValue").val('metric');
+    } else {
+        $("#unitValue").val('imperial');
+    }
     var unitSys = $("#unitValue");
     window.systemunit = unitSys.val();
-
-    // setup modals
-    //$("#noIE").modal({keyboard: true, backdrop: 'static'});
-
-    // setup popovers
-    $(function () {
-        $("a[rel=popover]").popover({ offset: 10 }).click(function(e) {
-            e.preventDefault();
-        })
-    });
-    $(function () {
-        $("input[rel=popover]").popover({ offset: 30, trigger: 'focus',
-        template:'<div class="arrow"></div><div class="inner"><div class="content"><p></p></div></div>'})
-    });
 }
 
 

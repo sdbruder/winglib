@@ -20,6 +20,7 @@ class CreateWingsTable extends Migration
             $table->integer('slug_id')->unsigned();
             $table->string('name', 100);
             $table->string('description');
+            $table->string('image_file');
 
             $table->string('unitsystem');
             $table->decimal('cgpos',5,2);

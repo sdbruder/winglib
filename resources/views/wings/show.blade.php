@@ -42,7 +42,7 @@
                 </div>
             </div>
             <div class="media-right media-middle">
-                <img class="media-object" src="/img/wing.png" height="350px">
+                <img class="media-object" src="{{$wing->image_file}}" height="350px">
             </div>
         </div>
 
