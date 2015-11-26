@@ -206,6 +206,7 @@
 {!! Form::submit($submitButton, ['class' => 'btn btn-primary form-control', 'id' => 'submit_button']); !!}
 
 @section('javascript')
+@parent
     <script src="/js/winglib.js"></script>
     <script type="text/javascript">
         $(document).ready(function() {
