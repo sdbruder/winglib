@@ -11,13 +11,13 @@
             </div>
         </div>
         <div class="form-group">
-            {!! Form::label('macdist', 'MAC&nbsp;Distance', ['class' => 'col-sm-6 control-label']);  !!}
+            {!! Form::label('macdist', 'MAC&nbsp;Dist', ['class' => 'col-sm-6 control-label']);  !!}
             <div class="col-sm-6">
             {!! Form::text('macdist', null, ['class'=>'form-control input-sm', 'readonly'=>'']);  !!}
             </div>
         </div>
         <div class="form-group">
-            {!! Form::label('maclength', 'MAC&nbsp;Length', ['class' => 'col-sm-6 control-label']);  !!}
+            {!! Form::label('maclength', 'MAC&nbsp;Len', ['class' => 'col-sm-6 control-label']);  !!}
             <div class="col-sm-6">
             {!! Form::text('maclength', null, ['class'=>'form-control input-sm', 'readonly'=>'']);  !!}
             </div>
@@ -42,13 +42,13 @@
         <div class="form-group">
             {!! Form::label('name', 'Wing&nbsp;Name', ['class' => 'col-sm-3 control-label']); !!}
             <div class="col-sm-9">
-                {!! Form::text('name', null, ['class'=>'form-control', 'placeholder'=>'Wing name']);  !!}
+                {!! Form::text('name', 'Zagi wing 1200mm', ['class'=>'form-control', 'placeholder'=>'Wing name']);  !!}
             </div>
         </div>
         <div class="form-group">
             {!! Form::label('description', 'Description', ['class' => 'col-sm-3 control-label']);  !!}
             <div class="col-sm-9">
-                {!! Form::textarea('description', null, [
+                {!! Form::textarea('description', 'classic 1200mm zagi plan', [
                         'rows'        => '4',
                         'class'       => 'form-control',
                         'placeholder' => 'description / details of the wing'
@@ -60,7 +60,9 @@
             <div class="col-sm-9">
                 <div class="checkbox">
                     <label>
-                        {!! Form::checkbox('drawvalues', Null, Null, ['class' => 'redraw']);  !!} Draw the measures.
+                        {!! Form::checkbox('drawvalues', Null, Null, [
+                            'class' => 'redraw',
+                            'checked' => 'Checked']);  !!} Draw the measures.
                     </label>
                 </div>
             </div>
@@ -84,19 +86,19 @@
         <div class="form-group">
             {!! Form::label('cgpos', 'CG&nbsp;Position', ['class' => 'col-sm-3 control-label']);  !!}
             <div class="col-sm-9">
-                {!! Form::text('cgpos', null, ['class'=>'form-control redraw']);  !!}
+                {!! Form::text('cgpos', '20', ['class'=>'form-control redraw']);  !!}
             </div>
         </div>
         <div class="form-group">
             {!! Form::label('weight', 'Weight', ['class' => 'col-sm-3 control-label']);  !!}
             <div class="col-sm-9">
-                {!! Form::text('weight', null, ['class'=>'form-control']);  !!}
+                {!! Form::text('weight', '650', ['class'=>'form-control']);  !!}
             </div>
         </div>
         <div class="form-group">
             {!! Form::label('rootchord', 'Root Chord', ['class' => 'col-sm-3 control-label']);  !!}
             <div class="col-sm-9">
-                {!! Form::text('rootchord', null, ['class'=>'form-control redraw']);  !!}
+                {!! Form::text('rootchord', '340.00', ['class'=>'form-control redraw']);  !!}
             </div>
         </div>
     </div>
@@ -110,19 +112,19 @@
             <div class="form-group">
                 {!! Form::label("panel{$p}span", 'Panel Span', ['class' => 'col-sm-3 control-label']);  !!}
                 <div class="col-sm-9">
-                    {!! Form::text("panel{$p}span", null, ['class'=>'form-control redraw']);  !!}
+                    {!! Form::text("panel{$p}span", (($p==1) ? 600 : null), ['class'=>'form-control redraw']);  !!}
                 </div>
             </div>
             <div class="form-group">
                 {!! Form::label("panel{$p}chord", 'Chord', ['class' => 'col-sm-3 control-label']);  !!}
                 <div class="col-sm-9">
-                    {!! Form::text("panel{$p}chord", null, ['class'=>'form-control redraw']);  !!}
+                    {!! Form::text("panel{$p}chord", (($p==1) ? 180 : null), ['class'=>'form-control redraw']);  !!}
                 </div>
             </div>
             <div class="form-group">
                 {!! Form::label("panel{$p}sweep", 'Sweep', ['class' => 'col-sm-3 control-label']);  !!}
                 <div class="col-sm-9">
-                    {!! Form::text("panel{$p}sweep", null, [
+                    {!! Form::text("panel{$p}sweep", (($p==1) ? 300 : null), [
                         'class' => 'form-control redraw recalcangle',
                         'panel' => $p ]);  !!}
                 </div>
@@ -130,7 +132,7 @@
             <div class="form-group">
                 {!! Form::label("panel{$p}angle", 'Angle', ['class' => 'col-sm-3 control-label']);  !!}
                 <div class="col-sm-9">
-                    {!! Form::text("panel{$p}angle", null, [
+                    {!! Form::text("panel{$p}angle", (($p==1) ? 26.57 : null), [
                         'class' => 'form-control redraw recalcsweep',
                         'panel' => $p ]);  !!}
                 </div>

@@ -345,17 +345,18 @@ function load_panels(qty) {
 
     // Update UI
     if (window.systemunit == "metric") {
-        $('#area').val(    Math.round( (2*window.panels[0].wingarea/10000) * 100) / 100);
-        loadarea = $('#area').val();
+        $('#wingarea').val(    Math.round( (2*window.panels[0].wingarea/10000) * 100) / 100);
+        loadarea = $('#wingarea').val();
     } else {
-        $('#area').val(    Math.round( (2*window.panels[0].wingarea)       * 100) / 100);
-        loadarea = $('#area').val()/144;
+        $('#wingarea').val(    Math.round( (2*window.panels[0].wingarea)       * 100) / 100);
+        loadarea = $('#wingarea').val()/144;
     }
     $('#macdist').val( Math.round( window.panels[0].macdist * 100) / 100);
-    $('#maclen').val(  Math.round( window.panels[0].maclen * 100) / 100);
-    $('#cgdist').val(  Math.round( window.panels[0].cg_dist * 100) / 100);
+    $('#maclength').val(  Math.round( window.panels[0].maclen * 100) / 100);
+    $('#cg').val(  Math.round( window.panels[0].cg_dist * 100) / 100);
 
     w = $('#weight').val();
+
     if (loadarea>0) {
         $('#wingload').val(Math.round( (w/loadarea) * 100) / 100);
     }
