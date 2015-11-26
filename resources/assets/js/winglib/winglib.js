@@ -642,25 +642,34 @@ function save_image() {
     return true;
 }
 
+function unitsystem_setup() {
+    var radios = $('#UnitsystemRadios label input');
+    if (radios.is(':checked') === false) {
+        $("#btn_metric").prop('checked', true);
+    }
+    // Fix radio label classes
+    radios.each(function( index ) {
+        if ( $(this).filter(':checked').val() ) {
+            $(this).parent().addClass('active');
+        }
+    });
+    // global variables setup
+    $("#unitValue").val( $("#btn_metric").filter(':checked').val() ? 'metric' : 'imperial' );
+    window.systemunit = $("#unitValue").val();
+}
+
 function wingcgcalc_setup() {
     // event linking
-    $("#label_btn_metric").click(function(event){     systemunits_to_metric();   });
-    $("#label_btn_imperial").click(function(event){   systemunits_to_imperial(); });
-    $("#btn_savepng").click(function(event){    savepng();                  event.preventDefault();});
-    $(window).resize(function(){                draw_wing(); });
-    $(".redraw").change(function(){             draw_wing(); });
-    $(".recalcsweep").change(function(){        angle2sweep($(this).attr('panel')); draw_wing(); });
-    $(".recalcangle").change(function(){        sweep2angle($(this).attr('panel')); draw_wing(); });
-    $("#submit_button").click(function(event){  save_image(); })
+    $("#label_btn_metric").click(   function(ev){ systemunits_to_metric();        });
+    $("#label_btn_imperial").click( function(ev){ systemunits_to_imperial();      });
+    $("#btn_savepng").click(        function(ev){ savepng(); ev.preventDefault(); });
+    $("#submit_button").click(      function(ev){ save_image(); });
+    $(window).resize(               function(){   draw_wing();  });
+    $(".redraw").change(            function(){   draw_wing();  });
+    $(".recalcsweep").change(       function(){   angle2sweep($(this).attr('panel')); draw_wing(); });
+    $(".recalcangle").change(       function(){   sweep2angle($(this).attr('panel')); draw_wing(); });
 
-    // global variables setup
-    if ($("#btn_metric").filter(':checked').val()) {
-        $("#unitValue").val('metric');
-    } else {
-        $("#unitValue").val('imperial');
-    }
-    var unitSys = $("#unitValue");
-    window.systemunit = unitSys.val();
+    unitsystem_setup();
 }
 
 

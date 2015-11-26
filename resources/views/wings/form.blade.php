@@ -209,19 +209,9 @@
     <script src="/js/winglib.js"></script>
     <script type="text/javascript">
         $(document).ready(function() {
-
-            $('#UnitsystemRadios label input').each(function( index ) {
-                rdio = $(this).filter(':checked').val();
-                if ( ! (rdio === undefined || rdio === null)) {
-                    $(this).parent().addClass('active');
-                }
-            });
-
-            $('#name').focus();
-
             wingcgcalc_setup();
             draw_wing();
-
+            $('#name').focus();
         });
     </script>
 @stop
