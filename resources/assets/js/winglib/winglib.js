@@ -445,8 +445,8 @@ function sweep2angle(panelnumber) {
 function draw_wing() {
     var panels = load_panels(6);
     var panel_qty = window.panels[0].qty;
-    var canvas_max_width  = 940;
-    var canvas_max_height = 400;
+    var canvas_max_width;
+    var canvas_max_height;
     var border_size = 30;
     var canvas = document.getElementById('wingcanvas');
     var canvasdiv = $('#canvasdiv');
@@ -460,7 +460,7 @@ function draw_wing() {
         canvas_max_height = 327;
     } else  {
         canvas_max_width  = canvasdiv.width()-5;
-        canvas_max_height = Math.ceil((canvasdiv.width()-5)/940)*400);
+        canvas_max_height = Math.ceil(((canvasdiv.width()-5)/940)*400);
     }
 
     if (canvas.getContext){
