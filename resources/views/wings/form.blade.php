@@ -1,3 +1,4 @@
+<input type="hidden" id="unitValue" name="unitValue" value="metric">
 <div class="row">
     <div class="col-md-10" id="canvasdiv">
         <canvas id="wingcanvas" width="940" height="400"></canvas>
@@ -21,7 +22,7 @@
             {!! Form::label('macdist', 'MAC&nbsp;Dist', ['class' => 'col-sm-6 control-label']);  !!}
             <div class="col-sm-6">
             {!! Form::text('macdist', null, [
-                'class'          => 'form-control input-sm',
+                'class'          => 'form-control input-sm data-inmm',
                 'readonly'       => '',
                 'data-toggle'    => 'popover',
                 'data-trigger'   => 'hover',
@@ -34,7 +35,7 @@
             {!! Form::label('maclength', 'MAC&nbsp;Len', ['class' => 'col-sm-6 control-label']);  !!}
             <div class="col-sm-6">
             {!! Form::text('maclength', null, [
-                'class'          => 'form-control input-sm',
+                'class'          => 'form-control input-sm data-inmm',
                 'readonly'       => '',
                 'data-toggle'    => 'popover',
                 'data-trigger'   => 'hover',
@@ -47,7 +48,7 @@
             {!! Form::label('cg', 'CG', ['class' => 'col-sm-6 control-label']);  !!}
             <div class="col-sm-6">
             {!! Form::text('cg', null, [
-                'class'          => 'form-control input-sm',
+                'class'          => 'form-control input-sm data-inmm',
                 'readonly'       => '',
                 'data-toggle'    => 'popover',
                 'data-trigger'   => 'hover',
@@ -109,11 +110,11 @@
             {!! Form::label('unitsystem', 'Unit&nbsp;System', ['class' => 'col-sm-3 control-label']);  !!}
             <div class="col-sm-9">
                 <div class="btn-group" data-toggle="buttons" id="UnitsystemRadios">
-                    <label class="btn btn-primary">
-                        {!! Form::radio('unitsystem', 'metric', true, []);  !!} Metric
+                    <label class="btn btn-primary" id="btn_metric">
+                        {!! Form::radio('unitsystem', 'metric', true, []); !!} Metric
                     </label>
-                    <label class="btn btn-primary">
-                        {!! Form::radio('unitsystem', 'imperial', false, []);  !!} Imperial
+                    <label class="btn btn-primary" id="btn_imperial">
+                        {!! Form::radio('unitsystem', 'imperial', false, []); !!} Imperial
                     </label>
                 </div>
             </div>
@@ -123,7 +124,7 @@
             <div class="col-sm-9">
                 <div class="input-group">
                     {!! Form::text('cgpos', '20', ['class'=>'form-control redraw']);  !!}
-                    <span class="input-group-addon" id="cgpos-addon">%</span>
+                    <span class="input-group-addon nommin-addon" id="cgpos-addon">%</span>
                 </div>
             </div>
         </div>
@@ -132,7 +133,7 @@
             <div class="col-sm-9">
                 <div class="input-group">
                     {!! Form::text('weight', '650', ['class'=>'form-control']);  !!}
-                    <span class="input-group-addon" id="weight-addon">g</span>
+                    <span class="input-group-addon nommin-addon" id="weight-addon">g</span>
                 </div>
             </div>
         </div>
@@ -159,7 +160,7 @@
                     <div class="input-group">
                         {!! Form::text("panel{$p}span", (($p==1) ? 600 : null), [
                             'class'=>'form-control redraw']);  !!}
-                        <span class="input-group-addon" id="panel{$p}span-addon">mm</span>
+                        <span class="input-group-addon" id="panel{{$p}}span-addon">mm</span>
                     </div>
                 </div>
             </div>
@@ -169,7 +170,7 @@
                     <div class="input-group">
                         {!! Form::text("panel{$p}chord", (($p==1) ? 180 : null), [
                             'class'=>'form-control redraw']);  !!}
-                        <span class="input-group-addon" id="panel{$p}chord-addon">mm</span>
+                        <span class="input-group-addon" id="panel{{$p}}chord-addon">mm</span>
                     </div>
                 </div>
             </div>
@@ -180,7 +181,7 @@
                         {!! Form::text("panel{$p}sweep", (($p==1) ? 300 : null), [
                             'class' => 'form-control redraw recalcangle',
                             'panel' => $p ]);  !!}
-                        <span class="input-group-addon" id="panel{$p}sweep-addon">mm</span>
+                        <span class="input-group-addon" id="panel{{$p}}sweep-addon">mm</span>
                     </div>
                 </div>
             </div>
@@ -191,7 +192,7 @@
                         {!! Form::text("panel{$p}angle", (($p==1) ? 26.57 : null), [
                             'class' => 'form-control redraw recalcsweep',
                             'panel' => $p ]);  !!}
-                        <span class="input-group-addon" id="panel{$p}angle-addon">&deg;</span>
+                        <span class="input-group-addon nommin-addon" id="panel{{$p}}angle-addon">&deg;</span>
                     </div>
                 </div>
             </div>

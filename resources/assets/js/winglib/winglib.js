@@ -377,7 +377,7 @@ function mkURIcomponent(id) {
 
 function makePARAMS() {
     var url = "?";
-    url = url + mkURIcomponent('unitsystem');
+    url = url + mkURIcomponent('unitvalue');
     url = url + mkURIcomponent('panelsqty');
     url = url + mkURIcomponent('cgpos');
     url = url + mkURIcomponent('weight');
@@ -535,34 +535,30 @@ function shortit() {
 function systemunits_to_metric(recalc) {
     var inch_value = 25.4;
     var ounce_value = 28.349523;
-    var unitSys = $("#unitsystem");
+    var unitSys = $("#unitValue");
     recalc = typeof recalc !== 'undefined' ? recalc : true;
 
     if (window.systemunit != "metric") {
-        $("#btn_metric").addClass("disabled");
-        $("#btn_metric").addClass("btn-primary");
-        $("#btn_imperial").removeClass("disabled");
-        $("#btn_imperial").removeClass("btn-primary");
-
         if (recalc) {
-            $("#weight").val( Math.round( 100 * strtofloat($("#weight").val()) * ounce_value ) / 100);
-            $("#chord0").val( Math.round( 100 * strtofloat($("#chord0").val()) * inch_value ) / 100);
+            $("#weight").val(   Math.round( 100 * strtofloat($("#weight").val())    * ounce_value) / 100);
+            $("#rootchord").val(Math.round( 100 * strtofloat($("#rootchord").val()) * inch_value ) / 100);
             for(i=1;i<=6;i++) {
                 p = i.toString();
-                $("#panelspan"+p).val( Math.round( 100 * strtofloat($("#panelspan"+p).val()) * inch_value ) / 100);
-                $("#chord"+p).val(     Math.round( 100 * strtofloat($("#chord"+p).val())     * inch_value ) / 100);
-                $("#sweep"+p).val(     Math.round( 100 * strtofloat($("#sweep"+p).val())     * inch_value ) / 100);
+                $("#panel"+p+"span").val( Math.round( 100 * strtofloat($("#panel"+p+"span").val()) * inch_value ) / 100);
+                $("#panel"+p+"chord").val(Math.round( 100 * strtofloat($("#panel"+p+"chord").val())* inch_value ) / 100);
+                $("#panel"+p+"sweep").val(Math.round( 100 * strtofloat($("#panel"+p+"sweep").val())* inch_value ) / 100);
+                if ($("#panel"+p+"span").val() == 0) {
+                    $("#panel"+p+"span").val('');
+                    $("#panel"+p+"chord").val('');
+                    $("#panel"+p+"sweep").val('');
+                }
             }
         }
-        $("#areaunit").removeClass("add-on");
-        $("#cgunit").removeClass("add-on");
-        $("#weightunit").removeClass("add-on");
-        $("#wingloadunit").removeClass("add-on");
-        $(".add-on").replaceWith('<span class="add-on small">mm</span>');
-        $("#areaunit").replaceWith('<span id="areaunit" class="add-on small">dm&sup2;</span>');
-        $("#cgunit").addClass("add-on");
-        $("#weightunit").replaceWith('<span id="weightunit" class="add-on">g</span>');
-        $("#wingloadunit").replaceWith('<span id="wingloadunit" class="add-on small">g/dm&sup2;</span>');
+        $(".input-group-addon:not(.nommin-addon)").html('mm');
+        $(".data-inmm").attr('data-content', 'mm');
+        $("#weight-addon").html('g');
+        $("#wingarea").attr('data-content', 'dm²');
+        $("#wingload").attr('data-content', 'g/dm²');
 
         window.systemunit = "metric";
         unitSys.val(window.systemunit);
@@ -573,35 +569,30 @@ function systemunits_to_metric(recalc) {
 function systemunits_to_imperial(recalc) {
     var inch_value = 25.4;
     var ounce_value = 28.349523;
-    var unitSys = $("#unitsystem");
+    var unitSys = $("#unitValue");
     recalc = typeof recalc !== 'undefined' ? recalc : true;
 
     if (window.systemunit != "imperial") {
-        $("#btn_imperial").addClass("disabled");
-        $("#btn_imperial").addClass("btn-primary");
-        $("#btn_metric").removeClass("disabled");
-        $("#btn_metric").removeClass("btn-primary");
-
         if (recalc) {
-            $("#weight").val( Math.round( 100 * strtofloat($("#weight").val()) / ounce_value ) / 100);
-            $("#chord0").val( Math.round( 100 * strtofloat($("#chord0").val()) / inch_value ) / 100);
+            $("#weight").val(   Math.round( 100 * strtofloat($("#weight").val())    / ounce_value) / 100);
+            $("#rootchord").val(Math.round( 100 * strtofloat($("#rootchord").val()) / inch_value ) / 100);
             for(i=1;i<=6;i++) {
                 p = i.toString();
-                $("#panelspan"+p).val( Math.round( 100 * strtofloat($("#panelspan"+p).val()) / inch_value ) / 100);
-                $("#chord"+p).val(     Math.round( 100 * strtofloat($("#chord"+p).val())     / inch_value ) / 100);
-                $("#sweep"+p).val(     Math.round( 100 * strtofloat($("#sweep"+p).val())     / inch_value ) / 100);
+                $("#panel"+p+"span").val( Math.round( 100 * strtofloat($("#panel"+p+"span").val())  / inch_value ) / 100);
+                $("#panel"+p+"chord").val(Math.round( 100 * strtofloat($("#panel"+p+"chord").val()) / inch_value ) / 100);
+                $("#panel"+p+"sweep").val(Math.round( 100 * strtofloat($("#panel"+p+"sweep").val()) / inch_value ) / 100);
+                if ($("#panel"+p+"span").val() == 0) {
+                    $("#panel"+p+"span").val('');
+                    $("#panel"+p+"chord").val('');
+                    $("#panel"+p+"sweep").val('');
+                }
             }
         }
-
-        $("#areaunit").removeClass("add-on");
-        $("#cgunit").removeClass("add-on");
-        $("#weightunit").removeClass("add-on");
-        $("#wingloadunit").removeClass("add-on");
-        $(".add-on").replaceWith('<span class="add-on small">in</span>');
-        $("#areaunit").replaceWith('<span id="areaunit" class="add-on small">in&sup2;</span>');
-        $("#cgunit").addClass("add-on");
-        $("#weightunit").replaceWith('<span id="weightunit" class="add-on small">oz</span>');
-        $("#wingloadunit").replaceWith('<span id="wingloadunit" class="add-on small">oz/ft&sup2;</span>');
+        $(".input-group-addon:not(.nommin-addon)").html('in');
+        $(".data-inmm").attr('data-content', 'in');
+        $("#weight-addon").html('oz');
+        $("#wingarea").attr('data-content', 'in²');
+        $("#wingload").attr('data-content', 'oz/ft²');
 
         window.systemunit = "imperial";
         unitSys.val(window.systemunit);
@@ -628,8 +619,8 @@ function wingcgcalc_setup() {
     // $("#addPanelBtn").click(function(event){    addPanel();    draw_wing(); event.preventDefault();});
     // $("#removePanelBtn").click(function(event){ removePanel(); draw_wing(); event.preventDefault();});
     // $("#calc").click(function(event){           draw_wing();                event.preventDefault();});
-    $("#btn_metric").click(function(event){     systemunits_to_metric();    event.preventDefault();});
-    $("#btn_imperial").click(function(event){   systemunits_to_imperial();  event.preventDefault();});
+    $("#btn_metric").click(function(event){     systemunits_to_metric();   });
+    $("#btn_imperial").click(function(event){   systemunits_to_imperial(); });
     // $("#btn_shortit").click(function(event){    shortit();                  event.preventDefault();});
     $("#btn_savepng").click(function(event){    savepng();                  event.preventDefault();});
     $(window).resize(function(){                draw_wing(); });
@@ -638,7 +629,7 @@ function wingcgcalc_setup() {
     $(".recalcangle").change(function(){        sweep2angle($(this).attr('panel')); draw_wing(); });
 
     // global variables setup
-    var unitSys = $("#unitsystem");
+    var unitSys = $("#unitValue");
     window.systemunit = unitSys.val();
 
     // setup modals
