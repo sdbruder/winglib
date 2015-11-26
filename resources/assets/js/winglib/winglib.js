@@ -531,6 +531,16 @@ function shortit() {
     $('#btn_shortit').addClass('disabled');
 }
 
+function roundit(value) {
+    var strval;
+    var round_factor = 10000;
+    value = Math.round(round_factor * value) / round_factor;
+    strval = value.toString();
+    if ( (strval.search('.99') != -1) || (strval.search('.00') != -1) ) {
+        value = Math.round(value);
+    }
+    return value;
+}
 
 function systemunits_to_metric(recalc) {
     var inch_value = 25.4;
@@ -540,13 +550,13 @@ function systemunits_to_metric(recalc) {
 
     if (window.systemunit != "metric") {
         if (recalc) {
-            $("#weight").val(   Math.round( 100 * strtofloat($("#weight").val())    * ounce_value) / 100);
-            $("#rootchord").val(Math.round( 100 * strtofloat($("#rootchord").val()) * inch_value ) / 100);
+            $("#weight").val(    roundit( strtofloat($("#weight").val())    * ounce_value) );
+            $("#rootchord").val( roundit( strtofloat($("#rootchord").val()) * inch_value ) );
             for(i=1;i<=6;i++) {
                 p = i.toString();
-                $("#panel"+p+"span").val( Math.round( 100 * strtofloat($("#panel"+p+"span").val()) * inch_value ) / 100);
-                $("#panel"+p+"chord").val(Math.round( 100 * strtofloat($("#panel"+p+"chord").val())* inch_value ) / 100);
-                $("#panel"+p+"sweep").val(Math.round( 100 * strtofloat($("#panel"+p+"sweep").val())* inch_value ) / 100);
+                $("#panel"+p+"span").val( roundit( strtofloat($("#panel"+p+"span").val()) * inch_value ) );
+                $("#panel"+p+"chord").val(roundit( strtofloat($("#panel"+p+"chord").val())* inch_value ) );
+                $("#panel"+p+"sweep").val(roundit( strtofloat($("#panel"+p+"sweep").val())* inch_value ) );
                 if ($("#panel"+p+"span").val() == 0) {
                     $("#panel"+p+"span").val('');
                     $("#panel"+p+"chord").val('');
@@ -574,13 +584,13 @@ function systemunits_to_imperial(recalc) {
 
     if (window.systemunit != "imperial") {
         if (recalc) {
-            $("#weight").val(   Math.round( 100 * strtofloat($("#weight").val())    / ounce_value) / 100);
-            $("#rootchord").val(Math.round( 100 * strtofloat($("#rootchord").val()) / inch_value ) / 100);
+            $("#weight").val(   roundit( strtofloat($("#weight").val())    / ounce_value) );
+            $("#rootchord").val(roundit( strtofloat($("#rootchord").val()) / inch_value ) );
             for(i=1;i<=6;i++) {
                 p = i.toString();
-                $("#panel"+p+"span").val( Math.round( 100 * strtofloat($("#panel"+p+"span").val())  / inch_value ) / 100);
-                $("#panel"+p+"chord").val(Math.round( 100 * strtofloat($("#panel"+p+"chord").val()) / inch_value ) / 100);
-                $("#panel"+p+"sweep").val(Math.round( 100 * strtofloat($("#panel"+p+"sweep").val()) / inch_value ) / 100);
+                $("#panel"+p+"span").val( roundit( strtofloat($("#panel"+p+"span").val())  / inch_value ) );
+                $("#panel"+p+"chord").val(roundit( strtofloat($("#panel"+p+"chord").val()) / inch_value ) );
+                $("#panel"+p+"sweep").val(roundit( strtofloat($("#panel"+p+"sweep").val()) / inch_value ) );
                 if ($("#panel"+p+"span").val() == 0) {
                     $("#panel"+p+"span").val('');
                     $("#panel"+p+"chord").val('');
