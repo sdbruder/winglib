@@ -439,7 +439,8 @@ function sweep2angle(panelnumber) {
     sweep = fieldtofloat($('#panel'+panelnumber+'sweep'));
     span  = fieldtofloat($('#panel'+panelnumber+'span'));
     an = Math.atan( sweep/span ) * (180 / Math.PI);
-    $('#panel'+panelnumber+'angle').val( Math.round( 100 * an ) / 100);
+    val =  Math.round( 100 * an ) / 100;
+    $('#panel'+panelnumber+'angle').val( (isNaN(val) ? null : val) );
 }
 
 
@@ -563,7 +564,7 @@ function systemunits_to_metric(recalc) {
                 $("#panel"+p+"span").val( roundit( strtofloat($("#panel"+p+"span").val()) * inch_value ) );
                 $("#panel"+p+"chord").val(roundit( strtofloat($("#panel"+p+"chord").val())* inch_value ) );
                 $("#panel"+p+"sweep").val(roundit( strtofloat($("#panel"+p+"sweep").val())* inch_value ) );
-                if ($("#panel"+p+"span").val() == 0) {
+                if ( ($("#panel"+p+"span").val() == 0) && ($("#panel"+p+"chord").val() == 0) ) {
                     $("#panel"+p+"span").val('');
                     $("#panel"+p+"chord").val('');
                     $("#panel"+p+"sweep").val('');
@@ -579,6 +580,8 @@ function systemunits_to_metric(recalc) {
         window.systemunit = "metric";
         unitSys.val(window.systemunit);
         draw_wing();
+    } else {
+        console.log('is already metric!');
     }
 }
 
@@ -597,7 +600,7 @@ function systemunits_to_imperial(recalc) {
                 $("#panel"+p+"span").val( roundit( strtofloat($("#panel"+p+"span").val())  / inch_value ) );
                 $("#panel"+p+"chord").val(roundit( strtofloat($("#panel"+p+"chord").val()) / inch_value ) );
                 $("#panel"+p+"sweep").val(roundit( strtofloat($("#panel"+p+"sweep").val()) / inch_value ) );
-                if ($("#panel"+p+"span").val() == 0) {
+                if ( ($("#panel"+p+"span").val() == 0) && ($("#panel"+p+"chord").val() == 0) ) {
                     $("#panel"+p+"span").val('');
                     $("#panel"+p+"chord").val('');
                     $("#panel"+p+"sweep").val('');
@@ -613,6 +616,8 @@ function systemunits_to_imperial(recalc) {
         window.systemunit = "imperial";
         unitSys.val(window.systemunit);
         draw_wing();
+    } else {
+        console.log('is already imperial!');
     }
 }
 
@@ -639,8 +644,8 @@ function save_image() {
 
 function wingcgcalc_setup() {
     // event linking
-    $("#btn_metric").click(function(event){     systemunits_to_metric();   });
-    $("#btn_imperial").click(function(event){   systemunits_to_imperial(); });
+    $("#label_btn_metric").click(function(event){     systemunits_to_metric();   });
+    $("#label_btn_imperial").click(function(event){   systemunits_to_imperial(); });
     $("#btn_savepng").click(function(event){    savepng();                  event.preventDefault();});
     $(window).resize(function(){                draw_wing(); });
     $(".redraw").change(function(){             draw_wing(); });

@@ -111,11 +111,11 @@
             {!! Form::label('unitsystem', 'Unit&nbsp;System', ['class' => 'col-sm-3 control-label']);  !!}
             <div class="col-sm-9">
                 <div class="btn-group" data-toggle="buttons" id="UnitsystemRadios">
-                    <label class="btn btn-primary" id="btn_metric">
-                        {!! Form::radio('unitsystem', 'metric', false, []); !!} Metric
+                    <label class="btn btn-primary" id="label_btn_metric">
+                        {!! Form::radio('unitsystem', 'metric', false, ['id' => 'btn_metric']); !!} Metric
                     </label>
-                    <label class="btn btn-primary" id="btn_imperial">
-                        {!! Form::radio('unitsystem', 'imperial', false, []); !!} Imperial
+                    <label class="btn btn-primary" id="label_btn_imperial">
+                        {!! Form::radio('unitsystem', 'imperial', false, ['id' => 'btn_imperial']); !!} Imperial
                     </label>
                 </div>
             </div>
