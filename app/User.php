@@ -66,10 +66,12 @@ class User extends Model implements AuthenticatableContract,
                 $user->token = bcrypt($user->provider . '::' . $user->provider_id);
             }
 
-            if (Gravatar::exists($user->email)) {
-                $user->avatar = Gravatar::get($user->email);
-            } else {
-                $user->avatar = '/img/default-avatar.jpg';
+            if (($user->email) && empty($user->avatar)) {
+                if (Gravatar::exists($user->email)) {
+                    $user->avatar = Gravatar::get($user->email);
+                } else {
+                    $user->avatar = '/img/default-avatar.jpg';
+                }
             }
 
             return true;
