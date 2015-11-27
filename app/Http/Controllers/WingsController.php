@@ -2,6 +2,7 @@
 
 namespace app\Http\Controllers;
 
+use Flash;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -41,15 +42,20 @@ class WingsController extends Controller
      */
     public function store(WingRequest $request)
     {
-        // saves the image and return the URL for it.
-        $image_url = Wing::createImage($request->image_base64);
+        if (Auth::user()) {
+            // saves the image and return the URL for it.
+            $image_url = Wing::createImage($request->image_base64);
+            $wing = new Wing($request->all());
+            $wing->image_file = $image_url;
+            // create the wing
+            Auth::user()->wings()->save($wing);
 
-        $wing = new Wing($request->all());
-        $wing->image_file = $image_url;
-
-        Auth::user()->wings()->save($wing);
-
-        return redirect('wings');
+            return redirect('wings');
+        } else {
+            Flash::error('You cant save a wing without a user.<br/>'.
+                'Login or create an account to be able to do it.');
+            return redirect()->back();
+        }
     }
 
     /**
@@ -85,7 +91,13 @@ class WingsController extends Controller
     public function edit($id)
     {
         $wing = Wing::findOrFail($id);
-        return view('wings.edit', compact('wing'));
+        if ((Auth::user()) and ($wing->user->id == Auth::user()->id)) {
+            return view('wings.edit', compact('wing'));
+        } else {
+            Flash::warning('This wing is not yours or you are not logged in.<br/>'.
+                'You cannot edit it.');
+            return redirect()->back();
+        }
     }
 
     /**
@@ -117,9 +129,14 @@ class WingsController extends Controller
     {
         $wing = Wing::findOrFail($id);
 
-        $wing->delete();
-
-        return redirect('/wings');
+        if ((Auth::user()) and ($wing->user->id == Auth::user()->id)) {
+            $wing->delete();
+            return redirect('/wings');
+        } else {
+            Flash::error('This wing is not yours or you are not logged in.<br/>'.
+                'You cannot delete it.');
+            return redirect()->back();
+        }
     }
 
     /**

@@ -143,16 +143,12 @@
                         <div class="col-md-4"></div>
                     </div>
                 </div>
-                <!-- <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                </div> -->
             </div>
         </div>
     </div>
-
     <!-- Javascript stuff -->
     <script src="/js/all.js"></script>
     @yield('javascript')
 
+    @include('include.sweetalert')
 </body></html>
