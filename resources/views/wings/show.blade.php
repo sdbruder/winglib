@@ -28,21 +28,26 @@
                     </div>
                 </div>
                 <div class="row">
-                &nbsp;
+                    &nbsp;
                 </div>
                 <div class="row">
-                    <div class="col-md-6">
-                    <b>Total Span:</b> {{$wing->totalspan}} <br/>
-                    <b>Wing Area:</b> {{$wing->wingarea}} <br/>
+                    <div class="col-md-12">
+                    <b>Total Span:</b> {{$wing->totalspan}} {{ $wing->unit('distance') }}<br/>
+                    <b>Wing Area:</b> {{$wing->wingarea}} {{ $wing->unit('area') }}<br/>
                     </div>
-                    <div class="col-md-6">
-                    <b>CG&commat;{{$wing->cgpos}}%:</b> {{$wing->cg}} <br/>
-                    <b>Wing Load:</b> {{$wing->wingload}} <br/>
+                </div>
+                <div class="row">
+                    &nbsp;
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                    <b>CG&commat;{{$wing->cgpos}}%:</b> {{$wing->cg}} {{ $wing->unit('distance') }}<br/>
+                    <b>Wing Load:</b> {{$wing->wingload}} {{ $wing->unit('load') }}<br/>
                     </div>
                 </div>
             </div>
             <div class="media-right media-middle">
-                <img class="media-object" src="{{$wing->image_file}}" height="350px">
+                <img class="media-object" src="{{$wing->image_file}}" width="800px">
             </div>
         </div>
 

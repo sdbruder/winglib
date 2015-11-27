@@ -193,6 +193,25 @@ class Wing extends Model
         file_put_contents($image_filename, base64_decode($base64_str));
     }
 
+    public function unit($what) {
+        if ($this->unitsystem == 'metric') {
+            $units = [  'distance'   => 'mm',
+                        'weight'     => 'g',
+                        'area'       => 'dm²',
+                        'load'       => 'g/dm²',
+                        'percentual' => '%',
+                        'angle'      => '°'];
+        } else {
+            $units = [  'distance'   => 'in',
+                        'weight'     => 'oz',
+                        'area'       => 'in²',
+                        'load'       => 'oz/ft²',
+                        'percentual' => '%',
+                        'angle'      => '°'];
+        }
+        return $units[$what];
+    }
+
     public function endsWith($haystack, $needle) {
         // search forward starting from end minus needle length characters
         return $needle === "" || (($temp = strlen($haystack) - strlen($needle)) >= 0 && strpos($haystack, $needle, $temp) !== FALSE);

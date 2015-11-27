@@ -29,12 +29,12 @@
                                 {{$w->description}}
                                 </div>
                                 <div class="col-md-3">
-                                <b>Total Span:</b> {{$w->totalspan}} <br/>
-                                <b>Wing Area:</b> {{$w->wingarea}} <br/>
+                                <b>Total Span:</b> {{$w->totalspan}} {{$w->unit('distance')}}<br/>
+                                <b>Wing Area:</b> {{$w->wingarea}} {{$w->unit('area')}}<br/>
                                 </div>
                                 <div class="col-md-3">
-                                <b>CG&commat;{{$w->cgpos}}%:</b> {{$w->cg}} <br/>
-                                <b>Wing Load:</b> {{$w->wingload}} <br/>
+                                <b>CG&commat;{{$w->cgpos}}%:</b> {{$w->cg}} {{$w->unit('distance')}}<br/>
+                                <b>Wing Load:</b> {{$w->wingload}} {{$w->unit('load')}}<br/>
                                 </div>
                             </div>
                         </div>
