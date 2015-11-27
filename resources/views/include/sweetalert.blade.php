@@ -1,3 +1,15 @@
+@if (Session::has('status'))
+    <script type="text/javascript">
+        $(document).ready(function() {
+            swal({
+                html: true,
+                title: "Info",
+                text:  "{!! Session::get('status') !!}",
+                type:  "info"
+            });
+        });
+    </script>
+@endif
 @if (Session::has('flash_notification.message'))
     <script type="text/javascript">
         $(document).ready(function() {

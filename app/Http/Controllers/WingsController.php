@@ -3,13 +3,13 @@
 namespace app\Http\Controllers;
 
 use Flash;
-use Illuminate\Http\Request;
+use App\Wing;
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use App\Http\Requests\WingRequest;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
-use App\Wing;
+use App\Http\Controllers\Controller;
 
 class WingsController extends Controller
 {
@@ -49,7 +49,6 @@ class WingsController extends Controller
             $wing->image_file = $image_url;
             // create the wing
             Auth::user()->wings()->save($wing);
-
             return redirect('wings');
         } else {
             Flash::error('You cant save a wing without a user.<br/>'.

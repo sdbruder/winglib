@@ -54,7 +54,7 @@ return [
     |
     */
 
-    'from' => ['address' => null, 'name' => null],
+    'from' => ['address' => 'winglib@winglib.com', 'name' => ''],
 
     /*
     |--------------------------------------------------------------------------
@@ -119,6 +119,6 @@ return [
     |
     */
 
-    'pretend' => false,
+    'pretend' => env('MAIL_PRETEND', false),
 
 ];
