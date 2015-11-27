@@ -34,7 +34,7 @@
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
             <li><a href="/">Home</a></li>
-            <li><a href="/wings/create">Create a wing</a></li>
+            <li><a id="createWingMenu" href="/wings/create">Create a wing</a></li>
             <li><a href="/wings">Library</a></li>
             <li><p class="navbar-text">
               <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -70,7 +70,7 @@
               <img src="{{ Auth::user()->avatar }}" alt="" class="img-circle" height="48" width="48">
               </p>
             @else
-              <li><a data-toggle="modal" data-target="#loginModal">Log In</a></li>
+              <li><a data-toggle="modal" data-target="#loginModal" id="login">Log In</a></li>
               <form action="/auth/register" class="navbar-form navbar-right" role="search">
                 <button type="submit" class="btn btn-danger">Create an account</button>
               </form>
@@ -149,6 +149,32 @@
     <!-- Javascript stuff -->
     <script src="/js/all.js"></script>
     @yield('javascript')
-
     @include('include.sweetalert')
+    @if (!Auth::user()))
+    <script type="text/javascript">
+      $('#createWingMenu').click(function (ev){
+        ev.preventDefault();
+        swal({
+          html: true,
+          title: "Info",
+          text:  "You are not logged in.<br/><br/>"+
+                 "You will be able to draw your wing and calc the CG but<br/>"+
+                 "you will not be able to save it.",
+          type:  "info",
+          showCancelButton: true,
+          confirmButtonText: "Ok",
+          cancelButtonText: "Create my account then",
+          closeOnConfirm: true,
+          closeOnCancel: true
+        },
+        function(isConfirm){
+          if (isConfirm) {
+            window.location='/wings/create';
+          } else {
+            window.location='/auth/register';
+          }
+        });
+      });
+    </script>
+    @endif
 </body></html>
