@@ -22,6 +22,7 @@
         </div>
 
         {!! Form::submit('Login',['class' => 'btn btn-primary']); !!}
+        <a class="btn btn-danger" href="/password/email">Forgot your password?</a>
         {!! Form::close(); !!}
 
         @include('errors.list')
