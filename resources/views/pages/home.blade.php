@@ -28,6 +28,7 @@
 @section('content')
     <div class="container">
         <br/>
+        {{--
         <p class="lead">
             All started with a need: calculate the CG of a complex (multiple
             panel) wing.
@@ -38,34 +39,71 @@
             tail) too, It's only a question of configuring the right amount.
         </p>
         <hr>
+        --}}
         <div class="row">
             <div class="col-md-4">
                 <div class="panel panel-default">
-                    <div class="panel-heading"><h3>Hello.</h3></div>
-                    <div class="panel-body">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis pharetra varius quam sit amet vulputate.
-                    Quisque mauris augue, molestie tincidunt condimentum vitae, gravida a libero. Aenean sit amet felis
-                    dolor, in sagittis nisi. Sed ac orci quis tortor imperdiet venenatis. Duis elementum auctor accumsan.
-                    Aliquam in felis sit amet augue.
+                    <div class="panel-heading"><h4>Last Wings
+                    <span class="glyphicon glyphicon-step-forward" aria-hidden="true"></span>
+                    </h4></div>
+                    <div class="panel-body">
+                    @foreach ($last as $w)
+                        <div class="media" onclick="document.location = '/wing/{{$w->slug}}';">
+                            <div class="media-left">
+                                <a href="/wing/{{$w->slug}}">
+                                    <img class="media-object" src="{{$w->image_file}}" width="90px">
+                                </a>
+                            </div>
+                            <div class="media-body">
+                                <h4 class="media-heading">{{$w->name}}</h4>
+                                {{$w->description}}
+                            </div>
+                        </div>
+                    @endforeach
                     </div>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="panel panel-default">
-                    <div class="panel-heading"><h3>Hello.</h3></div>
-                    <div class="panel-body">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis pharetra varius quam sit amet vulputate.
-                    Quisque mauris augue, molestie tincidunt condimentum vitae, gravida a libero. Aenean sit amet felis
-                    dolor, in sagittis nisi. Sed ac orci quis tortor imperdiet venenatis. Duis elementum auctor accumsan.
-                    Aliquam in felis sit amet augue.
+                    <div class="panel-heading"><h4>Most voted
+                    <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
+                    </h4></div>
+                    <div class="panel-body">
+                    @foreach ($voted as $w)
+                        <div class="media" onclick="document.location = '/wing/{{$w->slug}}';">
+                            <div class="media-left">
+                                <a href="/wing/{{$w->slug}}">
+                                    <img class="media-object" src="{{$w->image_file}}" width="90px">
+                                </a>
+                            </div>
+                            <div class="media-body">
+                                <h4 class="media-heading">{{$w->name}} ({{$w->likes}})</h4>
+                                {{$w->description}}
+                            </div>
+                        </div>
+                    @endforeach
                     </div>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="panel panel-default">
-                    <div class="panel-heading"><h3>Hello.</h3></div>
-                    <div class="panel-body">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis pharetra varius quam sit amet vulputate.
-                    Quisque mauris augue, molestie tincidunt condimentum vitae, gravida a libero. Aenean sit amet felis
-                    dolor, in sagittis nisi. Sed ac orci quis tortor imperdiet venenatis. Duis elementum auctor accumsan.
-                    Aliquam in felis sit amet augue.
+                    <div class="panel-heading"><h4>Random
+                    <span class="glyphicon glyphicon-random" aria-hidden="true"></span>
+                    </h4></div>
+                    <div class="panel-body">
+                    @foreach ($rand as $w)
+                        <div class="media" onclick="document.location = '/wing/{{$w->slug}}';">
+                            <div class="media-left">
+                                <a href="/wing/{{$w->slug}}">
+                                    <img class="media-object" src="{{$w->image_file}}" width="90px">
+                                </a>
+                            </div>
+                            <div class="media-body">
+                                <h4 class="media-heading">{{$w->name}}</h4>
+                                {{$w->description}}
+                            </div>
+                        </div>
+                    @endforeach
                     </div>
                 </div>
             </div>
