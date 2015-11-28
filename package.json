@@ -5,6 +5,10 @@
   },
   "dependencies": {
     "laravel-elixir": "^3.0.0",
-    "bootstrap-sass": "^3.0.0"
+    "bootstrap-sass": "^3.0.0",
+    "vueify": "^5.0.4",
+    "babel-runtime": "^5.8.25",
+    "vue-hot-reload-api": "^1.2.1",
+    "vueify-insert-css": "^1.0.0"
   }
 }
