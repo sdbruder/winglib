@@ -54,7 +54,7 @@ return [
     |
     */
 
-    'from' => ['address' => 'winglib@winglib.com', 'name' => ''],
+    'from' => ['address' => 'winglib@winglib.com', 'name' => 'Wing Lib'],
 
     /*
     |--------------------------------------------------------------------------
