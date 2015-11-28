@@ -4,6 +4,8 @@ namespace app;
 
 use Illuminate\Database\Eloquent\Model;
 
+define('URL_SEPARATOR', '/');
+
 class Wing extends Model
 {
 
@@ -107,32 +109,34 @@ class Wing extends Model
 
         // construct the panels json
         static::saving(function (Wing $wing) {
-            $wing->panels = [
-                '1' => ['span'  => $wing->attributes['panel1span'],
-                        'chord' => $wing->attributes['panel1chord'],
-                        'sweep' => $wing->attributes['panel1sweep'],
-                        'angle' => $wing->attributes['panel1angle']],
-                '2' => ['span'  => $wing->attributes['panel2span'],
-                        'chord' => $wing->attributes['panel2chord'],
-                        'sweep' => $wing->attributes['panel2sweep'],
-                        'angle' => $wing->attributes['panel2angle']],
-                '3' => ['span'  => $wing->attributes['panel3span'],
-                        'chord' => $wing->attributes['panel3chord'],
-                        'sweep' => $wing->attributes['panel3sweep'],
-                        'angle' => $wing->attributes['panel3angle']],
-                '4' => ['span'  => $wing->attributes['panel4span'],
-                        'chord' => $wing->attributes['panel4chord'],
-                        'sweep' => $wing->attributes['panel4sweep'],
-                        'angle' => $wing->attributes['panel4angle']],
-                '5' => ['span'  => $wing->attributes['panel5span'],
-                        'chord' => $wing->attributes['panel5chord'],
-                        'sweep' => $wing->attributes['panel5sweep'],
-                        'angle' => $wing->attributes['panel5angle']],
-                '6' => ['span'  => $wing->attributes['panel6span'],
-                        'chord' => $wing->attributes['panel6chord'],
-                        'sweep' => $wing->attributes['panel6sweep'],
-                        'angle' => $wing->attributes['panel6angle']]
-            ];
+            if (array_key_exists('panel1span', $wing->attributes)) {
+                $wing->panels = [
+                    '1' => ['span'  => $wing->attributes['panel1span'],
+                            'chord' => $wing->attributes['panel1chord'],
+                            'sweep' => $wing->attributes['panel1sweep'],
+                            'angle' => $wing->attributes['panel1angle']],
+                    '2' => ['span'  => $wing->attributes['panel2span'],
+                            'chord' => $wing->attributes['panel2chord'],
+                            'sweep' => $wing->attributes['panel2sweep'],
+                            'angle' => $wing->attributes['panel2angle']],
+                    '3' => ['span'  => $wing->attributes['panel3span'],
+                            'chord' => $wing->attributes['panel3chord'],
+                            'sweep' => $wing->attributes['panel3sweep'],
+                            'angle' => $wing->attributes['panel3angle']],
+                    '4' => ['span'  => $wing->attributes['panel4span'],
+                            'chord' => $wing->attributes['panel4chord'],
+                            'sweep' => $wing->attributes['panel4sweep'],
+                            'angle' => $wing->attributes['panel4angle']],
+                    '5' => ['span'  => $wing->attributes['panel5span'],
+                            'chord' => $wing->attributes['panel5chord'],
+                            'sweep' => $wing->attributes['panel5sweep'],
+                            'angle' => $wing->attributes['panel5angle']],
+                    '6' => ['span'  => $wing->attributes['panel6span'],
+                            'chord' => $wing->attributes['panel6chord'],
+                            'sweep' => $wing->attributes['panel6sweep'],
+                            'angle' => $wing->attributes['panel6angle']]
+                ];
+            }
             if ( ! $wing->slug ) {
                 $slug_str = str_slug($wing->name);
                 $latest = Wing::whereRaw("slug_str = '{$slug_str}'")->latest("slug_id")->get()->first();
@@ -164,8 +168,24 @@ class Wing extends Model
         }); // static::saving
     }
 
+    public static function duplicateImage($orig_image) {
+        $subdir = substr(microtime(),4,2);
+        $storage_path = join(DIRECTORY_SEPARATOR, [storage_path(), 'app', 'wingimg', $subdir]);
+        $url_path = join(URL_SEPARATOR, ['wingimg', $subdir]);
+        $filename = uniqid('') . '.png';
+
+        $image_filename = join(DIRECTORY_SEPARATOR, [ $storage_path, $filename]);
+        $image_url      = URL_SEPARATOR . join(URL_SEPARATOR, [ $url_path, $filename]);
+
+        $origin = join(DIRECTORY_SEPARATOR, [storage_path(), 'app', $orig_image]);
+        if (!copy($origin, $image_filename)) {
+            App::abort(500, 'Something bad happened');
+        }
+        // return the URL made above.
+        return $image_url;
+    }
+
     public static function createImage($base64_image) {
-        define('URL_SEPARATOR', '/');
 
         $subdir = substr(microtime(),4,2);
         $storage_path = join(DIRECTORY_SEPARATOR, [storage_path(), 'app', 'wingimg', $subdir]);

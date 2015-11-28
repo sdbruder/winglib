@@ -20,26 +20,23 @@ Route::get('/', function () {
         'voted' => $voted]);
 });
 
-// AJAX method to a user like a wing
-Route::post('wings/likeit', 'WingsController@likeit');
-
-// Wings resource (CRUD, etcetera)
-Route::get(     'wing/{slug}', 'WingsController@showSlug');
-Route::resource('wings',       'WingsController');
+// Wings stuff
+Route::get(     'wing/{slug}',       'WingsController@showSlug'); // Show by slug
+Route::post(    'wings/likeit',      'WingsController@likeit'  ); // AJAX to like a wing
+Route::get(     'wings/{id}/forkit', 'WingsController@forkIt'  ); // forkit
+Route::resource('wings',             'WingsController'         ); // Wings resource
 
 // User settings
 Route::get('user/settings', 'UsersController@settings');
-
-// Authentication routes
-Route::get( 'auth/login',  'Auth\AuthController@getLogin');
-Route::post('auth/login',  'Auth\AuthController@postLogin');
-Route::get( 'auth/logout', 'Auth\AuthController@getLogout');
-Route::get( 'auth/register', 'Auth\AuthController@getRegister');
-Route::post('auth/register', 'Auth\AuthController@postRegister');
-
 // Password reset routes
 Route::controllers(['password' => 'Auth\PasswordController']);
-
+// Authentication routes
+Route::get( 'auth/login',    'Auth\AuthController@getLogin'    );
+Route::post('auth/login',    'Auth\AuthController@postLogin'   );
+Route::get( 'auth/logout',   'Auth\AuthController@getLogout'   );
+Route::get( 'auth/register', 'Auth\AuthController@getRegister' );
+Route::post('auth/register', 'Auth\AuthController@postRegister');
 // OAuth Authentication routes
-Route::get('auth/{driver}',          'Auth\AuthController@redirectToProvider');
+Route::get('auth/{driver}',          'Auth\AuthController@redirectToProvider'    );
 Route::get('auth/{driver}/callback', 'Auth\AuthController@handleProviderCallback');
+

@@ -14,6 +14,29 @@ use App\Http\Controllers\Controller;
 class WingsController extends Controller
 {
     /**
+     * Fork a wing already registered making a copy of it for the current user.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function forkIt($id)
+    {
+        $origWing = Wing::findOrFail($id);
+        if ((Auth::user()) and ($origWing->user->id != Auth::user()->id)) {
+            $newWing = $origWing->replicate();
+            // <UglyStuff>
+            $newWing->slug = null; // We want a new slug, so let it be created again.
+            $newWing->image_file = Wing::duplicateImage($origWing->image_file);
+            $newWing->name .= ' a forked version';
+            // </UglyStuff>
+            Auth::user()->wings()->save($newWing);
+            return redirect('/wings/'.$newWing->id.'/edit');
+        } else {
+            Flash::error('You need to be logged in and<br/>you can only fork a wing that isn\'t yours.');
+            return redirect()->back();
+        }
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
