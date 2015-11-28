@@ -39,16 +39,16 @@ return [
     'facebook' => [
         'client_id'     => env('FACEBOOK_ID'),
         'client_secret' => env('FACEBOOK_SECRET'),
-        'redirect'      => 'http://cgcalc.app/auth/facebook/callback',
+        'redirect'      => 'http://'.$_SERVER["SERVER_NAME"].'/auth/facebook/callback'
     ],
     'google' => [
         'client_id'     => env('GOOGLE_ID'),
         'client_secret' => env('GOOGLE_SECRET'),
-        'redirect'      => 'http://cgcalc.app/auth/google/callback',
+        'redirect'      => 'http://'.$_SERVER["SERVER_NAME"].'/auth/google/callback'
     ],
     'twitter' => [
         'client_id'     => env('TWITTER_ID'),
         'client_secret' => env('TWITTER_SECRET'),
-        'redirect'      => 'http://cgcalc.app/auth/twitter/callback'
+        'redirect'      => 'http://'.$_SERVER["SERVER_NAME"].'/auth/twitter/callback'
     ]
 ];
