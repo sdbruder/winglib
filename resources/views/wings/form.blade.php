@@ -161,7 +161,7 @@
                     <div class="input-group">
                         {{--  (($p==1) ? 600 : null)  --}}
                         {!! Form::text("panel{$p}span", null, [
-                            'class'=>'form-control redraw']);  !!}
+                            'class'=>'form-control redraw recalcangle']);  !!}
                         <span class="input-group-addon" id="panel{{$p}}span-addon">mm</span>
                     </div>
                 </div>
