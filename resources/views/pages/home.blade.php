@@ -8,9 +8,10 @@
             <div class="jumbotron">
                 <h1>Wing Library</h1>
                 <p class="lead">
-                    Wing Library started as a flexible flying wing CG calculator for complex
-                    wings with multiple panels, forward swept and configurable MAC and
-                    CG positions and evolved to a public library for wing formats.
+                    Wing Library started as a flexible flying wing center of gravity
+                    calculator for complex wings with multiple panels, forward swept
+                    and configurable MAC and CG positions and evolved to a public
+                    library for wing plans. Enjoy!
                 </p>
                 <div class="row">
                     <div class="col-md-6">
