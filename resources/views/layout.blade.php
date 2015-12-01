@@ -79,8 +79,12 @@
               </p>
             @else
               <li><a data-toggle="modal" data-target="#loginModal" id="login">Log In</a></li>
-              <form action="/auth/register" class="navbar-form navbar-right" role="search">
-                <button type="submit" class="btn btn-danger">Create an account</button>
+              {{-- <form action="/auth/register" class="navbar-form navbar-right" role="search"> --}}
+              <form class="navbar-form navbar-right" role="search">
+                <button
+                  type="button"
+                  data-toggle="modal" data-target="#createAccountModal" id="createAccountButton"
+                  class="btn btn-danger">Create an account</button>
               </form>
             @endif
             <!-- <li class="dropdown">
@@ -154,6 +158,56 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="createAccountModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Create an account</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <a href="/auth/twitter" class="btn btn-lg btn-block btn-social btn-twitter">
+                                <span class="fa fa-twitter"></span>
+                                Login with Twitter
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="/auth/facebook" class="btn btn-lg btn-block btn-social btn-facebook">
+                                <span class="fa fa-facebook"></span>
+                                Login with Facebook
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="/auth/google" class="btn btn-lg btn-block btn-social btn-google">
+                                <span class="fa fa-google"></span>
+                                Login with Google
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="strike"><span>or</span></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3"></div>
+                        <div class="col-md-6">
+                            <a href="/auth/register" class="btn btn-lg btn-block btn-social btn-github">
+                                <span class="glyphicon glyphicon-user"></span>
+                                Create an account with email
+                            </a>
+                        </div>
+                        <div class="col-md-3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Javascript stuff -->
     <script src="/js/all.js"></script>
     @yield('javascript')
