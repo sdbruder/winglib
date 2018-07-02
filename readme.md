@@ -11,3 +11,5 @@ WingLib is a online open library of wing designs. Enjoy!
 - infinety/sweetalert composer package was abandoned, we adopted the package.
 
 Nothing fancy server side, its a really simple laravel app. The interesting part is JS, in fact based into a simpler online calc tool for CG from http://wingcgcalc.bruder.com.br/.
+
+**PS:** As this was build with a old laravel version there will be some problems regarding the crypt library with newer php versions.
