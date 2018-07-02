@@ -3,6 +3,7 @@
 Homestead.yaml
 Homestead.json
 .env
+.env.production
 /storage/app/*       
 /storage/debugbar/*  
 /storage/framework/* 
