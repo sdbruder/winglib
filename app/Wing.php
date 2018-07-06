@@ -111,30 +111,30 @@ class Wing extends Model
         static::saving(function (Wing $wing) {
             if (array_key_exists('panel1span', $wing->attributes)) {
                 $wing->panels = [
-                    '1' => ['span'  => $wing->attributes['panel1span'],
-                            'chord' => $wing->attributes['panel1chord'],
-                            'sweep' => $wing->attributes['panel1sweep'],
-                            'angle' => $wing->attributes['panel1angle']],
-                    '2' => ['span'  => $wing->attributes['panel2span'],
-                            'chord' => $wing->attributes['panel2chord'],
-                            'sweep' => $wing->attributes['panel2sweep'],
-                            'angle' => $wing->attributes['panel2angle']],
-                    '3' => ['span'  => $wing->attributes['panel3span'],
-                            'chord' => $wing->attributes['panel3chord'],
-                            'sweep' => $wing->attributes['panel3sweep'],
-                            'angle' => $wing->attributes['panel3angle']],
-                    '4' => ['span'  => $wing->attributes['panel4span'],
-                            'chord' => $wing->attributes['panel4chord'],
-                            'sweep' => $wing->attributes['panel4sweep'],
-                            'angle' => $wing->attributes['panel4angle']],
-                    '5' => ['span'  => $wing->attributes['panel5span'],
-                            'chord' => $wing->attributes['panel5chord'],
-                            'sweep' => $wing->attributes['panel5sweep'],
-                            'angle' => $wing->attributes['panel5angle']],
-                    '6' => ['span'  => $wing->attributes['panel6span'],
-                            'chord' => $wing->attributes['panel6chord'],
-                            'sweep' => $wing->attributes['panel6sweep'],
-                            'angle' => $wing->attributes['panel6angle']]
+                    1 =>   ['span'  => (float) $wing->attributes['panel1span'],
+                            'chord' => (float) $wing->attributes['panel1chord'],
+                            'sweep' => (float) $wing->attributes['panel1sweep'],
+                            'angle' => (float) $wing->attributes['panel1angle']],
+                    2 =>   ['span'  => (float) $wing->attributes['panel2span'],
+                            'chord' => (float) $wing->attributes['panel2chord'],
+                            'sweep' => (float) $wing->attributes['panel2sweep'],
+                            'angle' => (float) $wing->attributes['panel2angle']],
+                    3 =>   ['span'  => (float) $wing->attributes['panel3span'],
+                            'chord' => (float) $wing->attributes['panel3chord'],
+                            'sweep' => (float) $wing->attributes['panel3sweep'],
+                            'angle' => (float) $wing->attributes['panel3angle']],
+                    4 =>   ['span'  => (float) $wing->attributes['panel4span'],
+                            'chord' => (float) $wing->attributes['panel4chord'],
+                            'sweep' => (float) $wing->attributes['panel4sweep'],
+                            'angle' => (float) $wing->attributes['panel4angle']],
+                    5 =>   ['span'  => (float) $wing->attributes['panel5span'],
+                            'chord' => (float) $wing->attributes['panel5chord'],
+                            'sweep' => (float) $wing->attributes['panel5sweep'],
+                            'angle' => (float) $wing->attributes['panel5angle']],
+                    6 =>   ['span'  => (float) $wing->attributes['panel6span'],
+                            'chord' => (float) $wing->attributes['panel6chord'],
+                            'sweep' => (float) $wing->attributes['panel6sweep'],
+                            'angle' => (float) $wing->attributes['panel6angle']]
                 ];
             }
             if ( ! $wing->slug ) {
@@ -151,12 +151,12 @@ class Wing extends Model
                 }
             }
             $wing->attributes['totalspan'] =
-                ($wing->panels['1']['span'] +
-                $wing->panels['2']['span'] +
-                $wing->panels['3']['span'] +
-                $wing->panels['4']['span'] +
-                $wing->panels['5']['span'] +
-                $wing->panels['6']['span']) * 2;
+                ($wing->panels[1]['span'] +
+                 $wing->panels[2]['span'] +
+                 $wing->panels[3]['span'] +
+                 $wing->panels[4]['span'] +
+                 $wing->panels[5]['span'] +
+                 $wing->panels[6]['span']) * 2;
 
             foreach($wing->attributes as $key => $value) {
                 if (in_array($key,$wing->appends)) {
@@ -251,122 +251,122 @@ class Wing extends Model
 
     public function getPanel1SpanAttribute()
     {
-        return $this->panels['1']['span'];
+        return $this->panels[1]['span'];
     }
 
     public function getPanel1ChordAttribute()
     {
-        return $this->panels['1']['chord'];
+        return $this->panels[1]['chord'];
     }
 
     public function getPanel1SweepAttribute()
     {
-        return $this->panels['1']['sweep'];
+        return $this->panels[1]['sweep'];
     }
 
     public function getPanel1AngleAttribute()
     {
-        return $this->panels['1']['angle'];
+        return $this->panels[1]['angle'];
     }
 
     public function getPanel2SpanAttribute()
     {
-        return $this->panels['2']['span'];
+        return $this->panels[2]['span'];
     }
 
     public function getPanel2ChordAttribute()
     {
-        return $this->panels['2']['chord'];
+        return $this->panels[2]['chord'];
     }
 
     public function getPanel2SweepAttribute()
     {
-        return $this->panels['2']['sweep'];
+        return $this->panels[2]['sweep'];
     }
 
     public function getPanel2AngleAttribute()
     {
-        return $this->panels['2']['angle'];
+        return $this->panels[2]['angle'];
     }
 
     public function getPanel3SpanAttribute()
     {
-        return $this->panels['3']['span'];
+        return $this->panels[3]['span'];
     }
 
     public function getPanel3ChordAttribute()
     {
-        return $this->panels['3']['chord'];
+        return $this->panels[3]['chord'];
     }
 
     public function getPanel3SweepAttribute()
     {
-        return $this->panels['3']['sweep'];
+        return $this->panels[3]['sweep'];
     }
 
     public function getPanel3AngleAttribute()
     {
-        return $this->panels['3']['angle'];
+        return $this->panels[3]['angle'];
     }
 
     public function getPanel4SpanAttribute()
     {
-        return $this->panels['4']['span'];
+        return $this->panels[4]['span'];
     }
 
     public function getPanel4ChordAttribute()
     {
-        return $this->panels['4']['chord'];
+        return $this->panels[4]['chord'];
     }
 
     public function getPanel4SweepAttribute()
     {
-        return $this->panels['4']['sweep'];
+        return $this->panels[4]['sweep'];
     }
 
     public function getPanel4AngleAttribute()
     {
-        return $this->panels['4']['angle'];
+        return $this->panels[4]['angle'];
     }
 
     public function getPanel5SpanAttribute()
     {
-        return $this->panels['5']['span'];
+        return $this->panels[5]['span'];
     }
 
     public function getPanel5ChordAttribute()
     {
-        return $this->panels['5']['chord'];
+        return $this->panels[5]['chord'];
     }
 
     public function getPanel5SweepAttribute()
     {
-        return $this->panels['5']['sweep'];
+        return $this->panels[5]['sweep'];
     }
 
     public function getPanel5AngleAttribute()
     {
-        return $this->panels['5']['angle'];
+        return $this->panels[5]['angle'];
     }
 
     public function getPanel6SpanAttribute()
     {
-        return $this->panels['6']['span'];
+        return $this->panels[6]['span'];
     }
 
     public function getPanel6ChordAttribute()
     {
-        return $this->panels['6']['chord'];
+        return $this->panels[6]['chord'];
     }
 
     public function getPanel6SweepAttribute()
     {
-        return $this->panels['6']['sweep'];
+        return $this->panels[6]['sweep'];
     }
 
     public function getPanel6AngleAttribute()
     {
-        return $this->panels['6']['angle'];
+        return $this->panels[6]['angle'];
     }
 
     /**
