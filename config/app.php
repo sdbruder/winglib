@@ -183,6 +183,7 @@ return [
         Laravel\Socialite\SocialiteServiceProvider::class,
         Infinety\SweetAlert\AlertServiceProvider::class,
         App\Providers\AppServiceProvider::class,
+        Laravel\Tinker\TinkerServiceProvider::class,
 
     ],
 

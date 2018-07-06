@@ -23,7 +23,8 @@
         "intervention/image": "~2.2",
         "components/jquery": "^2.1",
         "laravel/socialite": "^3.0",
-        "infinety/sweetalert": "dev-master"
+        "infinety/sweetalert": "dev-master",
+        "laravel/tinker": "^1.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
