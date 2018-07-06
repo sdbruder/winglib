@@ -28,15 +28,24 @@ Route::resource('wings',             'WingsController'         ); // Wings resou
 
 // User settings
 Route::get('user/settings', 'UsersController@settings');
-// Password reset routes
-Route::controllers(['password' => 'Auth\PasswordController']);
-// Authentication routes
-Route::get( 'auth/login',    'Auth\AuthController@getLogin'    );
-Route::post('auth/login',    'Auth\AuthController@postLogin'   );
-Route::get( 'auth/logout',   'Auth\AuthController@getLogout'   );
-Route::get( 'auth/register', 'Auth\AuthController@getRegister' );
-Route::post('auth/register', 'Auth\AuthController@postRegister');
+
+// Authentication Routes...
+Route::get( 'auth/login',    'Auth\LoginController@showLoginForm')->name('login');
+Route::post('auth/login',    'Auth\LoginController@login');
+Route::get('auth/logout',    'Auth\LoginController@logout')->name('logout');
+Route::post('auth/logout',   'Auth\LoginController@logout')->name('logout');
+
+// Registration Routes...
+Route::get( 'auth/register', 'Auth\RegisterController@showRegistrationForm')->name('register');
+Route::post('auth/register', 'Auth\RegisterController@register');
+
+// Password Reset Routes...
+Route::get( 'password/reset',         'Auth\ForgotPasswordController@showLinkRequestForm');
+Route::post('password/email',         'Auth\ForgotPasswordController@sendResetLinkEmail');
+Route::get( 'password/reset/{token}', 'Auth\ResetPasswordController@showResetForm');
+Route::post('password/reset',         'Auth\ResetPasswordController@reset');
+
 // OAuth Authentication routes
-Route::get('auth/{driver}',          'Auth\AuthController@redirectToProvider'    );
-Route::get('auth/{driver}/callback', 'Auth\AuthController@handleProviderCallback');
+Route::get('auth/{driver}',          'Auth\LoginController@redirectToProvider'    );
+Route::get('auth/{driver}/callback', 'Auth\LoginController@handleProviderCallback');
 
