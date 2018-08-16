@@ -53,10 +53,14 @@
     "scripts": {
         "post-install-cmd": [
             "php artisan clear-compiled || true",
-            "php artisan ide-helper:generate || true"
+	    "php artisan ide-helper:generate",
+            "php artisan optimize || true"
         ],
         "pre-update-cmd": [
             "php artisan clear-compiled || true"
+        ],
+        "post-update-cmd": [
+            "php artisan optimize || true"
         ],
         "post-root-package-install": [
             "php -r \"copy('.env.example', '.env');\""

@@ -151,12 +151,14 @@ class Wing extends Model
                 }
             }
             $wing->attributes['totalspan'] =
-                ($wing->panels[1]['span'] +
-                 $wing->panels[2]['span'] +
-                 $wing->panels[3]['span'] +
-                 $wing->panels[4]['span'] +
-                 $wing->panels[5]['span'] +
-                 $wing->panels[6]['span']) * 2;
+                (
+                floatval($wing->panels[1]['span']) +
+                floatval($wing->panels[2]['span']) +
+                floatval($wing->panels[3]['span']) +
+                floatval($wing->panels[4]['span']) +
+                floatval($wing->panels[5]['span']) +
+                floatval($wing->panels[6]['span'])
+                ) * 2;
 
             foreach($wing->attributes as $key => $value) {
                 if (in_array($key,$wing->appends)) {
@@ -178,9 +180,7 @@ class Wing extends Model
         $image_url      = URL_SEPARATOR . join(URL_SEPARATOR, [ $url_path, $filename]);
 
         $origin = join(DIRECTORY_SEPARATOR, [storage_path(), 'app', $orig_image]);
-        if (!copy($origin, $image_filename)) {
-            App::abort(500, 'Something bad happened');
-        }
+        @copy($origin, $image_filename);
         // return the URL made above.
         return $image_url;
     }
