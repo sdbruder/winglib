@@ -2,6 +2,8 @@
 
 namespace Tests;
 
+use App\User;
+use App\Wing;
 use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
@@ -126,5 +128,45 @@ class TestCase extends BaseTestCase
         if (file_exists($path)) {
             unlink($path);
         }
+    }
+
+    /**
+     * A wing that belongs to the given user, with a real image file behind it.
+     *
+     * @return Wing
+     */
+    protected function wingOwnedBy(User $user)
+    {
+        return Wing::factory()->create([
+            'user_id' => $user->id,
+            'name' => 'Test Wing Alpha',
+            'image_file' => Wing::createImage($this->base64Png('original image')),
+        ]);
+    }
+
+    /**
+     * A wing with a fresh user of its own.
+     *
+     * @return Wing
+     */
+    protected function createWing(array $attributes = [])
+    {
+        $user = User::factory()->create();
+
+        return Wing::factory()->create($attributes + ['user_id' => $user->id]);
+    }
+
+    /**
+     * The value of one query parameter of a URL.
+     *
+     * @param  string  $url
+     * @param  string  $key
+     * @return string|null
+     */
+    protected function queryValue($url, $key)
+    {
+        parse_str(parse_url($url, PHP_URL_QUERY), $query);
+
+        return $query[$key] ?? null;
     }
 }

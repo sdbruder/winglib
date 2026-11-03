@@ -7,23 +7,13 @@ use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvid
 class AuthServiceProvider extends ServiceProvider
 {
     /**
-     * The policy mappings for the application.
-     *
-     * @var array
-     */
-    protected $policies = [
-        'App\Model' => 'App\Policies\ModelPolicy',
-    ];
-
-    /**
      * Register any authentication / authorization services.
      *
      * @return void
      */
     public function boot()
     {
-        $this->registerPolicies();
-
-        //
+        // The framework registers the policies itself from Laravel 10 on, and this application
+        // defines none: there is no App\Model and no App\Policies\ModelPolicy.
     }
 }

@@ -22,4 +22,4 @@ public/fonts
 envs/*
 packages/**
 
-.phpunit.result.cache
+.phpunit.cache/

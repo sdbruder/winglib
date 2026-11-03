@@ -1,54 +1,31 @@
 <?php
 
-namespace Tests\Feature;
+it('a wing is reachable by its slug', function () {
+    $wing = $this->createWing(['name' => 'Test Wing Alpha']);
 
-use App\User;
-use App\Wing;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
+    $this->assertSame('test-wing-alpha', $wing->slug);
 
-class WingShowTest extends TestCase
-{
-    use RefreshDatabase;
+    $response = $this->get('/wing/test-wing-alpha');
 
-    public function test_a_wing_is_reachable_by_its_slug()
-    {
-        $wing = $this->createWing(['name' => 'Test Wing Alpha']);
+    $response->assertStatus(200);
+    $response->assertViewHas('wing');
+    $this->assertEquals($wing->id, $this->viewData($response, 'wing')->id);
+});
 
-        $this->assertSame('test-wing-alpha', $wing->slug);
+it('a wing is reachable by its id', function () {
+    $wing = $this->createWing();
 
-        $response = $this->get('/wing/test-wing-alpha');
+    $response = $this->get('/wings/'.$wing->id);
 
-        $response->assertStatus(200);
-        $response->assertViewHas('wing');
-        $this->assertEquals($wing->id, $this->viewData($response, 'wing')->id);
-    }
+    $response->assertStatus(200);
+    $response->assertViewHas('wing');
+    $this->assertEquals($wing->id, $this->viewData($response, 'wing')->id);
+});
 
-    public function test_a_wing_is_reachable_by_its_id()
-    {
-        $wing = $this->createWing();
+it('an unknown slug is not found', function () {
+    $this->get('/wing/nope')->assertStatus(404);
+});
 
-        $response = $this->get('/wings/'.$wing->id);
-
-        $response->assertStatus(200);
-        $response->assertViewHas('wing');
-        $this->assertEquals($wing->id, $this->viewData($response, 'wing')->id);
-    }
-
-    public function test_an_unknown_slug_is_not_found()
-    {
-        $this->get('/wing/nope')->assertStatus(404);
-    }
-
-    public function test_an_unknown_id_is_not_found()
-    {
-        $this->get('/wings/999999')->assertStatus(404);
-    }
-
-    private function createWing(array $attributes = [])
-    {
-        $user = User::factory()->create();
-
-        return Wing::factory()->create($attributes + ['user_id' => $user->id]);
-    }
-}
+it('an unknown id is not found', function () {
+    $this->get('/wings/999999')->assertStatus(404);
+});

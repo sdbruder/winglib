@@ -1,38 +1,27 @@
 <?php
 
-namespace Tests\Feature;
-
 use App\User;
 use App\Wing;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
-use Tests\TestCase;
 
-class WingLikeTest extends TestCase
-{
-    use RefreshDatabase;
+it('liking a wing adds one row and returns the count', function () {
+    $user = User::factory()->create();
+    $wing = Wing::factory()->create(['user_id' => User::factory()->create()->id]);
 
-    public function test_liking_a_wing_adds_one_row_and_returns_the_count()
-    {
-        $user = User::factory()->create();
-        $wing = Wing::factory()->create(['user_id' => User::factory()->create()->id]);
+    $response = $this->actingAs($user)->post('/wings/likeit', ['id' => $wing->id]);
 
-        $response = $this->actingAs($user)->post('/wings/likeit', ['id' => $wing->id]);
+    $response->assertStatus(200);
+    $response->assertExactJson([1]);
+    $this->assertSame(1, DB::table('users_likes_wings')->count());
 
-        $response->assertStatus(200);
-        $response->assertExactJson([1]);
-        $this->assertSame(1, DB::table('users_likes_wings')->count());
+    $again = $this->actingAs($user)->post('/wings/likeit', ['id' => $wing->id]);
 
-        $again = $this->actingAs($user)->post('/wings/likeit', ['id' => $wing->id]);
+    $again->assertExactJson([1]);
+    $this->assertSame(1, DB::table('users_likes_wings')->count());
+});
 
-        $again->assertExactJson([1]);
-        $this->assertSame(1, DB::table('users_likes_wings')->count());
-    }
+it('liking an unknown wing is not found', function () {
+    $user = User::factory()->create();
 
-    public function test_liking_an_unknown_wing_is_not_found()
-    {
-        $user = User::factory()->create();
-
-        $this->actingAs($user)->post('/wings/likeit', ['id' => 999999])->assertStatus(404);
-    }
-}
+    $this->actingAs($user)->post('/wings/likeit', ['id' => 999999])->assertStatus(404);
+});
