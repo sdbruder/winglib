@@ -178,7 +178,6 @@ return [
         Laracasts\Flash\FlashServiceProvider::class,
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         Creativeorange\Gravatar\GravatarServiceProvider::class,
-        Intervention\Image\ImageServiceProvider::class,
         Laravel\Socialite\SocialiteServiceProvider::class,
         App\Providers\AppServiceProvider::class,
         Laravel\Tinker\TinkerServiceProvider::class,
@@ -240,7 +239,6 @@ return [
         'Debugbar'  => Barryvdh\Debugbar\Facade::class,
         'Flash'     => Laracasts\Flash\Flash::class,
         'Gravatar'  => Creativeorange\Gravatar\Facades\Gravatar::class,
-        'Image'     => Intervention\Image\Facades\Image::class,
         'Socialite' => Laravel\Socialite\Facades\Socialite::class
 
     ],

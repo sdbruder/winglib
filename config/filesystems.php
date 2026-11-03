@@ -8,27 +8,15 @@ return [
     |--------------------------------------------------------------------------
     |
     | Here you may specify the default filesystem disk that should be used
-    | by the framework. A "local" driver, as well as a variety of cloud
-    | based drivers are available for your choosing. Just store away!
-    |
-    | Supported: "local", "ftp", "s3", "rackspace"
+    | by the framework. Only the local driver, which needs no extra package,
+    | is configured here: the application writes its wing images with plain
+    | file functions under storage/app, and uses no disk at all. The cloud
+    | key is gone in Laravel 9, and the s3 and ftp disks would each need a
+    | Flysystem 3 driver package that is not installed.
     |
     */
 
     'default' => 'local',
-
-    /*
-    |--------------------------------------------------------------------------
-    | Default Cloud Filesystem Disk
-    |--------------------------------------------------------------------------
-    |
-    | Many applications store files both locally and in the cloud. For this
-    | reason, you may specify a default "cloud" driver here. This driver
-    | will be bound as the Cloud disk implementation in the container.
-    |
-    */
-
-    'cloud' => 's3',
 
     /*
     |--------------------------------------------------------------------------
@@ -46,28 +34,6 @@ return [
         'local' => [
             'driver' => 'local',
             'root'   => storage_path('app'),
-        ],
-
-        'ftp' => [
-            'driver'   => 'ftp',
-            'host'     => 'ftp.example.com',
-            'username' => 'your-username',
-            'password' => 'your-password',
-
-            // Optional FTP Settings...
-            // 'port'     => 21,
-            // 'root'     => '',
-            // 'passive'  => true,
-            // 'ssl'      => true,
-            // 'timeout'  => 30,
-        ],
-
-        's3' => [
-            'driver' => 's3',
-            'key'    => 'your-key',
-            'secret' => 'your-secret',
-            'region' => 'your-region',
-            'bucket' => 'your-bucket',
         ],
 
     ],
