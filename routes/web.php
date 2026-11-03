@@ -19,7 +19,7 @@ Route::get('user/settings', 'UsersController@settings');
 Route::get( 'auth/login',    'Auth\LoginController@showLoginForm')->name('login');
 Route::post('auth/login',    'Auth\LoginController@login');
 Route::get('auth/logout',    'Auth\LoginController@logout')->name('logout');
-Route::post('auth/logout',   'Auth\LoginController@logout')->name('logout');
+Route::post('auth/logout',   'Auth\LoginController@logout');
 
 // Registration Routes...
 Route::get( 'auth/register', 'Auth\RegisterController@showRegistrationForm')->name('register');

@@ -22,6 +22,14 @@ class TestCase extends BaseTestCase
      */
     public function createApplication()
     {
+        // A cached configuration is written from .env by the optimize script that composer runs
+        // on install and update. It quietly overrides the environment phpunit.xml sets, so the
+        // suite would then run against the developer's app.url and database, and cached routes
+        // would hide changes to the route files. Drop both, so every test boots live config.
+        foreach (glob(__DIR__.'/../bootstrap/cache/{config,routes-*}.php', GLOB_BRACE) as $cached) {
+            @unlink($cached);
+        }
+
         $app = require __DIR__.'/../bootstrap/app.php';
 
         $app->make(Kernel::class)->bootstrap();
@@ -39,7 +47,7 @@ class TestCase extends BaseTestCase
      * TestResponse::viewData() arrives in a later Laravel major, but the property it reads is
      * the same in every version this suite runs on.
      *
-     * @param  \Illuminate\Foundation\Testing\TestResponse  $response
+     * @param  \Illuminate\Testing\TestResponse  $response
      * @param  string  $key
      * @return mixed
      */

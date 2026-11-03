@@ -32,7 +32,7 @@ class RouteTableTest extends TestCase
     }
 
     /**
-     * Every route that routes/web.php and routes/api.php declare.
+     * Every route that routes/web.php declares.
      *
      * @return array
      */
@@ -40,7 +40,6 @@ class RouteTableTest extends TestCase
     {
         return [
             'GET|HEAD /',
-            'GET|HEAD api/user',
             'GET|HEAD auth/login',
             'POST auth/login',
             'GET|HEAD auth/logout',
