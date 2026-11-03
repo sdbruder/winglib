@@ -158,6 +158,16 @@ the general case, both of them additive and neither touching a file that is stil
 arrives with the `php8.5-gd` package here and with the container image. It was exercised on beta by
 deleting one wing's PNG and drawing it back — 940x400 RGBA, then restored.
 
+Every image is now drawn in the bolder style (3 px outlines, 4 px ticks, ~11.5 px labels, a
+`#f4f6ff` panel fill, and a margin that is a share of the canvas rather than a fixed 30 px):
+thumbnails at 180 and 282 px for the home panels and the library listing, full size at 940 px for
+the wing page. Tallies: beta 2 full size and 2+2 thumbnails, prod 3127 full size and 3127 at each
+thumbnail width. One prod wing is skipped and reported — `losange-6` has a panel with a span and no
+chords, so there is no MAC to find (the canvas would have landed on `NaN` there).
+
+The pre-redraw files are at `/home/sergio/backups/wingimg-{winglib,beta.winglib}-2015-20261103`
+(76 and 52 MB). To restore: `rsync -a --delete <that directory>/ storage/app/wingimg/`.
+
 ## Known gaps
 
 - Both sites run `master`; the `prod` branch and the `php7.4` pool stay in place
