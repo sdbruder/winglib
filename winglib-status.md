@@ -69,6 +69,26 @@ the next manual reload. Beta's renewal was proven by a forced renewal on
 `acme-staging-v02.api.letsencrypt.org`, which is unreachable here (the production
 endpoint answers in under a second).
 
+## Server maintenance (added 2026-11-03)
+
+| item | where | detail |
+|---|---|---|
+| database dumps | `mysql-backup.timer` (05:15 UTC, `Persistent=true`) → `mysql-backup.service` → `/home/sergio/backups/mysql-backup.sh` | dumps every database except `information_schema`/`performance_schema`, gzips into `/home/sergio/backups/tmp` (mode 600, newest two kept), uploads to the Minecraft Storage Box under `mysql/`, and prunes remote archives older than `SB_RETAIN_DAYS` (30). Runs as `root`, because `root@localhost` is the shared credential every app on this host uses. |
+| log rotation | `/etc/logrotate.d/laravel-winglib` | daily, 14 rotations, `copytruncate`, `su sergio sergio`, covering both `storage/logs` directories. The 228 MB prod log was rotated and compressed by hand on 2026-11-03. |
+| swap | `/swapfile` (2G), `/etc/fstab`, `vm.swappiness=10` | the host ran MariaDB and two FPM pools in 3.8 GB of RAM with no swap at all |
+| HTTP/2 | `listen 443 ssl http2` in `winglib.conf` (two 443 blocks) and `beta.winglib.conf` | nginx 1.24 enables HTTP/2 through the `listen` directive; the separate `http2 on;` form needs 1.25.1 |
+| certbot cron | removed from root's crontab | it duplicated `certbot.timer` (05:19 UTC) and used `systemctl restart nginx` where the timer's own hooks reload. Backup: `/home/sergio/backups/root-crontab.bak-20261103`. Only the two winglib certificates carry `post_hook = systemctl reload nginx`; `bruder.com.br` and both `qr-lapide.com.br` certificates still carry `systemctl restart nginx`, so renewing those still restarts nginx. |
+| config backups | `/home/sergio/backups/winglib-config/` | six mode-600 files: the beta `.env` copies and beta git-config copy taken during the 2026-11-03 work, plus prod snapshots (`prod.env.bak-20261103`, and `prod.git-config.bak-20261103` with the removed `[remote "bitbucket"]` block re-added). No `.bak-*` file is left inside either checkout. |
+
+`sudo mariadb-upgrade --force` ran on 2026-11-03: `mysql.proc` carried a stale
+definition, so every routine operation failed with `ERROR 1728 … Cannot load from
+mysql.proc. The table is probably corrupted` — creating a procedure, `SHOW PROCEDURE
+STATUS` and `mysqldump --routines` all died. Routine reads, creates and dumps work
+again since the repair; the pre-repair table files are in
+`/home/sergio/backups/mysql-systemtable-backup-20261103/`. The event scheduler is
+`OFF` on this server, so the dumps pass `--skip-events`; `SHOW EVENTS` and
+`mysqldump --events` fail with `ERROR 1577` otherwise.
+
 ## Known gaps
 
 - `winglib.com` still runs the 5.1 line while `master` holds the 5.5 upgrade;
@@ -96,3 +116,12 @@ endpoint answers in under a second).
 - `_ide_helper.php` on prod carries one uncommitted generated-date line; two
   untracked verification files (`public/ads.txt`,
   `public/google7130d95414ed0aad.html`) match the blobs in `master` exactly.
+- Social login on beta: `config/services.php` on `master` now builds each callback
+  from `config('app.url')`, giving `https://beta.winglib.com/auth/<driver>/callback`.
+  Facebook and Google accept it (`/auth/facebook` and `/auth/google` answer `302` to
+  the provider), Twitter still answers `403 Callback URL not approved` because that
+  URL is not in the Twitter app's callback list — that list lives in the provider's
+  dashboard, not on this host.
+- The `bitbucket` remote is gone from the local repo and from both server checkouts;
+  `origin` (GitHub) is the only remote. The old URL survives only inside the backup
+  copies under `/home/sergio/backups/winglib-config/`.
