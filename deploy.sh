@@ -21,6 +21,12 @@ $PHP artisan down || true
 
 git pull --ff-only
 
+# A checkout that came from an older Laravel carries bootstrap/cache/packages.php
+# and services.php for the old service provider list. The repository ignores
+# them, so a pull never replaces them, and the new code would try to load the
+# old providers. Drop them; package:discover and optimize rebuild them.
+rm -f bootstrap/cache/*.php
+
 # uncomment when composer.json or composer.lock changed in the pulled range.
 # Composer runs under php8.5: the lock carries Symfony 8, which refuses to
 # install on the host's default 8.2 CLI. Composer 2 is the only supported
