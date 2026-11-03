@@ -1,5 +1,7 @@
 <?php
 
+use App\User;
+
 return [
 
     /*
@@ -24,31 +26,31 @@ return [
     ],
 
     'ses' => [
-        'key'    => env('SES_KEY'),
+        'key' => env('SES_KEY'),
         'secret' => env('SES_SECRET'),
         'region' => 'us-east-1',
     ],
 
     'stripe' => [
-        'model'  => App\User::class,
-        'key'    => env('STRIPE_KEY'),
+        'model' => User::class,
+        'key' => env('STRIPE_KEY'),
         'secret' => env('STRIPE_SECRET'),
     ],
 
     // OAuth Socialite drivers
     'facebook' => [
-        'client_id'     => env('FACEBOOK_ID'),
+        'client_id' => env('FACEBOOK_ID'),
         'client_secret' => env('FACEBOOK_SECRET'),
-        'redirect'      => rtrim(config('app.url'), '/').'/auth/facebook/callback'
+        'redirect' => rtrim(config('app.url'), '/').'/auth/facebook/callback',
     ],
     'google' => [
-        'client_id'     => env('GOOGLE_ID'),
+        'client_id' => env('GOOGLE_ID'),
         'client_secret' => env('GOOGLE_SECRET'),
-        'redirect'      => rtrim(config('app.url'), '/').'/auth/google/callback'
+        'redirect' => rtrim(config('app.url'), '/').'/auth/google/callback',
     ],
     'twitter' => [
-        'client_id'     => env('TWITTER_ID'),
+        'client_id' => env('TWITTER_ID'),
         'client_secret' => env('TWITTER_SECRET'),
-        'redirect'      => rtrim(config('app.url'), '/').'/auth/twitter/callback'
-    ]
+        'redirect' => rtrim(config('app.url'), '/').'/auth/twitter/callback',
+    ],
 ];

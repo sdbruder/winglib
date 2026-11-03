@@ -4,20 +4,20 @@ namespace App;
 
 use Gravatar;
 use Illuminate\Auth\Authenticatable;
+use Illuminate\Auth\Passwords\CanResetPassword;
+use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Auth\Passwords\CanResetPassword;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\Access\Authorizable;
-use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
-use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
-use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use Illuminate\Notifications\Notifiable;
 
-class User extends Model implements AuthenticatableContract,
-                                    AuthorizableContract,
-                                    CanResetPasswordContract
+class User extends Model implements AuthenticatableContract, AuthorizableContract, CanResetPasswordContract
 {
-    use Authenticatable, Authorizable, CanResetPassword, Notifiable, HasFactory;
+    use Authenticatable, Authorizable, CanResetPassword, HasFactory, Notifiable;
 
     /**
      * The database table used by the model.
@@ -65,7 +65,7 @@ class User extends Model implements AuthenticatableContract,
                 $user->provider_id = $user->email;
             }
             if (empty($user->token)) {
-                $user->token = bcrypt($user->provider . '::' . $user->provider_id);
+                $user->token = bcrypt($user->provider.'::'.$user->provider_id);
             }
 
             if (($user->email) && empty($user->avatar)) {
@@ -83,7 +83,7 @@ class User extends Model implements AuthenticatableContract,
     /**
      * A user can have many wings
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function wings()
     {
@@ -93,7 +93,7 @@ class User extends Model implements AuthenticatableContract,
     /**
      * A user likes many wings (many to many)
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
     public function likes()
     {

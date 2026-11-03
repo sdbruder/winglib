@@ -4,6 +4,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Str;
 
 define('URL_SEPARATOR', '/');
@@ -59,7 +61,7 @@ class Wing extends Model
         'panel6span',
         'panel6chord',
         'panel6sweep',
-        'panel6angle'
+        'panel6angle',
     ];
 
     /**
@@ -68,7 +70,7 @@ class Wing extends Model
      * @var array
      */
     protected $casts = [
-        'panels' => 'array'
+        'panels' => 'array',
     ];
 
     protected $appends = [
@@ -100,7 +102,7 @@ class Wing extends Model
         'panel6span',
         'panel6chord',
         'panel6sweep',
-        'panel6angle'
+        'panel6angle',
     ];
 
     /**
@@ -114,40 +116,40 @@ class Wing extends Model
         static::saving(function (Wing $wing) {
             if (array_key_exists('panel1span', $wing->attributes)) {
                 $wing->panels = [
-                    1 =>   ['span'  => (float) $wing->attributes['panel1span'],
-                            'chord' => (float) $wing->attributes['panel1chord'],
-                            'sweep' => (float) $wing->attributes['panel1sweep'],
-                            'angle' => (float) $wing->attributes['panel1angle']],
-                    2 =>   ['span'  => (float) $wing->attributes['panel2span'],
-                            'chord' => (float) $wing->attributes['panel2chord'],
-                            'sweep' => (float) $wing->attributes['panel2sweep'],
-                            'angle' => (float) $wing->attributes['panel2angle']],
-                    3 =>   ['span'  => (float) $wing->attributes['panel3span'],
-                            'chord' => (float) $wing->attributes['panel3chord'],
-                            'sweep' => (float) $wing->attributes['panel3sweep'],
-                            'angle' => (float) $wing->attributes['panel3angle']],
-                    4 =>   ['span'  => (float) $wing->attributes['panel4span'],
-                            'chord' => (float) $wing->attributes['panel4chord'],
-                            'sweep' => (float) $wing->attributes['panel4sweep'],
-                            'angle' => (float) $wing->attributes['panel4angle']],
-                    5 =>   ['span'  => (float) $wing->attributes['panel5span'],
-                            'chord' => (float) $wing->attributes['panel5chord'],
-                            'sweep' => (float) $wing->attributes['panel5sweep'],
-                            'angle' => (float) $wing->attributes['panel5angle']],
-                    6 =>   ['span'  => (float) $wing->attributes['panel6span'],
-                            'chord' => (float) $wing->attributes['panel6chord'],
-                            'sweep' => (float) $wing->attributes['panel6sweep'],
-                            'angle' => (float) $wing->attributes['panel6angle']]
+                    1 => ['span' => (float) $wing->attributes['panel1span'],
+                        'chord' => (float) $wing->attributes['panel1chord'],
+                        'sweep' => (float) $wing->attributes['panel1sweep'],
+                        'angle' => (float) $wing->attributes['panel1angle']],
+                    2 => ['span' => (float) $wing->attributes['panel2span'],
+                        'chord' => (float) $wing->attributes['panel2chord'],
+                        'sweep' => (float) $wing->attributes['panel2sweep'],
+                        'angle' => (float) $wing->attributes['panel2angle']],
+                    3 => ['span' => (float) $wing->attributes['panel3span'],
+                        'chord' => (float) $wing->attributes['panel3chord'],
+                        'sweep' => (float) $wing->attributes['panel3sweep'],
+                        'angle' => (float) $wing->attributes['panel3angle']],
+                    4 => ['span' => (float) $wing->attributes['panel4span'],
+                        'chord' => (float) $wing->attributes['panel4chord'],
+                        'sweep' => (float) $wing->attributes['panel4sweep'],
+                        'angle' => (float) $wing->attributes['panel4angle']],
+                    5 => ['span' => (float) $wing->attributes['panel5span'],
+                        'chord' => (float) $wing->attributes['panel5chord'],
+                        'sweep' => (float) $wing->attributes['panel5sweep'],
+                        'angle' => (float) $wing->attributes['panel5angle']],
+                    6 => ['span' => (float) $wing->attributes['panel6span'],
+                        'chord' => (float) $wing->attributes['panel6chord'],
+                        'sweep' => (float) $wing->attributes['panel6sweep'],
+                        'angle' => (float) $wing->attributes['panel6angle']],
                 ];
             }
-            if ( ! $wing->slug ) {
+            if (! $wing->slug) {
                 $slug_str = Str::slug($wing->name);
-                $latest = Wing::whereRaw("slug_str = '{$slug_str}'")->latest("slug_id")->get()->first();
+                $latest = Wing::whereRaw("slug_str = '{$slug_str}'")->latest('slug_id')->get()->first();
                 if ($latest) {
                     $slug_id = $latest['slug_id'] + 1;
                     $wing->attributes['slug_str'] = $slug_str;
                     $wing->attributes['slug_id'] = $slug_id;
-                    $wing->attributes['slug'] = $slug_str . '-' . $slug_id;
+                    $wing->attributes['slug'] = $slug_str.'-'.$slug_id;
                 } else {
                     $wing->attributes['slug_str'] = $slug_str;
                     $wing->attributes['slug'] = $slug_str;
@@ -155,16 +157,16 @@ class Wing extends Model
             }
             $wing->attributes['totalspan'] =
                 (
-                floatval($wing->panels[1]['span']) +
-                floatval($wing->panels[2]['span']) +
-                floatval($wing->panels[3]['span']) +
-                floatval($wing->panels[4]['span']) +
-                floatval($wing->panels[5]['span']) +
-                floatval($wing->panels[6]['span'])
+                    floatval($wing->panels[1]['span']) +
+                    floatval($wing->panels[2]['span']) +
+                    floatval($wing->panels[3]['span']) +
+                    floatval($wing->panels[4]['span']) +
+                    floatval($wing->panels[5]['span']) +
+                    floatval($wing->panels[6]['span'])
                 ) * 2;
 
-            foreach($wing->attributes as $key => $value) {
-                if (in_array($key,$wing->appends)) {
+            foreach ($wing->attributes as $key => $value) {
+                if (in_array($key, $wing->appends)) {
                     unset($wing->attributes[$key]);
                 }
             }
@@ -173,34 +175,37 @@ class Wing extends Model
         }); // static::saving
     }
 
-    public static function duplicateImage($orig_image) {
-        $subdir = substr(microtime(),4,2);
-        $storage_path = join(DIRECTORY_SEPARATOR, [storage_path(), 'app', 'wingimg', $subdir]);
-        $url_path = join(URL_SEPARATOR, ['wingimg', $subdir]);
-        $filename = uniqid('') . '.png';
+    public static function duplicateImage($orig_image)
+    {
+        $subdir = substr(microtime(), 4, 2);
+        $storage_path = implode(DIRECTORY_SEPARATOR, [storage_path(), 'app', 'wingimg', $subdir]);
+        $url_path = implode(URL_SEPARATOR, ['wingimg', $subdir]);
+        $filename = uniqid('').'.png';
 
-        $image_filename = join(DIRECTORY_SEPARATOR, [ $storage_path, $filename]);
-        $image_url      = URL_SEPARATOR . join(URL_SEPARATOR, [ $url_path, $filename]);
+        $image_filename = implode(DIRECTORY_SEPARATOR, [$storage_path, $filename]);
+        $image_url = URL_SEPARATOR.implode(URL_SEPARATOR, [$url_path, $filename]);
 
-        $origin = join(DIRECTORY_SEPARATOR, [storage_path(), 'app', $orig_image]);
+        $origin = implode(DIRECTORY_SEPARATOR, [storage_path(), 'app', $orig_image]);
         @copy($origin, $image_filename);
+
         // return the URL made above.
         return $image_url;
     }
 
-    public static function createImage($base64_image) {
+    public static function createImage($base64_image)
+    {
 
-        $subdir = substr(microtime(),4,2);
-        $storage_path = join(DIRECTORY_SEPARATOR, [storage_path(), 'app', 'wingimg', $subdir]);
-        $url_path = join(URL_SEPARATOR, ['wingimg', $subdir]);
-        $filename = uniqid('') . '.png';
+        $subdir = substr(microtime(), 4, 2);
+        $storage_path = implode(DIRECTORY_SEPARATOR, [storage_path(), 'app', 'wingimg', $subdir]);
+        $url_path = implode(URL_SEPARATOR, ['wingimg', $subdir]);
+        $filename = uniqid('').'.png';
 
-        $image_filename = join(DIRECTORY_SEPARATOR, [ $storage_path, $filename]);
-        $image_url      = URL_SEPARATOR . join(URL_SEPARATOR, [ $url_path, $filename]);
+        $image_filename = implode(DIRECTORY_SEPARATOR, [$storage_path, $filename]);
+        $image_url = URL_SEPARATOR.implode(URL_SEPARATOR, [$url_path, $filename]);
 
-        //get the base-64 from data
-        $base64_str = substr($base64_image, strpos($base64_image, ",")+1);
-        //decode base64 string and write it down.
+        // get the base-64 from data
+        $base64_str = substr($base64_image, strpos($base64_image, ',') + 1);
+        // decode base64 string and write it down.
         $image = base64_decode($base64_str);
         file_put_contents($image_filename, $image);
 
@@ -208,42 +213,48 @@ class Wing extends Model
         return $image_url;
     }
 
-    public function saveImage($base64_image) {
-        $image_filename = join(DIRECTORY_SEPARATOR, [ storage_path(), 'app']) . $this->image_file;
-        //get the base-64 from data
-        $base64_str = substr($base64_image, strpos($base64_image, ",")+1);
-        //decode base64 string and write it down.
+    public function saveImage($base64_image)
+    {
+        $image_filename = implode(DIRECTORY_SEPARATOR, [storage_path(), 'app']).$this->image_file;
+        // get the base-64 from data
+        $base64_str = substr($base64_image, strpos($base64_image, ',') + 1);
+        // decode base64 string and write it down.
         file_put_contents($image_filename, base64_decode($base64_str));
     }
 
-    public function unit($what) {
+    public function unit($what)
+    {
         if ($this->unitsystem == 'metric') {
-            $units = [  'distance'   => 'mm',
-                        'weight'     => 'g',
-                        'area'       => 'dm²',
-                        'load'       => 'g/dm²',
-                        'percentual' => '%',
-                        'angle'      => '°'];
+            $units = ['distance' => 'mm',
+                'weight' => 'g',
+                'area' => 'dm²',
+                'load' => 'g/dm²',
+                'percentual' => '%',
+                'angle' => '°'];
         } else {
-            $units = [  'distance'   => 'in',
-                        'weight'     => 'oz',
-                        'area'       => 'in²',
-                        'load'       => 'oz/ft²',
-                        'percentual' => '%',
-                        'angle'      => '°'];
+            $units = ['distance' => 'in',
+                'weight' => 'oz',
+                'area' => 'in²',
+                'load' => 'oz/ft²',
+                'percentual' => '%',
+                'angle' => '°'];
         }
+
         return $units[$what];
     }
 
-    public function endsWith($haystack, $needle) {
+    public function endsWith($haystack, $needle)
+    {
         // search forward starting from end minus needle length characters
-        return $needle === "" || (($temp = strlen($haystack) - strlen($needle)) >= 0 && strpos($haystack, $needle, $temp) !== FALSE);
+        return $needle === '' || (($temp = strlen($haystack) - strlen($needle)) >= 0 && strpos($haystack, $needle, $temp) !== false);
     }
 
-    public function clearDotZeroes($value) {
-        if ($this->endsWith($value,'.00')) {
+    public function clearDotZeroes($value)
+    {
+        if ($this->endsWith($value, '.00')) {
             $value = str_replace('.00', '', $value);
         }
+
         return $value;
     }
 
@@ -374,6 +385,7 @@ class Wing extends Model
 
     /**
      * prepare the Panels array
+     *
      * @return array return the Panels Array
      */
     private function prepPanelsArray()
@@ -382,23 +394,24 @@ class Wing extends Model
         if (gettype($panels) != 'array') {
             $panels = [];
         }
-        for($p = 1; $p <= 6; $p++) {
-            if (!array_key_exists($p, $panels)) {
+        for ($p = 1; $p <= 6; $p++) {
+            if (! array_key_exists($p, $panels)) {
                 $panels[$p] = [
-                    'span'  => 0.00,
+                    'span' => 0.00,
                     'chord' => 0.00,
                     'sweep' => 0.00,
                     'angle' => 0.00];
             }
         }
         $this->attributes['panels'] = json_encode($panels);
+
         return $panels;
     }
 
     /**
      * A wing is owned by an user
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function user()
     {
@@ -408,7 +421,7 @@ class Wing extends Model
     /**
      * A wing was liked by many users (many to many)
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
     public function likedBy()
     {

@@ -2,8 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Http\Requests\Request;
-
 class WingRequest extends Request
 {
     /**
@@ -24,7 +22,7 @@ class WingRequest extends Request
     public function rules()
     {
         return [
-            'name' => 'required|min:5'
+            'name' => 'required|min:5',
         ];
     }
 }

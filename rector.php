@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use RectorLaravel\Set\LaravelLevelSetList;
 use Rector\Config\RectorConfig;
+use RectorLaravel\Set\LaravelLevelSetList;
 
 return RectorConfig::configure()
     ->withPaths([

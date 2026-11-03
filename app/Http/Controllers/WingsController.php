@@ -2,21 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use Flash;
-use App\Wing;
-use App\Http\Requests;
-use Illuminate\Http\Request;
 use App\Http\Requests\WingRequest;
-use Illuminate\Support\Facades\Log;
+use App\Wing;
+use Flash;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\Controller;
 
 class WingsController extends Controller
 {
     /**
      * Fork a wing already registered making a copy of it for the current user.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function forkIt($id)
     {
@@ -29,9 +27,11 @@ class WingsController extends Controller
             $newWing->name .= ' a forked version';
             // </UglyStuff>
             Auth::user()->wings()->save($newWing);
+
             return redirect('/wings/'.$newWing->id.'/edit');
         } else {
             Flash::error('You need to be logged in and<br/>you can only fork a wing that isn\'t yours.');
+
             return redirect()->back();
         }
     }
@@ -39,18 +39,19 @@ class WingsController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
         $wings = Wing::paginate(10);
+
         return view('wings.index', compact('wings'));
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
@@ -60,8 +61,7 @@ class WingsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\WingRequest  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(WingRequest $request)
     {
@@ -72,10 +72,12 @@ class WingsController extends Controller
             $wing->image_file = $image_url;
             // create the wing
             Auth::user()->wings()->save($wing);
+
             return redirect('wings');
         } else {
             Flash::error('You cant save a wing without a user.<br/>'.
                 'Login or create an account to be able to do it.');
+
             return redirect()->back();
         }
     }
@@ -84,11 +86,12 @@ class WingsController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show($id)
     {
         $wing = Wing::findOrFail($id);
+
         return view('wings.show', compact('wing'));
     }
 
@@ -96,11 +99,12 @@ class WingsController extends Controller
      * Display the specified resource by the slug
      *
      * @param  string  $slug
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function showSlug($slug)
     {
         $wing = Wing::where('slug', $slug)->firstorfail();
+
         return view('wings.show', compact('wing'));
     }
 
@@ -108,7 +112,7 @@ class WingsController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function edit($id)
     {
@@ -118,6 +122,7 @@ class WingsController extends Controller
         } else {
             Flash::warning('This wing is not yours or you are not logged in.<br/>'.
                 'You cannot edit it.');
+
             return redirect()->back();
         }
     }
@@ -125,9 +130,8 @@ class WingsController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\WingRequest  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(WingRequest $request, $id)
     {
@@ -145,7 +149,7 @@ class WingsController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy($id)
     {
@@ -153,17 +157,18 @@ class WingsController extends Controller
 
         if ((Auth::user()) and ($wing->user->id == Auth::user()->id)) {
             $wing->delete();
+
             return redirect('/wings');
         } else {
             Flash::error('This wing is not yours or you are not logged in.<br/>'.
                 'You cannot delete it.');
+
             return redirect()->back();
         }
     }
 
     /**
      * Ajax Like it: insert / delete a relationship in users_likes_wings
-     *
      */
     public function likeit(Request $request)
     {
@@ -171,7 +176,7 @@ class WingsController extends Controller
         $user_id = Auth::id();
 
         $count = $wing->likedby->count();
-        if (!$wing->likedby->contains($user_id)) {
+        if (! $wing->likedby->contains($user_id)) {
             $wing->likedby()->attach($user_id);
             $count += 1;
         }

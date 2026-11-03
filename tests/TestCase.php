@@ -3,7 +3,9 @@
 namespace Tests;
 
 use Illuminate\Contracts\Console\Kernel;
+use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use Illuminate\Testing\TestResponse;
 use Tests\Support\StubGravatar;
 
 class TestCase extends BaseTestCase
@@ -18,7 +20,7 @@ class TestCase extends BaseTestCase
     /**
      * Creates the application.
      *
-     * @return \Illuminate\Foundation\Application
+     * @return Application
      */
     public function createApplication()
     {
@@ -47,7 +49,7 @@ class TestCase extends BaseTestCase
      * TestResponse::viewData() arrives in a later Laravel major, but the property it reads is
      * the same in every version this suite runs on.
      *
-     * @param  \Illuminate\Testing\TestResponse  $response
+     * @param  TestResponse  $response
      * @param  string  $key
      * @return mixed
      */

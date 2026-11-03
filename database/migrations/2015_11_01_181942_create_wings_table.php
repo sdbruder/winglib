@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 
 class CreateWingsTable extends Migration
 {
@@ -23,19 +23,19 @@ class CreateWingsTable extends Migration
             $table->string('image_file');
 
             $table->string('unitsystem');
-            $table->decimal('cgpos',5,2);
-            $table->decimal('weight',6,2);
+            $table->decimal('cgpos', 5, 2);
+            $table->decimal('weight', 6, 2);
             $table->boolean('drawvalues');
-            $table->decimal('rootchord',7,2);
-            $table->decimal('totalspan',7,2);
+            $table->decimal('rootchord', 7, 2);
+            $table->decimal('totalspan', 7, 2);
 
             $table->json('panels');
 
-            $table->decimal('wingarea',7,2);
-            $table->decimal('macdist',7,2);
-            $table->decimal('maclength',7,2);
-            $table->decimal('cg',7,2);
-            $table->decimal('wingload',7,2);
+            $table->decimal('wingarea', 7, 2);
+            $table->decimal('macdist', 7, 2);
+            $table->decimal('maclength', 7, 2);
+            $table->decimal('cg', 7, 2);
+            $table->decimal('wingload', 7, 2);
 
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
