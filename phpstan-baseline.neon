@@ -253,28 +253,10 @@ parameters:
 			path: app/Http/Middleware/EncryptCookies.php
 
 		-
-			message: '#^PHPDoc type array of property App\\Http\\Middleware\\VerifyCsrfToken\:\:\$except is not covariant with PHPDoc type array\<int, string\> of overridden property Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken\:\:\$except\.$#'
-			identifier: property.phpDocType
-			count: 1
-			path: app/Http/Middleware/VerifyCsrfToken.php
-
-		-
 			message: '#^PHPDoc type array of property App\\Providers\\EventServiceProvider\:\:\$listen is not covariant with PHPDoc type array\<string, array\<int, string\>\> of overridden property Illuminate\\Foundation\\Support\\Providers\\EventServiceProvider\:\:\$listen\.$#'
 			identifier: property.phpDocType
 			count: 1
 			path: app/Providers/EventServiceProvider.php
-
-		-
-			message: '#^PHPDoc type array of property App\\User\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
-			identifier: property.phpDocType
-			count: 1
-			path: app/User.php
-
-		-
-			message: '#^PHPDoc type array of property App\\User\:\:\$hidden is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$hidden\.$#'
-			identifier: property.phpDocType
-			count: 1
-			path: app/User.php
 
 		-
 			message: '#^Called ''first'' on Laravel collection, but could have been retrieved as a query\.$#'

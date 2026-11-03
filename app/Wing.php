@@ -2,6 +2,8 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\Attributes\Appends;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -11,91 +13,89 @@ use Illuminate\Support\Str;
 
 define('URL_SEPARATOR', '/');
 
+#[Appends([
+    'panel1span',
+    'panel1chord',
+    'panel1sweep',
+    'panel1angle',
+
+    'panel2span',
+    'panel2chord',
+    'panel2sweep',
+    'panel2angle',
+
+    'panel3span',
+    'panel3chord',
+    'panel3sweep',
+    'panel3angle',
+
+    'panel4span',
+    'panel4chord',
+    'panel4sweep',
+    'panel4angle',
+
+    'panel5span',
+    'panel5chord',
+    'panel5sweep',
+    'panel5angle',
+
+    'panel6span',
+    'panel6chord',
+    'panel6sweep',
+    'panel6angle',
+])]
+#[Fillable([
+    'slug',
+    'user_id',
+    'name',
+    'description',
+    'image_file',
+    'unitsystem',
+    'cgpos',
+    'weight',
+    'drawvalues',
+    'rootchord',
+    'totalspan',
+    'panels',
+    'wingarea',
+    'macdist',
+    'maclength',
+    'cg',
+    'wingload',
+
+    'panel1span',
+    'panel1chord',
+    'panel1sweep',
+    'panel1angle',
+
+    'panel2span',
+    'panel2chord',
+    'panel2sweep',
+    'panel2angle',
+
+    'panel3span',
+    'panel3chord',
+    'panel3sweep',
+    'panel3angle',
+
+    'panel4span',
+    'panel4chord',
+    'panel4sweep',
+    'panel4angle',
+
+    'panel5span',
+    'panel5chord',
+    'panel5sweep',
+    'panel5angle',
+
+    'panel6span',
+    'panel6chord',
+    'panel6sweep',
+    'panel6angle',
+])]
 class Wing extends Model
 {
     use HasFactory;
-
-    protected $fillable = [
-        'slug',
-        'user_id',
-        'name',
-        'description',
-        'image_file',
-        'unitsystem',
-        'cgpos',
-        'weight',
-        'drawvalues',
-        'rootchord',
-        'totalspan',
-        'panels',
-        'wingarea',
-        'macdist',
-        'maclength',
-        'cg',
-        'wingload',
-
-        'panel1span',
-        'panel1chord',
-        'panel1sweep',
-        'panel1angle',
-
-        'panel2span',
-        'panel2chord',
-        'panel2sweep',
-        'panel2angle',
-
-        'panel3span',
-        'panel3chord',
-        'panel3sweep',
-        'panel3angle',
-
-        'panel4span',
-        'panel4chord',
-        'panel4sweep',
-        'panel4angle',
-
-        'panel5span',
-        'panel5chord',
-        'panel5sweep',
-        'panel5angle',
-
-        'panel6span',
-        'panel6chord',
-        'panel6sweep',
-        'panel6angle',
-    ];
-
-    protected $appends = [
-        'panel1span',
-        'panel1chord',
-        'panel1sweep',
-        'panel1angle',
-
-        'panel2span',
-        'panel2chord',
-        'panel2sweep',
-        'panel2angle',
-
-        'panel3span',
-        'panel3chord',
-        'panel3sweep',
-        'panel3angle',
-
-        'panel4span',
-        'panel4chord',
-        'panel4sweep',
-        'panel4angle',
-
-        'panel5span',
-        'panel5chord',
-        'panel5sweep',
-        'panel5angle',
-
-        'panel6span',
-        'panel6chord',
-        'panel6sweep',
-        'panel6angle',
-    ];
 
     /**
      * boot method

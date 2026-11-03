@@ -4,13 +4,13 @@ namespace App\Http;
 
 use App\Http\Middleware\EncryptCookies;
 use App\Http\Middleware\RedirectIfAuthenticated;
-use App\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Auth\Middleware\AuthenticateWithBasicAuth;
 use Illuminate\Auth\Middleware\Authorize;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
-use Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode;
+use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
+use Illuminate\Foundation\Http\Middleware\PreventRequestsDuringMaintenance;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Routing\Middleware\ThrottleRequests;
 use Illuminate\Session\Middleware\StartSession;
@@ -26,7 +26,7 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $middleware = [
-        CheckForMaintenanceMode::class,
+        PreventRequestsDuringMaintenance::class,
     ];
 
     /**
@@ -40,7 +40,7 @@ class Kernel extends HttpKernel
             AddQueuedCookiesToResponse::class,
             StartSession::class,
             ShareErrorsFromSession::class,
-            VerifyCsrfToken::class,
+            PreventRequestForgery::class,
             SubstituteBindings::class,
         ],
 
