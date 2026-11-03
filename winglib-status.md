@@ -54,11 +54,23 @@ format Laravel 5.5 cannot read (`PackageManifest`: `Undefined index: name`).
 `--no-scripts` stops the post-install hooks from regenerating `_ide_helper.php`
 inside the checkout.
 
+## TLS
+
+Both sites terminate TLS in nginx with Let's Encrypt certificates and renew through
+the webroot authenticator, so the HTTP-01 challenge path on port 80 stays outside
+the redirect to HTTPS:
+
+| site | certificate | renews | note |
+|---|---|---|---|
+| winglib.com, www | `winglib.com` (ECDSA) | 2027-02-01 | vhost redirects www to the apex |
+| beta.winglib.com | `beta.winglib.com` (ECDSA) | 2027-02-01 | added 2026-11-03 |
+
+Both renewal configs carry `post_hook = systemctl reload nginx`; `certbot certonly`
+does not add that hook on its own, so a renewed certificate would sit unused until
+the next manual reload.
+
 ## Known gaps
 
-- **beta.winglib.com has no TLS**: `https://beta.winglib.com` is answered by an
-  unrelated 443 block (`*.qr-lapide.com.br` certificate, QR Lápide login page).
-  The vhost is `listen 80` only.
 - **beta runs with `APP_ENV=local` and `APP_DEBUG=true`**, which shows debugbar and
   exception details to visitors.
 - `winglib.com` still runs the 5.1 line while `master` holds the 5.5 upgrade;
