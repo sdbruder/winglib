@@ -26,7 +26,7 @@ Bitbucket moved SSH to `ssh.bitbucket.org` on 2026-11-12; the old host
 | path | site | branch | pool |
 |---|---|---|---|
 | `/var/www/winglib` | winglib.com (TLS) | `prod` | `php7.4-fpm-winglib.sock` (user `sergio`) |
-| `/var/www/beta.winglib` | beta.winglib.com (port 80 only) | `master` | `php7.4-fpm-winglib.sock` |
+| `/var/www/beta.winglib` | beta.winglib.com (TLS) | `master` | `php7.4-fpm-winglib.sock` |
 
 Both checkouts are owned by `sergio`, which is also the pool user, so PHP writes
 `storage/` and `bootstrap/cache/` without sudo. Only the fpm reload needs sudo
@@ -75,8 +75,6 @@ endpoint answers in under a second).
 
 ## Known gaps
 
-- **beta runs with `APP_ENV=local` and `APP_DEBUG=true`**, which shows debugbar and
-  exception details to visitors.
 - `winglib.com` still runs the 5.1 line while `master` holds the 5.5 upgrade;
   moving it is a deploy decision, and it changes the artisan steps.
 - Migrations: 4 applied, 0 pending on prod. The beta database is `winglibbeta`
@@ -85,13 +83,20 @@ endpoint answers in under a second).
   mode `1733 root:root`, as the app expected); beta uses its own
   `storage/framework/sessions`, because Laravel 5.5's own session GC has to list
   the directory and `1733` forbids that to a non-owner.
-- Session cookies: `config/session.php` now reads `SESSION_DOMAIN` and
-  `SESSION_SECURE_COOKIE` from the environment, with the old values as defaults, so
-  no behaviour changed for a site that sets neither. Beta sets
-  `SESSION_DOMAIN=beta.winglib.com` and `SESSION_SECURE_COOKIE=true`: before that,
-  beta and winglib.com both wrote a `domain=winglib.com` cookie, so visiting one
-  site overwrote the other's session cookie. Prod still uses the shared
-  `winglib.com` domain and no `Secure` flag.
+- Environments: beta runs `APP_ENV=staging`, `APP_DEBUG=false`; prod runs
+  `APP_ENV=prod`, `APP_DEBUG=false`. Debugbar follows `app.debug`, so it is off on
+  both.
+- Cookies: `config/app.php` and `config/session.php` on both branches read
+  `APP_URL`, `SESSION_COOKIE`, `SESSION_DOMAIN` and `SESSION_SECURE_COOKIE` from the
+  environment, with the previous values as defaults, so a site that sets none of
+  them behaves exactly as before. Beta sets all four (`https://beta.winglib.com`,
+  `beta_laravel_session`, `beta.winglib.com`, `true`); prod sets `APP_URL` and
+  `SESSION_SECURE_COOKIE=true` and keeps `laravel_session` on `winglib.com`. Before
+  this, both sites wrote the same `laravel_session` cookie for the parent domain, so
+  a visit to one invalidated the other's session.
+- Prod's `XSRF-TOKEN` cookie still lacks `Secure`: Laravel 5.1 hard-codes that in
+  `VerifyCsrfToken`, while 5.5 takes it from `session.secure`. Only the session
+  cookie is affected by the setting.
 - `_ide_helper.php` on prod carries one uncommitted generated-date line; two
   untracked verification files (`public/ads.txt`,
   `public/google7130d95414ed0aad.html`) match the blobs in `master` exactly.
