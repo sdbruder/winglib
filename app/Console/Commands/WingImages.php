@@ -8,11 +8,10 @@ use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 
-#[Description('List the wing images the database references and copy the missing ones')]
 #[Signature('wings:images
-                            {--missing : list only the images whose file is not on disk}
-                            {--paths : print the referenced paths instead of a table}
-                            {--copy-from= : copy the missing files out of the storage/app/wingimg directory of another checkout}')]
+    {--missing : list only the images whose file is not on disk}
+    {--paths : print the referenced paths instead of a table}')]
+#[Description('List the wing image files the database references, and which are missing')]
 class WingImages extends Command
 {
     /**
@@ -21,7 +20,6 @@ class WingImages extends Command
     public function handle(): int
     {
         $root = storage_path('app/wingimg');
-        $source = $this->option('copy-from');
         $referenced = [];
         $blank = 0;
 
@@ -40,8 +38,6 @@ class WingImages extends Command
                 'id' => $wing->id,
                 'slug' => $wing->slug,
                 'image' => '/'.$image,
-                'path' => $relative === null ? null : $root.'/'.$relative,
-                'relative' => $relative,
                 'exists' => $relative !== null && File::exists($root.'/'.$relative),
             ];
         }
@@ -61,41 +57,14 @@ class WingImages extends Command
             );
         }
 
-        $copied = 0;
-        $failed = 0;
-
-        if ($source !== null) {
-            foreach ($missing as $row) {
-                if ($row['relative'] === null) {
-                    $this->warn(sprintf('wing %d keeps its image outside wingimg: %s', $row['id'], $row['image']));
-                    $failed++;
-
-                    continue;
-                }
-
-                $from = rtrim($source, '/').'/'.$row['relative'];
-
-                if (! File::exists($from)) {
-                    $failed++;
-
-                    continue;
-                }
-
-                File::ensureDirectoryExists(dirname($row['path']));
-                File::copy($from, $row['path']);
-                $copied++;
-            }
-        }
-
         $this->line(sprintf(
-            '%d wings, %d referencing an image, %d missing on disk%s.%s',
+            '%d wings, %d referencing an image, %d missing on disk.%s',
             count($referenced) + $blank,
             count($referenced),
             count($missing),
-            $source === null ? '' : sprintf(', %d copied', $copied),
             $blank > 0 ? sprintf(' %d wing(s) have no image recorded.', $blank) : ''
         ));
 
-        return $source !== null && $failed > 0 ? self::FAILURE : self::SUCCESS;
+        return self::SUCCESS;
     }
 }
