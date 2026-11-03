@@ -46,6 +46,21 @@ class WingModelTest extends TestCase
         }
     }
 
+    public function test_the_panel_accessors_read_the_stored_panels()
+    {
+        $wing = Wing::find($this->createWing()->id);
+
+        // The wing form binds every field to one of these accessors through the model, so they
+        // must agree with the stored panels. They were written as getPanel1SpanAttribute style
+        // mutators and became Attribute casts at the Laravel 9 hop.
+        $this->assertEquals(1, $wing->panel1span);
+        $this->assertEquals(2, $wing->panel2span);
+        $this->assertEquals(10, $wing->panel3chord);
+        $this->assertEquals(0, $wing->panel4sweep);
+        $this->assertEquals(0, $wing->panel5angle);
+        $this->assertEquals(6, $wing->panel6span);
+    }
+
     public function test_the_total_span_is_twice_the_sum_of_the_panel_spans()
     {
         $this->assertEquals(42, $this->createWing()->totalspan);
