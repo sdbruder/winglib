@@ -5,6 +5,9 @@ namespace Database\Factories;
 use App\Wing;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
+/**
+ * @extends Factory<Wing>
+ */
 class WingFactory extends Factory
 {
     /**
@@ -22,8 +25,8 @@ class WingFactory extends Factory
     public function definition()
     {
         $wing = [
-            'name' => 'Test Wing '.$this->faker->unique()->word,
-            'description' => $this->faker->sentence,
+            'name' => 'Test Wing '.fake()->unique()->word,
+            'description' => fake()->sentence,
             'image_file' => '/wingimg/00/test.png',
             'unitsystem' => 'metric',
             'cgpos' => 12,

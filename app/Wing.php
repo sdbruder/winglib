@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -258,129 +259,179 @@ class Wing extends Model
         return $value;
     }
 
-    public function getCGPosAttribute()
+    protected function cGPos(): Attribute
     {
-        return $this->clearDotZeroes($this->attributes['cgpos']);
+        return Attribute::make(get: function () {
+            return $this->clearDotZeroes($this->attributes['cgpos']);
+        });
     }
 
-    public function getPanel1SpanAttribute()
+    protected function panel1Span(): Attribute
     {
-        return $this->panels[1]['span'];
+        return Attribute::make(get: function () {
+            return $this->panels[1]['span'];
+        });
     }
 
-    public function getPanel1ChordAttribute()
+    protected function panel1Chord(): Attribute
     {
-        return $this->panels[1]['chord'];
+        return Attribute::make(get: function () {
+            return $this->panels[1]['chord'];
+        });
     }
 
-    public function getPanel1SweepAttribute()
+    protected function panel1Sweep(): Attribute
     {
-        return $this->panels[1]['sweep'];
+        return Attribute::make(get: function () {
+            return $this->panels[1]['sweep'];
+        });
     }
 
-    public function getPanel1AngleAttribute()
+    protected function panel1Angle(): Attribute
     {
-        return $this->panels[1]['angle'];
+        return Attribute::make(get: function () {
+            return $this->panels[1]['angle'];
+        });
     }
 
-    public function getPanel2SpanAttribute()
+    protected function panel2Span(): Attribute
     {
-        return $this->panels[2]['span'];
+        return Attribute::make(get: function () {
+            return $this->panels[2]['span'];
+        });
     }
 
-    public function getPanel2ChordAttribute()
+    protected function panel2Chord(): Attribute
     {
-        return $this->panels[2]['chord'];
+        return Attribute::make(get: function () {
+            return $this->panels[2]['chord'];
+        });
     }
 
-    public function getPanel2SweepAttribute()
+    protected function panel2Sweep(): Attribute
     {
-        return $this->panels[2]['sweep'];
+        return Attribute::make(get: function () {
+            return $this->panels[2]['sweep'];
+        });
     }
 
-    public function getPanel2AngleAttribute()
+    protected function panel2Angle(): Attribute
     {
-        return $this->panels[2]['angle'];
+        return Attribute::make(get: function () {
+            return $this->panels[2]['angle'];
+        });
     }
 
-    public function getPanel3SpanAttribute()
+    protected function panel3Span(): Attribute
     {
-        return $this->panels[3]['span'];
+        return Attribute::make(get: function () {
+            return $this->panels[3]['span'];
+        });
     }
 
-    public function getPanel3ChordAttribute()
+    protected function panel3Chord(): Attribute
     {
-        return $this->panels[3]['chord'];
+        return Attribute::make(get: function () {
+            return $this->panels[3]['chord'];
+        });
     }
 
-    public function getPanel3SweepAttribute()
+    protected function panel3Sweep(): Attribute
     {
-        return $this->panels[3]['sweep'];
+        return Attribute::make(get: function () {
+            return $this->panels[3]['sweep'];
+        });
     }
 
-    public function getPanel3AngleAttribute()
+    protected function panel3Angle(): Attribute
     {
-        return $this->panels[3]['angle'];
+        return Attribute::make(get: function () {
+            return $this->panels[3]['angle'];
+        });
     }
 
-    public function getPanel4SpanAttribute()
+    protected function panel4Span(): Attribute
     {
-        return $this->panels[4]['span'];
+        return Attribute::make(get: function () {
+            return $this->panels[4]['span'];
+        });
     }
 
-    public function getPanel4ChordAttribute()
+    protected function panel4Chord(): Attribute
     {
-        return $this->panels[4]['chord'];
+        return Attribute::make(get: function () {
+            return $this->panels[4]['chord'];
+        });
     }
 
-    public function getPanel4SweepAttribute()
+    protected function panel4Sweep(): Attribute
     {
-        return $this->panels[4]['sweep'];
+        return Attribute::make(get: function () {
+            return $this->panels[4]['sweep'];
+        });
     }
 
-    public function getPanel4AngleAttribute()
+    protected function panel4Angle(): Attribute
     {
-        return $this->panels[4]['angle'];
+        return Attribute::make(get: function () {
+            return $this->panels[4]['angle'];
+        });
     }
 
-    public function getPanel5SpanAttribute()
+    protected function panel5Span(): Attribute
     {
-        return $this->panels[5]['span'];
+        return Attribute::make(get: function () {
+            return $this->panels[5]['span'];
+        });
     }
 
-    public function getPanel5ChordAttribute()
+    protected function panel5Chord(): Attribute
     {
-        return $this->panels[5]['chord'];
+        return Attribute::make(get: function () {
+            return $this->panels[5]['chord'];
+        });
     }
 
-    public function getPanel5SweepAttribute()
+    protected function panel5Sweep(): Attribute
     {
-        return $this->panels[5]['sweep'];
+        return Attribute::make(get: function () {
+            return $this->panels[5]['sweep'];
+        });
     }
 
-    public function getPanel5AngleAttribute()
+    protected function panel5Angle(): Attribute
     {
-        return $this->panels[5]['angle'];
+        return Attribute::make(get: function () {
+            return $this->panels[5]['angle'];
+        });
     }
 
-    public function getPanel6SpanAttribute()
+    protected function panel6Span(): Attribute
     {
-        return $this->panels[6]['span'];
+        return Attribute::make(get: function () {
+            return $this->panels[6]['span'];
+        });
     }
 
-    public function getPanel6ChordAttribute()
+    protected function panel6Chord(): Attribute
     {
-        return $this->panels[6]['chord'];
+        return Attribute::make(get: function () {
+            return $this->panels[6]['chord'];
+        });
     }
 
-    public function getPanel6SweepAttribute()
+    protected function panel6Sweep(): Attribute
     {
-        return $this->panels[6]['sweep'];
+        return Attribute::make(get: function () {
+            return $this->panels[6]['sweep'];
+        });
     }
 
-    public function getPanel6AngleAttribute()
+    protected function panel6Angle(): Attribute
     {
-        return $this->panels[6]['angle'];
+        return Attribute::make(get: function () {
+            return $this->panels[6]['angle'];
+        });
     }
 
     /**
