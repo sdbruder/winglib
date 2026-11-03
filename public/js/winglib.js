@@ -860,6 +860,9 @@ function draw_wing(forcesize) {
 
         canvas_w = canvas_max_width;
         canvas_h = canvas_max_height;
+        // A share of the canvas rather than a fixed thirty pixels, so an editor canvas that is
+        // narrower than 940 keeps the same framing.
+        border_size = 30 * canvas_max_width / 940;
         if ((w/h) > (canvas_max_width/canvas_max_height)) {
             zoom = (canvas_w - border_size*2) / w;
         } else {

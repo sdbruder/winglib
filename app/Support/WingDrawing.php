@@ -104,9 +104,13 @@ class WingDrawing
             $height = 1;
         }
 
-        $this->zoom = min(($this->canvasWidth - 2 * self::BORDER) / $width, ($this->canvasHeight - 2 * self::BORDER) / $height);
+        // The margin is a share of the canvas, not a fixed thirty pixels: on a 77 pixel tall
+        // thumbnail a fixed border would leave almost no room for the drawing itself.
+        $border = self::BORDER * $this->canvasWidth / self::WIDTH;
+
+        $this->zoom = min(($this->canvasWidth - 2 * $border) / $width, ($this->canvasHeight - 2 * $border) / $height);
         $this->originX = $this->canvasWidth / 2;
-        $this->originY = self::BORDER + ($whole['minX'] < 0 ? $this->zoom * abs($whole['minX']) : 0);
+        $this->originY = $border + ($whole['minX'] < 0 ? $this->zoom * abs($whole['minX']) : 0);
 
         $this->image = imagecreatetruecolor($this->canvasWidth, $this->canvasHeight);
         $this->fill = imagecolorallocate($this->image, 0xF4, 0xF6, 0xFF);

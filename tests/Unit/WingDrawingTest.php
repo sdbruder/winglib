@@ -46,6 +46,30 @@ function drawingInkNear($image, int $x, int $y): bool
     return false;
 }
 
+function drawingInkBounds($image): array
+{
+    $width = imagesx($image);
+    $height = imagesy($image);
+    $bounds = ['left' => $width, 'top' => $height, 'right' => 0, 'bottom' => 0];
+
+    for ($y = 1; $y < $height - 1; $y++) {
+        for ($x = 1; $x < $width - 1; $x++) {
+            [$alpha, $red, $green, $blue] = drawingPixel($image, $x, $y);
+
+            if ($alpha > 63 && $red > 200 && $green > 200 && $blue > 200) {
+                continue;
+            }
+
+            $bounds['left'] = min($bounds['left'], $x);
+            $bounds['top'] = min($bounds['top'], $y);
+            $bounds['right'] = max($bounds['right'], $x);
+            $bounds['bottom'] = max($bounds['bottom'], $y);
+        }
+    }
+
+    return $bounds;
+}
+
 it('draws the panels where the canvas geometry puts them', function () {
     $image = imagecreatefromstring(WingDrawing::png(drawingWing()));
 
@@ -90,6 +114,19 @@ it('skips a panel that has a span but no chords', function () {
     $image = imagecreatefromstring(WingDrawing::png($wing));
 
     expect(imagesx($image))->toBe(940)->and(imagesy($image))->toBe(400);
+});
+
+it('keeps the same relative margin on a smaller canvas', function () {
+    $wing = drawingWing();
+
+    $big = drawingInkBounds(imagecreatefromstring(WingDrawing::png($wing)));
+    $small = drawingInkBounds(imagecreatefromstring(WingDrawing::png($wing, 188)));
+
+    $bigShare = ($big['right'] - $big['left']) / 940;
+    $smallShare = ($small['right'] - $small['left']) / 188;
+
+    expect(abs($bigShare - $smallShare))->toBeLessThan(0.06);
+    expect(abs(($big['bottom'] - $big['top']) / 400 - ($small['bottom'] - $small['top']) / 77))->toBeLessThan(0.06);
 });
 
 it('refuses a wing with no panels', function () {
