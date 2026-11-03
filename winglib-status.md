@@ -142,6 +142,22 @@ removed.
 - `app/Http/Middleware/EncryptCookies.php` and `Authenticate.php` are empty shells
   from the 5.x layout that no guide in this upgrade touches.
 
+## Wing images
+
+`public/wingimg` is a symlink to `storage/app/wingimg`, so an image URL is only as good as the file
+behind it. Beta carried the rows but none of the files — its two wings are copies of prod rows — and
+served 404 for both until prod's tree was copied over (3657 files, 52 MB). Two commands now cover
+the general case, both of them additive and neither touching a file that is still there:
+
+| command | what it does |
+|---|---|
+| `php8.5 artisan wings:images [--missing] [--paths]` | reports what the database references against `storage/app/wingimg`, and which of those are not on disk |
+| `php8.5 artisan wings:draw {id} [--missing] [--all] [--force]` | redraws the image from the wing's own measurements (panels, cgpos, unitsystem, drawvalues) the way `public/js/winglib.js` draws it |
+
+`wings:draw` is a GD port of that canvas code, font included (`resources/fonts/DejaVuSans.ttf`); GD
+arrives with the `php8.5-gd` package here and with the container image. It was exercised on beta by
+deleting one wing's PNG and drawing it back — 940x400 RGBA, then restored.
+
 ## Known gaps
 
 - Both sites run `master`; the `prod` branch and the `php7.4` pool stay in place
