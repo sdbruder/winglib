@@ -67,7 +67,11 @@ the redirect to HTTPS:
 
 Both renewal configs carry `post_hook = systemctl reload nginx`; `certbot certonly`
 does not add that hook on its own, so a renewed certificate would sit unused until
-the next manual reload.
+the next manual reload. Beta's renewal was proven by a forced renewal on
+2026-11-03: the issued serial changed and nginx served the new serial right away.
+`certbot renew --dry-run` cannot be used on this host, because it talks to
+`acme-staging-v02.api.letsencrypt.org`, which is unreachable here (the production
+endpoint answers in under a second).
 
 ## Known gaps
 
