@@ -1,0 +1,57 @@
+name: winglib
+
+x-app: &app
+  build:
+    context: .
+    args:
+      PHP_VERSION: "8.2"
+  working_dir: /app
+  user: "${CONTAINER_UID:-501}:${CONTAINER_GID:-20}"
+  environment:
+    HOME: /tmp
+    COMPOSER_HOME: /composer
+    DB_HOST: db
+    DB_DATABASE: winglib_test
+    DB_USERNAME: root
+    DB_PASSWORD: ""
+  volumes:
+    - ..:/app
+    - composer:/composer
+  depends_on:
+    db:
+      condition: service_healthy
+
+services:
+  php74:
+    <<: *app
+    build:
+      context: .
+      args:
+        PHP_VERSION: "7.4"
+  php82:
+    <<: *app
+  php85:
+    <<: *app
+    build:
+      context: .
+      args:
+        PHP_VERSION: "8.5"
+  db:
+    image: mariadb:10.11
+    environment:
+      MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: "1"
+      MARIADB_ROOT_HOST: "%"
+      MARIADB_DATABASE: winglib_test
+    ports:
+      - "33061:3306"
+    volumes:
+      - dbdata:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+volumes:
+  composer:
+  dbdata:
