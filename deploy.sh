@@ -23,8 +23,12 @@ $PHP artisan down || true
 
 git pull --ff-only
 
-# uncomment when composer.json or composer.lock changed in the pulled range
-#php7.4 /usr/bin/composer install --no-dev --no-interaction --optimize-autoloader
+# uncomment when composer.json or composer.lock changed in the pulled range.
+# Use Composer 1: these are old Laravel versions, and Composer 2 rewrites
+# vendor/composer/installed.json into a format Laravel 5.5 cannot read
+# (PackageManifest: "Undefined index: name"). --no-scripts keeps the
+# post-install hooks from regenerating _ide_helper.php inside the checkout.
+#/home/sergio/bin/composer1.phar install --no-dev --no-interaction --no-scripts --optimize-autoloader
 
 # bootstrap/cache/compiled.php is a Laravel 5.1 class cache: drop it before the
 # new code runs, then rebuild it together with services.json.
