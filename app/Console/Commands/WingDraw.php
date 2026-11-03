@@ -9,7 +9,6 @@ use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\File;
-use RuntimeException;
 
 #[Signature('wings:draw
     {wing? : the id of the wing to redraw}
@@ -55,7 +54,9 @@ class WingDraw extends Command
             try {
                 // A thumbnail carries no measure labels: at that size they only smear.
                 $png = WingDrawing::png($wing, $width, $width < WingDrawing::WIDTH ? false : null);
-            } catch (RuntimeException $exception) {
+            } catch (\Throwable $exception) {
+                // One unrenderable row (a wing with no panels, a degenerate one) must not stop
+                // a batch of three thousand.
                 $this->warn(sprintf('wing %d %s: skipped, %s', $wing->id, $wing->slug, $exception->getMessage()));
                 $skipped++;
 

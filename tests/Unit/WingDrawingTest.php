@@ -76,6 +76,22 @@ it('draws the panels where the canvas geometry puts them', function () {
     expect($alpha)->toBe(127);
 });
 
+it('skips a panel that has a span but no chords', function () {
+    $wing = drawingWing();
+    $wing->panels = [
+        1 => ['span' => '600', 'chord' => '180', 'sweep' => '300', 'angle' => '26.57'],
+        2 => ['span' => '400', 'chord' => '0', 'sweep' => '0', 'angle' => '0'],
+        3 => ['span' => '', 'chord' => '', 'sweep' => '', 'angle' => ''],
+        4 => ['span' => '', 'chord' => '', 'sweep' => '', 'angle' => ''],
+        5 => ['span' => '', 'chord' => '', 'sweep' => '', 'angle' => ''],
+        6 => ['span' => '', 'chord' => '', 'sweep' => '', 'angle' => ''],
+    ];
+
+    $image = imagecreatefromstring(WingDrawing::png($wing));
+
+    expect(imagesx($image))->toBe(940)->and(imagesy($image))->toBe(400);
+});
+
 it('refuses a wing with no panels', function () {
     $wing = drawingWing();
     $wing->panels = array_fill(1, 6, ['span' => '', 'chord' => '', 'sweep' => '', 'angle' => '']);

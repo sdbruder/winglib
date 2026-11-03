@@ -216,7 +216,10 @@ class WingDrawing
         for ($i = 1; $i <= $last; $i++) {
             $panel = $panels[$i];
 
-            if ($panel['span'] <= 0) {
+            // A span with no chords has no MAC to find: the two helper lines that locate it are
+            // parallel and the intersection divides by zero. The canvas lands on NaN there, so
+            // such a panel is skipped here, which is also what "no area" means for the weighting.
+            if ($panel['span'] <= 0 || $panel['root'] + $panel['tipc'] === 0.0) {
                 continue;
             }
 
