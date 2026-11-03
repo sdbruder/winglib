@@ -81,6 +81,13 @@ the next manual reload.
   mode `1733 root:root`, as the app expected); beta uses its own
   `storage/framework/sessions`, because Laravel 5.5's own session GC has to list
   the directory and `1733` forbids that to a non-owner.
+- Session cookies: `config/session.php` now reads `SESSION_DOMAIN` and
+  `SESSION_SECURE_COOKIE` from the environment, with the old values as defaults, so
+  no behaviour changed for a site that sets neither. Beta sets
+  `SESSION_DOMAIN=beta.winglib.com` and `SESSION_SECURE_COOKIE=true`: before that,
+  beta and winglib.com both wrote a `domain=winglib.com` cookie, so visiting one
+  site overwrote the other's session cookie. Prod still uses the shared
+  `winglib.com` domain and no `Secure` flag.
 - `_ide_helper.php` on prod carries one uncommitted generated-date line; two
   untracked verification files (`public/ads.txt`,
   `public/google7130d95414ed0aad.html`) match the blobs in `master` exactly.
