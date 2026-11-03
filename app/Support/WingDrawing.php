@@ -25,9 +25,9 @@ class WingDrawing
     /** draw_wing's border_size, the margin kept on every side. */
     private const BORDER = 30;
 
-    private const LINE = 2;         // 2/zoom in the scaled context
+    private const LINE = 3;         // 3/zoom in the scaled context
 
-    private const TICK = 3;         // 3/zoom, the tick half length
+    private const TICK = 4;         // 4/zoom, the tick half length
 
     private const GAP = 5;          // 5/zoom, the span line's offset from the leading edge
 
@@ -35,18 +35,22 @@ class WingDrawing
 
     private const CG_GAP = 14;      // 14/zoom, the cg line's inset
 
-    /** 7/zoom pt inside a zoom-scaled context is 7 * 96/72 px on the image. */
-    private const TEXT_SIZE = 9.3;
+    /** 8.625/zoom pt inside a zoom-scaled context is 11.5 px on the image. */
+    private const TEXT_SIZE = 11.5;
 
     private const FONT = __DIR__.'/../../resources/fonts/DejaVuSans.ttf';
 
     private GdImage $image;
 
-    private int $paper;
+    private int $fill;
 
     private int $ink;
 
     private int $cgInk;
+
+    private int $canvasWidth;
+
+    private int $canvasHeight;
 
     private float $zoom = 1.0;
 
@@ -63,19 +67,30 @@ class WingDrawing
 
     private bool $metric = true;
 
-    private function __construct(private readonly Wing $wing) {}
+    private function __construct(private readonly Wing $wing, int $width, private readonly ?bool $measuresOverride)
+    {
+        $this->canvasWidth = max(1, min($width, self::WIDTH));
+        $this->canvasHeight = max(1, (int) round($this->canvasWidth * self::HEIGHT / self::WIDTH));
+    }
 
     /**
-     * The PNG bytes for this wing, at the canvas' own 940 x 400.
+     * The PNG bytes for this wing. The default size is the canvas the editor posts; a smaller
+     * width draws the same planform on a smaller canvas, keeping the pixel weights above, which
+     * is what a thumbnail needs to stay legible. A width below the default also drops the
+     * measure labels unless $measures says otherwise.
      */
-    public static function png(Wing $wing): string
+    public static function png(Wing $wing, int $width = self::WIDTH, ?bool $measures = null): string
     {
-        return (new self($wing))->render();
+        return (new self($wing, $width, $measures))->render();
     }
 
     private function render(): string
     {
         $this->panels = $this->readPanels();
+
+        if ($this->measuresOverride !== null) {
+            $this->measures = $this->measuresOverride;
+        }
 
         if ($this->panels[0]['span'] <= 0) {
             throw new RuntimeException('this wing has no panels to draw');
@@ -89,19 +104,19 @@ class WingDrawing
             $height = 1;
         }
 
-        $this->zoom = min((self::WIDTH - 2 * self::BORDER) / $width, (self::HEIGHT - 2 * self::BORDER) / $height);
-        $this->originX = self::WIDTH / 2;
+        $this->zoom = min(($this->canvasWidth - 2 * self::BORDER) / $width, ($this->canvasHeight - 2 * self::BORDER) / $height);
+        $this->originX = $this->canvasWidth / 2;
         $this->originY = self::BORDER + ($whole['minX'] < 0 ? $this->zoom * abs($whole['minX']) : 0);
 
-        $this->image = imagecreatetruecolor(self::WIDTH, self::HEIGHT);
-        $this->paper = imagecolorallocate($this->image, 255, 255, 255);
+        $this->image = imagecreatetruecolor($this->canvasWidth, $this->canvasHeight);
+        $this->fill = imagecolorallocate($this->image, 0xF4, 0xF6, 0xFF);
         $this->ink = imagecolorallocate($this->image, 0, 0, 0);
         $this->cgInk = imagecolorallocate($this->image, 0x36, 0x36, 0xB2);
 
         // The canvas is never filled, so whatever the panels do not cover stays transparent, and
-        // that is what every stored image looks like. The panels themselves paint opaque white.
+        // that is what every stored image looks like. The panels paint the light fill on top.
         $this->clear();
-        imagerectangle($this->image, 0, 0, self::WIDTH - 1, self::HEIGHT - 1, $this->ink);
+        imagerectangle($this->image, 0, 0, $this->canvasWidth - 1, $this->canvasHeight - 1, $this->ink);
 
         $quantity = (int) $whole['qty'];
 
@@ -282,7 +297,7 @@ class WingDrawing
             $this->x(0), $this->y($root),
         ];
 
-        imagefilledpolygon($this->image, $points, $this->paper);
+        imagefilledpolygon($this->image, $points, $this->fill);
         imagesetthickness($this->image, self::LINE);
         imagepolygon($this->image, $points, $this->ink);
 
@@ -337,6 +352,11 @@ class WingDrawing
 
     private function arc(float $radius, float $from, float $to): void
     {
+        if (abs($from - $to) < 0.001) {
+            // The canvas draws nothing for a zero length arc, and GD would draw a whole ellipse.
+            return;
+        }
+
         imagesetthickness($this->image, self::LINE);
         imagearc(
             $this->image,
@@ -354,7 +374,10 @@ class WingDrawing
     {
         $whole = $this->panels[0];
         $radius = max(1.5 * $whole['span'] / 100, $this->metric ? 5 : 0.2);
-        $diameter = (int) round(2 * $this->zoom * $radius);
+
+        // A thumbnail shrinks the ball with everything else; at a couple of pixels GD draws
+        // nothing sensible for a zero diameter ellipse, so it keeps a visible dot.
+        $diameter = max(5, (int) round(2 * $this->zoom * $radius));
         $centreX = $this->x(0);
         $centreY = $this->y($whole['cg_dist']);
 

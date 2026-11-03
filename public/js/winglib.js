@@ -427,7 +427,7 @@ function draw_text(ctx,x,y,rotate,textAlign,text) {
     }
     ctx.textAlign = textAlign;
     ctx.fillStyle='#000';
-    size = 7/zoom;
+    size = 8.625/zoom;
     ctx.font = size.toString()+'pt Sans-Serif';
     ctx.fillText(text,0,0);
     ctx.restore();
@@ -437,27 +437,27 @@ function draw_text(ctx,x,y,rotate,textAlign,text) {
 function draw_line(ctx,x1,y1,x2,y2,pos,text) {
     if (y1==y2) {
         ctx.beginPath();
-        ctx.moveTo(x1,y1 + 3/zoom);
-        ctx.lineTo(x1,y1 - 3/zoom);
+        ctx.moveTo(x1,y1 + 4/zoom);
+        ctx.lineTo(x1,y1 - 4/zoom);
         ctx.stroke();
         ctx.beginPath();
-        ctx.moveTo(x2,y2 + 3/zoom);
-        ctx.lineTo(x2,y2 - 3/zoom);
+        ctx.moveTo(x2,y2 + 4/zoom);
+        ctx.lineTo(x2,y2 - 4/zoom);
         ctx.stroke();
         if (text.length > 0) {
-            draw_text(ctx,(x1+x2*(pos-1))/pos,y1-3/zoom,0,'center',text);
+            draw_text(ctx,(x1+x2*(pos-1))/pos,y1-4/zoom,0,'center',text);
         }
     } else if (x1 == x2) {
         ctx.beginPath();
-        ctx.moveTo(x1 + 3/zoom, y1);
-        ctx.lineTo(x1 - 3/zoom, y1);
+        ctx.moveTo(x1 + 4/zoom, y1);
+        ctx.lineTo(x1 - 4/zoom, y1);
         ctx.stroke();
         ctx.beginPath();
-        ctx.moveTo(x2 + 3/zoom, y2);
-        ctx.lineTo(x2 - 3/zoom, y2);
+        ctx.moveTo(x2 + 4/zoom, y2);
+        ctx.lineTo(x2 - 4/zoom, y2);
         ctx.stroke();
         if (text.length > 0) {
-            draw_text(ctx,x1+3/zoom,(y1+(pos-1)*y2)/pos,Math.PI/2,'center',text);
+            draw_text(ctx,x1+4/zoom,(y1+(pos-1)*y2)/pos,Math.PI/2,'center',text);
         }
     }
     ctx.beginPath();
@@ -518,7 +518,7 @@ function draw_cg(context,zoom,p,drawmeasures,wholewing) {
     if (wholewing) {
         context.strokeStyle="#3636b2";
         context.fillStyle="#3636b2";
-        context.lineWidth = 2/zoom; // context.lineWidth = 1.0;
+        context.lineWidth = 3/zoom; // context.lineWidth = 1.0;
     } else {
         context.strokeStyle="#7070ff";
         context.fillStyle="#7070ff";
@@ -869,7 +869,7 @@ function draw_wing(forcesize) {
         canvas.setAttribute("width", canvas_w);
         canvas.setAttribute("height", canvas_h);
         ctx.strokeStyle="#000";
-        ctx.fillStyle="#fff";
+        ctx.fillStyle="#f4f6ff";
         ctx.lineWidth = 1;
         ctx.strokeRect(0, 0, canvas_w, canvas_h);
         ctx.save();
@@ -879,7 +879,7 @@ function draw_wing(forcesize) {
             ctx.translate(canvas_w/2, border_size);
         }
         ctx.scale(zoom,zoom);
-        ctx.lineWidth = 2/zoom;
+        ctx.lineWidth = 3/zoom;
         ctx.strokeStyle = "#000";
         trw = Math.max(p.span,(canvas_w/zoom)/2);
         trh = -p.minX;

@@ -70,7 +70,7 @@ it('draws the panels where the canvas geometry puts them', function () {
     }
 
     [$alpha, $red, $green, $blue] = drawingPixel($image, 700, 200);
-    expect($alpha)->toBe(0)->and([$red, $green, $blue])->toBe([255, 255, 255]);
+    expect($alpha)->toBe(0)->and([$red, $green, $blue])->toBe([0xF4, 0xF6, 0xFF]);
 
     [$alpha] = drawingPixel($image, 60, 390);
     expect($alpha)->toBe(127);
