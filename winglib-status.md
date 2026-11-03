@@ -222,3 +222,17 @@ size image. `wing:draw` shares that code and still regenerates whole batches.
   written.
 - `WingImageVariantsTest` covers create, fork, edit and the full size redraw. The
   drawing test suite and the page tests are unchanged.
+
+### Deployed 2026-11-04
+
+`deploy.sh` on both sites from `master`, commit `033fd9d`. Proven live by deleting
+a thumbnail and saving the wing that owns it:
+
+| site | `image_file` | deleted | after the save |
+|---|---|---|---|
+| beta | `/wingimg/52/56595406c49fc.png` | 180 px | 698 B, back |
+| prod | `/wingimg/57/565a3b8c3c08d.png` | 180 and 282 px | 698 B and 1044 B, back |
+
+The home page answered `200` before and after on both sites. The delete and the
+save ran through `php8.5 artisan tinker`; the server's bare `php` is 8.2 and fails
+the Composer platform check, so hand-run commands on this host must say `php8.5`.
