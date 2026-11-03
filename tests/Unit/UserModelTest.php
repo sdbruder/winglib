@@ -1,8 +1,6 @@
 <?php
 
 use App\User;
-use Gravatar;
-
 it('the gravatar url is stored when the address has one', function () {
     Gravatar::shouldReceive('exists')->once()->andReturn(true);
     Gravatar::shouldReceive('get')->once()->andReturn('https://example.test/avatar.png');

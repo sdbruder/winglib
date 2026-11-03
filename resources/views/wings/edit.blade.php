@@ -4,9 +4,9 @@
     <div class="container">
         <h1>Wing edit: {{ $wing->name }}</h1>
 
-        {!! Form::model($wing, ['method' => 'PUT','url' => 'wings/'.$wing->id, 'class' => 'form-horizontal']) !!}
+        {{ html()->modelForm($wing, 'PUT', url('wings/'.$wing->id))->class('form-horizontal')->open() }}
         @include('wings.form', ['submitButton' => 'Update'])
-        {!! Form::close(); !!}
+        {{ html()->closeModelForm() }}
 
         @include('errors.list')
 

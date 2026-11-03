@@ -16,24 +16,22 @@
                         <a href="/wings/{{$wing->id}}/edit" class="btn btn-primary disabled">Edit</a>
                         </div>
                     @endif
-                    {!! Form::model($wing, [
-                        'method' => 'DELETE',
-                        'url'    => 'wings/'.$wing->id,
-                        'class'  => 'form-inline',
-                        'style'  => 'display: inline'
-                    ]) !!}
+                    {{ html()->modelForm($wing, 'DELETE', url('wings/'.$wing->id))
+                        ->class('form-inline')
+                        ->style('display: inline')
+                        ->open() }}
                     @if ((Auth::user()) and ($wing->user->id == Auth::user()->id))
-                        {!! Form::submit('Delete',['class' => 'btn btn-danger']); !!}
+                        {{ html()->submit('Delete')->class('btn btn-danger') }}
                     @else
                         <div class="tooltip-wrapper"
                             data-toggle="popover"
                             data-trigger="hover"
                             data-content="You can't delete a wing that is not yours or you are not logged in."
                             data-placement="bottom">
-                        {!! Form::submit('Delete',['class' => 'btn btn-danger disabled']); !!}
+                        {{ html()->submit('Delete')->class('btn btn-danger disabled') }}
                         </div>
                     @endif
-                    {!! Form::close(); !!}
+                    {{ html()->closeModelForm() }}
                     @if ((Auth::user()) and ($wing->user->id != Auth::user()->id))
                         <a href="/wings/{{$wing->id}}/forkit" class="btn btn-warning">Fork it!</a>
                     @else

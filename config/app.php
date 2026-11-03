@@ -1,37 +1,14 @@
 <?php
 
 use App\Providers\AppServiceProvider;
+use App\Providers\AuthServiceProvider;
 use App\Providers\EventServiceProvider;
 use App\Providers\RouteServiceProvider;
-use Barryvdh\Debugbar\Facade;
-use Barryvdh\Debugbar\ServiceProvider;
 use Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider;
-use Collective\Html\FormFacade;
-use Collective\Html\HtmlFacade;
-use Collective\Html\HtmlServiceProvider;
 use Creativeorange\Gravatar\Facades\Gravatar;
 use Creativeorange\Gravatar\GravatarServiceProvider;
-use Illuminate\Auth\AuthServiceProvider;
-use Illuminate\Auth\Passwords\PasswordResetServiceProvider;
-use Illuminate\Broadcasting\BroadcastServiceProvider;
-use Illuminate\Bus\BusServiceProvider;
-use Illuminate\Cache\CacheServiceProvider;
-use Illuminate\Cookie\CookieServiceProvider;
-use Illuminate\Database\DatabaseServiceProvider;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Encryption\EncryptionServiceProvider;
-use Illuminate\Filesystem\FilesystemServiceProvider;
 use Illuminate\Foundation\Inspiring;
-use Illuminate\Foundation\Providers\ConsoleSupportServiceProvider;
-use Illuminate\Foundation\Providers\FoundationServiceProvider;
-use Illuminate\Hashing\HashServiceProvider;
-use Illuminate\Mail\MailServiceProvider;
-use Illuminate\Notifications\NotificationServiceProvider;
-use Illuminate\Pagination\PaginationServiceProvider;
-use Illuminate\Pipeline\PipelineServiceProvider;
-use Illuminate\Queue\QueueServiceProvider;
-use Illuminate\Redis\RedisServiceProvider;
-use Illuminate\Session\SessionServiceProvider;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Blade;
@@ -62,9 +39,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\View;
-use Illuminate\Translation\TranslationServiceProvider;
-use Illuminate\Validation\ValidationServiceProvider;
-use Illuminate\View\ViewServiceProvider;
+use Illuminate\Support\ServiceProvider;
 use Laracasts\Flash\Flash;
 use Laracasts\Flash\FlashServiceProvider;
 use Laravel\Socialite\Facades\Socialite;
@@ -176,23 +151,6 @@ return [
 
     'key' => env('APP_KEY', 'SomeRandomString'),
 
-    'cipher' => 'AES-256-CBC',
-
-    /*
-    |--------------------------------------------------------------------------
-    | Logging Configuration
-    |--------------------------------------------------------------------------
-    |
-    | Here you may configure the log settings for your application. Out of
-    | the box, Laravel uses the Monolog PHP logging library. This gives
-    | you a variety of powerful log handlers / formatters to utilize.
-    |
-    | Available Settings: "single", "daily", "syslog", "errorlog"
-    |
-    */
-
-    'log' => 'single',
-
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers
@@ -204,55 +162,26 @@ return [
     |
     */
 
-    'providers' => [
-
-        /*
-         * Laravel Framework Service Providers...
-         */
-        AuthServiceProvider::class,
-        BroadcastServiceProvider::class,
-        BusServiceProvider::class,
-        CacheServiceProvider::class,
-        ConsoleSupportServiceProvider::class,
-        CookieServiceProvider::class,
-        DatabaseServiceProvider::class,
-        EncryptionServiceProvider::class,
-        FilesystemServiceProvider::class,
-        FoundationServiceProvider::class,
-        HashServiceProvider::class,
-        MailServiceProvider::class,
-        NotificationServiceProvider::class,
-        PaginationServiceProvider::class,
-        PipelineServiceProvider::class,
-        QueueServiceProvider::class,
-        RedisServiceProvider::class,
-        PasswordResetServiceProvider::class,
-        SessionServiceProvider::class,
-        TranslationServiceProvider::class,
-        ValidationServiceProvider::class,
-        ViewServiceProvider::class,
+    'providers' => ServiceProvider::defaultProviders()->merge([
 
         /*
          * Application Service Providers...
          */
         AppServiceProvider::class,
-        App\Providers\AuthServiceProvider::class,
+        AuthServiceProvider::class,
         EventServiceProvider::class,
         RouteServiceProvider::class,
 
         /*
          * CGCalc service providers...
          */
-        HtmlServiceProvider::class,
-        ServiceProvider::class,
         FlashServiceProvider::class,
         IdeHelperServiceProvider::class,
         GravatarServiceProvider::class,
         SocialiteServiceProvider::class,
-        AppServiceProvider::class,
         TinkerServiceProvider::class,
 
-    ],
+    ])->toArray(),
 
     /*
     |--------------------------------------------------------------------------
@@ -304,9 +233,6 @@ return [
         /*
          * CGCalc aliases...
          */
-        'Form' => FormFacade::class,
-        'Html' => HtmlFacade::class,
-        'Debugbar' => Facade::class,
         'Flash' => Flash::class,
         'Gravatar' => Gravatar::class,
         'Socialite' => Socialite::class,

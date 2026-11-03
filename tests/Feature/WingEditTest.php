@@ -16,6 +16,21 @@ it('the owner opens the edit form', function () {
     $this->deleteWingImage($wing->image_file);
 });
 
+it('the edit form is filled in from the wing', function () {
+    $user = User::factory()->create();
+    $wing = $this->wingOwnedBy($user);
+    $wing->update(['description' => 'A & B <b>bold</b>']);
+
+    $response = $this->actingAs($user)->get('/wings/'.$wing->id.'/edit');
+
+    $response->assertStatus(200);
+    $response->assertSee('value="Test Wing Alpha"', false);
+    $response->assertSee('A &amp; B &lt;b&gt;bold&lt;/b&gt;', false);
+    $response->assertDontSee('<b>bold</b>', false);
+
+    $this->deleteWingImage($wing->image_file);
+});
+
 it('another user cannot open the edit form', function () {
     $owner = User::factory()->create();
     $other = User::factory()->create();

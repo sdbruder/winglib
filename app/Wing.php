@@ -65,15 +65,6 @@ class Wing extends Model
         'panel6angle',
     ];
 
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'panels' => 'array',
-    ];
-
     protected $appends = [
         'panel1span',
         'panel1chord',
@@ -477,5 +468,15 @@ class Wing extends Model
     public function likedBy()
     {
         return $this->belongsToMany('App\User', 'users_likes_wings');
+    }
+
+    /**
+     * The attributes that should be casted to native types.
+     */
+    protected function casts(): array
+    {
+        return [
+            'panels' => 'array',
+        ];
     }
 }

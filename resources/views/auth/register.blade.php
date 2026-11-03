@@ -5,33 +5,33 @@
 
         <h1>Create your account</h1>
 
-        {!! Form::open(array('url' => '/auth/register')); !!}
+        {{ html()->form('POST', url('/auth/register'))->open() }}
 
         <div class="form-group">
-            {!! Form::label('name', 'Name'); !!}
-            {!! Form::text('name', old('name'), ['class'=>'form-control', 'placeholder'=>'Your name']);  !!}
+            {{ html()->label('Name', 'name') }}
+            {{ html()->text('name')->class('form-control')->placeholder('Your name') }}
         </div>
         <div class="form-group">
-            {!! Form::label('email', 'Email'); !!}
-            {!! Form::text('email', old('email'), ['class'=>'form-control', 'placeholder'=>'Your email']);  !!}
-        </div>
-
-        <div class="form-group">
-            {!! Form::label('password', 'Password'); !!}
-            {!! Form::password('password', ['class'=>'form-control' ]);  !!}
+            {{ html()->label('Email', 'email') }}
+            {{ html()->text('email')->class('form-control')->placeholder('Your email') }}
         </div>
 
         <div class="form-group">
-            {!! Form::label('password_confirmation', 'Confirm Password'); !!}
-            {!! Form::password('password_confirmation', ['class'=>'form-control' ]);  !!}
+            {{ html()->label('Password', 'password') }}
+            {{ html()->password('password')->class('form-control') }}
         </div>
 
         <div class="form-group">
-            {!! Form::checkbox('remember', null, ['class'=>'form-control']); !!} Remember me
+            {{ html()->label('Confirm Password', 'password_confirmation') }}
+            {{ html()->password('password_confirmation')->class('form-control') }}
         </div>
 
-        {!! Form::submit('Register',['class' => 'btn btn-primary']); !!}
-        {!! Form::close(); !!}
+        <div class="form-group">
+            {{ html()->checkbox('remember', true)->class('form-control') }} Remember me
+        </div>
+
+        {{ html()->submit('Register')->class('btn btn-primary') }}
+        </form>
 
         @include('errors.list')
 

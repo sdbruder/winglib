@@ -5,25 +5,25 @@
 
         <h3>Login</h3>
 
-        {!! Form::open(array('url' => '/auth/login')); !!}
+        {{ html()->form('POST', url('/auth/login'))->open() }}
 
         <div class="form-group">
-            {!! Form::label('email', 'Email'); !!}
-            {!! Form::text('email', old('email'), ['class'=>'form-control', 'placeholder'=>'Your email']);  !!}
+            {{ html()->label('Email', 'email') }}
+            {{ html()->text('email')->class('form-control')->placeholder('Your email') }}
         </div>
 
         <div class="form-group">
-            {!! Form::label('password', 'Password'); !!}
-            {!! Form::password('password', ['class'=>'form-control' ]);  !!}
+            {{ html()->label('Password', 'password') }}
+            {{ html()->password('password')->class('form-control') }}
         </div>
 
         <div class="form-group">
-            {!! Form::checkbox('remember', null, ['class'=>'form-control']); !!} Remember me
+            {{ html()->checkbox('remember', true)->class('form-control') }} Remember me
         </div>
 
-        {!! Form::submit('Login',['class' => 'btn btn-primary']); !!}
+        {{ html()->submit('Login')->class('btn btn-primary') }}
         <a class="btn btn-danger" href="/password/email">Forgot your password?</a>
-        {!! Form::close(); !!}
+        </form>
 
         @include('errors.list')
 
