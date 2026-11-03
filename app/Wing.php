@@ -10,7 +10,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use Throwable;
 
 define('URL_SEPARATOR', '/');
 
@@ -166,6 +168,13 @@ class Wing extends Model
 
             return true;
         }); // static::saving
+
+        // The home panels and the library listing show a small drawing beside each wing. It is
+        // rendered server side from the same data as the full size image, so refreshing it here
+        // covers every write path at once: store, update, fork, and the drawing command.
+        static::saved(function (Wing $wing) {
+            $wing->refreshImageVariants();
+        });
     }
 
     public static function duplicateImage($orig_image)
@@ -213,6 +222,35 @@ class Wing extends Model
         $base64_str = substr($base64_image, strpos($base64_image, ',') + 1);
         // decode base64 string and write it down.
         file_put_contents($image_filename, base64_decode($base64_str));
+    }
+
+    /** The thumbnail widths the home panels and the library listing ask for. */
+    public const IMAGE_VARIANTS = [180, 282];
+
+    /**
+     * (Re)draw the thumbnails the views ask for, from this wing's own measurements. It runs on
+     * every save, so no write path — created, edited, forked, redrawn — can leave a wing with a
+     * missing or a stale thumbnail, and it never touches the full size image the editor posted.
+     */
+    public function refreshImageVariants(): void
+    {
+        if ($this->image_file === '' || ! file_exists(storage_path('app'.$this->image_file))) {
+            return;
+        }
+
+        foreach (self::IMAGE_VARIANTS as $width) {
+            try {
+                // No measure labels at thumbnail size: they would only smear.
+                $png = WingDrawing::png($this, $width, false);
+            } catch (Throwable) {
+                return; // a wing that cannot be drawn must not break the save that produced it
+            }
+
+            $path = storage_path('app'.$this->imageVariant($width));
+
+            File::ensureDirectoryExists(dirname($path));
+            File::put($path, $png);
+        }
     }
 
     /**

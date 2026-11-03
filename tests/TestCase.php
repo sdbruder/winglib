@@ -128,6 +128,14 @@ class TestCase extends BaseTestCase
         if (file_exists($path)) {
             unlink($path);
         }
+
+        foreach (Wing::IMAGE_VARIANTS as $width) {
+            $variant = storage_path('app'.(new Wing(['image_file' => $imageUrl]))->imageVariant($width));
+
+            if (file_exists($variant)) {
+                unlink($variant);
+            }
+        }
     }
 
     /**

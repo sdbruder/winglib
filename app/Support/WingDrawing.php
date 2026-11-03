@@ -156,9 +156,14 @@ class WingDrawing
      */
     private function readPanels(): array
     {
-        $this->metric = $this->wing->unitsystem === 'metric';
-        $this->measures = (bool) $this->wing->drawvalues;
-        $this->cgPos = (float) $this->wing->getAttribute('cgpos');
+        // Everything but panels is read from the raw attribute array: a wing that was just created
+        // from a partial form has no cgpos, drawvalues or rootchord on the in memory model, and a
+        // property read on a missing attribute raises a warning inside the save that triggered it.
+        $attributes = $this->wing->getAttributes();
+
+        $this->metric = ($attributes['unitsystem'] ?? null) === 'metric';
+        $this->measures = (bool) ($attributes['drawvalues'] ?? false);
+        $this->cgPos = (float) ($attributes['cgpos'] ?? 0);
 
         /** @var array<int|string, array<string, string>> $stored */
         $stored = (array) $this->wing->panels;
@@ -178,7 +183,7 @@ class WingDrawing
                 'tipc' => (float) ($row['chord'] ?? 0),
                 'sweep' => (float) ($row['sweep'] ?? 0),
                 'angle' => (float) ($row['angle'] ?? 0),
-                'root' => $i === 1 ? (float) $this->wing->rootchord : $panels[$i - 1]['tipc'],
+                'root' => $i === 1 ? (float) ($attributes['rootchord'] ?? 0) : $panels[$i - 1]['tipc'],
             ];
 
             $previousSweep = $panels[0]['sweep'];

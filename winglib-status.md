@@ -203,3 +203,22 @@ The pre-redraw files are at `/home/sergio/backups/wingimg-{winglib,beta.winglib}
 - The `bitbucket` remote is gone from the local repo and from both server checkouts;
   `origin` (GitHub) is the only remote. The old URL survives only inside the backup
   copies under `/home/sergio/backups/winglib-config/`.
+
+## Wing thumbnails on every write (2026-11-04)
+
+The 180 and 282 px thumbnails are now written by the model, not only by `wing:draw`.
+A `saved` hook on `Wing` calls `refreshImageVariants()`, so a wing that is created,
+edited or forked gets its thumbnails at once, drawn from the same data as the full
+size image. `wing:draw` shares that code and still regenerates whole batches.
+
+- `WingDrawing` gained `saveImage()` and `saveImageVariant()`; the command and the
+  hook both call them.
+- The hook reads `unitsystem`, `drawvalues`, `cgpos` and `rootchord` from the raw
+  attribute array. A wing that was just saved from a form which did not post those
+  fields carries no such attribute on the in-memory model, and a property read on a
+  missing attribute raises a warning inside the save that triggered the hook. The
+  first version used property reads, the render threw `Undefined array key "cgpos"`
+  into the hook's own `catch (Throwable)`, and the thumbnails were silently never
+  written.
+- `WingImageVariantsTest` covers create, fork, edit and the full size redraw. The
+  drawing test suite and the page tests are unchanged.

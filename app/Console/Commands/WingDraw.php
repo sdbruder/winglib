@@ -66,6 +66,11 @@ class WingDraw extends Command
             File::ensureDirectoryExists(dirname($path));
             File::put($path, $png);
 
+            if ($width === WingDrawing::WIDTH) {
+                // The full size image changed, so the thumbnails have to follow it.
+                $wing->refreshImageVariants();
+            }
+
             $this->line(sprintf('wing %d %s: drew %s (%d bytes)', $wing->id, $wing->slug, $wing->imageVariant($width), strlen($png)));
             $drawn++;
         }
