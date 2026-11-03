@@ -1,0 +1,74 @@
+# winglib status
+
+Host: `host.bruder.com.br` (Hetzner `ubuntu-4gb-nbg1-1`), user `sergio`.
+
+## Remotes and branches
+
+| remote | url | notes |
+|---|---|---|
+| `origin` | `git@github.com:sdbruder/winglib.git` | primary since 2026-11-03 |
+| `bitbucket` | `ssh://git@ssh.bitbucket.org/sdbruder/winglib.git` | fallback, kept for now |
+
+Bitbucket moved SSH to `ssh.bitbucket.org` on 2026-11-12; the old host
+`bitbucket.org` is no longer in any `known_hosts`, so pulls from it fail.
+
+| branch | head | content |
+|---|---|---|
+| `master` | Laravel 5.5 | active line; `beta.winglib.com` deploys from it |
+| `prod` | Laravel 5.1, tip `7f72abd` (2018) | frozen line; `winglib.com` deploys from it |
+| `dev`, `hotfix` | Laravel 5.5-era | untouched |
+
+`prod`'s tip is an ancestor of `master`; `master` additionally carries the whole
+5.1 → 5.5 upgrade. Bitbucket trails both branches by a few commits.
+
+## Server layout
+
+| path | site | branch | pool |
+|---|---|---|---|
+| `/var/www/winglib` | winglib.com (TLS) | `prod` | `php7.4-fpm-winglib.sock` (user `sergio`) |
+| `/var/www/beta.winglib` | beta.winglib.com (port 80 only) | `master` | `php7.4-fpm-winglib.sock` |
+
+Both checkouts are owned by `sergio`, which is also the pool user, so PHP writes
+`storage/` and `bootstrap/cache/` without sudo. Only the fpm reload needs sudo
+(`NOPASSWD: ALL`). Vhosts live in `/etc/nginx/sites-available/`; the `.bak-*` files
+next to them are the pre-change copies.
+
+## Deploy
+
+`deploy.sh` in the checkout, as `sergio`, from the branch that site deploys:
+`artisan down`, `git pull --ff-only`, `clear-compiled`, `optimize`,
+`config:clear`, `route:clear`, `view:clear`, `cache:clear`,
+`systemctl reload php7.4-fpm`, and an `EXIT` trap that brings the app back up.
+`config:cache` is deliberately absent: on the 5.1 line `config/services.php`
+builds the OAuth redirect URIs from `$_SERVER[SERVER_NAME]`, which is unset in CLI
+and would be cached as an empty host.
+
+Dependencies, only when `composer.json`/`composer.lock` change:
+
+```
+/home/sergio/bin/composer1.phar install --no-dev --no-interaction --no-scripts --optimize-autoloader
+```
+
+Composer 1 is required: Composer 2 writes `vendor/composer/installed.json` in a
+format Laravel 5.5 cannot read (`PackageManifest`: `Undefined index: name`).
+`--no-scripts` stops the post-install hooks from regenerating `_ide_helper.php`
+inside the checkout.
+
+## Known gaps
+
+- **beta.winglib.com has no TLS**: `https://beta.winglib.com` is answered by an
+  unrelated 443 block (`*.qr-lapide.com.br` certificate, QR Lápide login page).
+  The vhost is `listen 80` only.
+- **beta runs with `APP_ENV=local` and `APP_DEBUG=true`**, which shows debugbar and
+  exception details to visitors.
+- `winglib.com` still runs the 5.1 line while `master` holds the 5.5 upgrade;
+  moving it is a deploy decision, and it changes the artisan steps.
+- Migrations: 4 applied, 0 pending on prod. The beta database is `winglibbeta`
+  (user `root` at `localhost`) and has not been migrated for the 5.5 line.
+- Sessions: prod uses `SESSION_PATH=/var/lib/php/session` (created 2026-11-03 with
+  mode `1733 root:root`, as the app expected); beta uses its own
+  `storage/framework/sessions`, because Laravel 5.5's own session GC has to list
+  the directory and `1733` forbids that to a non-owner.
+- `_ide_helper.php` on prod carries one uncommitted generated-date line; two
+  untracked verification files (`public/ads.txt`,
+  `public/google7130d95414ed0aad.html`) match the blobs in `master` exactly.
