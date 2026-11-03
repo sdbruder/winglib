@@ -13,8 +13,8 @@ class WingForkTest extends TestCase
 
     public function test_a_logged_in_user_forks_a_wing_that_is_not_theirs()
     {
-        $owner = factory(User::class)->create();
-        $forker = factory(User::class)->create();
+        $owner = User::factory()->create();
+        $forker = User::factory()->create();
         $original = $this->wingOwnedBy($owner);
 
         $response = $this->actingAs($forker)->get('/wings/'.$original->id.'/forkit');
@@ -36,7 +36,7 @@ class WingForkTest extends TestCase
 
     public function test_the_owner_cannot_fork_a_wing_of_their_own()
     {
-        $owner = factory(User::class)->create();
+        $owner = User::factory()->create();
         $original = $this->wingOwnedBy($owner);
 
         $response = $this->actingAs($owner)->get('/wings/'.$original->id.'/forkit');
@@ -51,7 +51,7 @@ class WingForkTest extends TestCase
 
     public function test_a_guest_cannot_fork_a_wing()
     {
-        $original = $this->wingOwnedBy(factory(User::class)->create());
+        $original = $this->wingOwnedBy(User::factory()->create());
 
         $response = $this->get('/wings/'.$original->id.'/forkit');
 
@@ -65,7 +65,7 @@ class WingForkTest extends TestCase
 
     private function wingOwnedBy(User $user)
     {
-        return factory(Wing::class)->create([
+        return Wing::factory()->create([
             'user_id' => $user->id,
             'name' => 'Test Wing Alpha',
             'image_file' => Wing::createImage($this->base64Png('original image')),

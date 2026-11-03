@@ -99,8 +99,8 @@ class WingModelTest extends TestCase
 
     private function createWing(array $attributes = [])
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
-        return factory(Wing::class)->create($attributes + ['user_id' => $user->id]);
+        return Wing::factory()->create($attributes + ['user_id' => $user->id]);
     }
 }

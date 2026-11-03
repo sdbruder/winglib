@@ -21,28 +21,26 @@
         "infinety/sweetalert": "dev-master",
         "intervention/image": "~2.2",
         "laracasts/flash": "^3.2",
-        "laravel/framework": "^7.0",
+        "laravel/framework": "^8.0",
         "laravel/socialite": "^5.0",
         "laravel/tinker": "^2.0",
-        "laravel/ui": "^2.0",
+        "laravel/ui": "^3.0",
         "laravelcollective/html": "^6.0"
     },
     "require-dev": {
         "driftingly/rector-laravel": "^2.0",
         "fakerphp/faker": "^1.9",
         "mockery/mockery": "^1.3",
-        "phpunit/phpunit": "^8.5",
+        "phpunit/phpunit": "^9.0",
         "rector/rector": "^2.8",
         "symfony/css-selector": "~3.0",
         "symfony/dom-crawler": "~3.0"
     },
     "autoload": {
-        "classmap": [
-            "database/seeds",
-            "database/factories"
-        ],
         "psr-4": {
-            "App\\": "app/"
+            "App\\": "app/",
+            "Database\\Factories\\": "database/factories/",
+            "Database\\Seeders\\": "database/seeders/"
         }
     },
     "autoload-dev": {

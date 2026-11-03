@@ -21,7 +21,7 @@ class AuthTest extends TestCase
 
     public function test_a_user_logs_in_with_the_right_password()
     {
-        $user = factory(User::class)->create(['password' => bcrypt('secret')]);
+        $user = User::factory()->create(['password' => bcrypt('secret')]);
 
         $response = $this->post('/auth/login', ['email' => $user->email, 'password' => 'secret']);
 
@@ -32,7 +32,7 @@ class AuthTest extends TestCase
 
     public function test_a_wrong_password_is_rejected()
     {
-        $user = factory(User::class)->create(['password' => bcrypt('secret')]);
+        $user = User::factory()->create(['password' => bcrypt('secret')]);
 
         $response = $this->post('/auth/login', ['email' => $user->email, 'password' => 'wrong']);
 
@@ -43,7 +43,7 @@ class AuthTest extends TestCase
 
     public function test_a_user_logs_out()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
         $response = $this->actingAs($user)->get('/auth/logout');
 
@@ -87,7 +87,7 @@ class AuthTest extends TestCase
 
     public function test_an_email_that_is_already_taken_is_rejected()
     {
-        factory(User::class)->create(['email' => 'test@example.test']);
+        User::factory()->create(['email' => 'test@example.test']);
 
         $response = $this->post('/auth/register', [
             'name' => 'Test User',
@@ -103,7 +103,7 @@ class AuthTest extends TestCase
 
     public function test_a_password_reset_link_is_sent()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
         Notification::fake();
 
@@ -115,7 +115,7 @@ class AuthTest extends TestCase
 
     public function test_a_user_resets_the_password_through_the_password_resets_table()
     {
-        $user = factory(User::class)->create(['password' => bcrypt('old-password')]);
+        $user = User::factory()->create(['password' => bcrypt('old-password')]);
 
         DB::table('password_resets')->insert([
             'email' => $user->email,

@@ -13,8 +13,8 @@ class WingListingTest extends TestCase
 
     public function test_the_library_lists_ten_wings_per_page()
     {
-        $user = factory(User::class)->create();
-        factory(Wing::class, 12)->create(['user_id' => $user->id]);
+        $user = User::factory()->create();
+        Wing::factory()->count(12)->create(['user_id' => $user->id]);
 
         $response = $this->get('/wings');
 

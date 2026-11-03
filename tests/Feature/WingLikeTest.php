@@ -14,8 +14,8 @@ class WingLikeTest extends TestCase
 
     public function test_liking_a_wing_adds_one_row_and_returns_the_count()
     {
-        $user = factory(User::class)->create();
-        $wing = factory(Wing::class)->create(['user_id' => factory(User::class)->create()->id]);
+        $user = User::factory()->create();
+        $wing = Wing::factory()->create(['user_id' => User::factory()->create()->id]);
 
         $response = $this->actingAs($user)->post('/wings/likeit', ['id' => $wing->id]);
 
@@ -31,7 +31,7 @@ class WingLikeTest extends TestCase
 
     public function test_liking_an_unknown_wing_is_not_found()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
         $this->actingAs($user)->post('/wings/likeit', ['id' => 999999])->assertStatus(404);
     }

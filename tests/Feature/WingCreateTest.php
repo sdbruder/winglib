@@ -35,7 +35,7 @@ class WingCreateTest extends TestCase
 
     public function test_a_user_stores_a_wing_with_its_image_and_panels()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
         $bytes = 'abcdefgh';
 
         $response = $this->actingAs($user)->post('/wings', array_merge([
@@ -67,7 +67,7 @@ class WingCreateTest extends TestCase
 
     public function test_a_name_shorter_than_five_characters_is_rejected()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
         $response = $this->actingAs($user)->post('/wings', array_merge([
             'name' => 'Wng',

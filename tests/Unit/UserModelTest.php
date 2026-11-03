@@ -16,7 +16,7 @@ class UserModelTest extends TestCase
         Gravatar::shouldReceive('exists')->once()->andReturn(true);
         Gravatar::shouldReceive('get')->once()->andReturn('https://example.test/avatar.png');
 
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
         $this->assertSame('https://example.test/avatar.png', $user->avatar);
     }
@@ -25,7 +25,7 @@ class UserModelTest extends TestCase
     {
         Gravatar::shouldReceive('exists')->once()->andReturn(false);
 
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
         $this->assertSame('/img/default-avatar.jpg', $user->avatar);
     }
@@ -34,7 +34,7 @@ class UserModelTest extends TestCase
     {
         Gravatar::shouldReceive('exists')->never();
 
-        $user = factory(User::class)->create(['avatar' => 'https://example.test/kept.png']);
+        $user = User::factory()->create(['avatar' => 'https://example.test/kept.png']);
 
         $this->assertSame('https://example.test/kept.png', $user->avatar);
     }

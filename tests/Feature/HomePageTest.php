@@ -24,11 +24,11 @@ class HomePageTest extends TestCase
 
     public function test_the_last_panel_holds_the_five_most_recently_updated_wings()
     {
-        $user = factory(User::class)->create();
-        $newest = factory(Wing::class)->create(['user_id' => $user->id]);
+        $user = User::factory()->create();
+        $newest = Wing::factory()->create(['user_id' => $user->id]);
 
         for ($i = 0; $i < 6; $i++) {
-            factory(Wing::class)->create(['user_id' => $user->id]);
+            Wing::factory()->create(['user_id' => $user->id]);
         }
 
         Wing::where('id', '!=', $newest->id)->update(['updated_at' => '2000-01-01 00:00:00']);
@@ -41,10 +41,10 @@ class HomePageTest extends TestCase
 
     public function test_the_most_voted_panel_ranks_the_wings_by_their_likes()
     {
-        $user = factory(User::class)->create();
-        $liked = factory(Wing::class)->create(['user_id' => $user->id]);
-        $lessLiked = factory(Wing::class)->create(['user_id' => $user->id]);
-        $likers = factory(User::class, 2)->create();
+        $user = User::factory()->create();
+        $liked = Wing::factory()->create(['user_id' => $user->id]);
+        $lessLiked = Wing::factory()->create(['user_id' => $user->id]);
+        $likers = User::factory()->count(2)->create();
 
         $liked->likedBy()->attach($likers->pluck('id')->all());
         $lessLiked->likedBy()->attach($likers->first()->id);

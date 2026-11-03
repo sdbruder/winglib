@@ -23,6 +23,21 @@ require __DIR__.'/../bootstrap/autoload.php';
 
 /*
 |--------------------------------------------------------------------------
+| Pre-rendered Maintenance Mode
+|--------------------------------------------------------------------------
+|
+| Laravel 8 can pre-render the maintenance mode view, so a visitor never meets
+| an error page while the application is down. `php artisan down`, which
+| deploy.sh runs before it pulls the new code, writes that file.
+|
+*/
+
+if (file_exists($maintenance = __DIR__.'/../storage/framework/maintenance.php')) {
+    require $maintenance;
+}
+
+/*
+|--------------------------------------------------------------------------
 | Turn On The Lights
 |--------------------------------------------------------------------------
 |

@@ -13,7 +13,7 @@ class WingEditTest extends TestCase
 
     public function test_the_owner_opens_the_edit_form()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
         $wing = $this->wingOwnedBy($user);
 
         $response = $this->actingAs($user)->get('/wings/'.$wing->id.'/edit');
@@ -27,8 +27,8 @@ class WingEditTest extends TestCase
 
     public function test_another_user_cannot_open_the_edit_form()
     {
-        $owner = factory(User::class)->create();
-        $other = factory(User::class)->create();
+        $owner = User::factory()->create();
+        $other = User::factory()->create();
         $wing = $this->wingOwnedBy($owner);
 
         $response = $this->actingAs($other)->get('/wings/'.$wing->id.'/edit');
@@ -42,7 +42,7 @@ class WingEditTest extends TestCase
 
     public function test_a_guest_cannot_open_the_edit_form()
     {
-        $wing = $this->wingOwnedBy(factory(User::class)->create());
+        $wing = $this->wingOwnedBy(User::factory()->create());
 
         $response = $this->get('/wings/'.$wing->id.'/edit');
 
@@ -55,7 +55,7 @@ class WingEditTest extends TestCase
 
     public function test_the_owner_updates_the_wing_and_its_image()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
         $wing = $this->wingOwnedBy($user);
         $bytes = 'ijklmnop';
 
@@ -79,7 +79,7 @@ class WingEditTest extends TestCase
 
     private function wingOwnedBy(User $user)
     {
-        return factory(Wing::class)->create([
+        return Wing::factory()->create([
             'user_id' => $user->id,
             'name' => 'Test Wing Alpha',
             'image_file' => Wing::createImage($this->base64Png('original image')),

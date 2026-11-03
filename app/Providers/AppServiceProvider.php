@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -13,7 +14,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        // From Laravel 8 the paginator renders Tailwind CSS markup by default. This
+        // application's views are Bootstrap 3, so keep the Bootstrap 3 pagination views.
+        Paginator::useBootstrapThree();
     }
 
     /**
