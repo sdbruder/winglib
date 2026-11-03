@@ -10,8 +10,8 @@ Host: `host.bruder.com.br` (Hetzner `ubuntu-4gb-nbg1-1`), user `sergio`.
 
 | branch | head | content |
 |---|---|---|
-| `master` | Laravel 5.5 | active line; `beta.winglib.com` deploys from it |
-| `prod` | Laravel 5.1, tip `7f72abd` (2018) | frozen line; `winglib.com` deploys from it |
+| `master` | Laravel 13.40.0 on PHP 8.5 | the only deployed line since 2026-11-04; both sites deploy from it |
+| `prod` | Laravel 5.1, tip `96dd1c6` | frozen line, kept as the rollback anchor for winglib.com until the window closes |
 | `dev`, `hotfix` | Laravel 5.5-era | untouched |
 
 `prod`'s tip is an ancestor of `master`; `master` additionally carries the whole
@@ -21,8 +21,8 @@ Host: `host.bruder.com.br` (Hetzner `ubuntu-4gb-nbg1-1`), user `sergio`.
 
 | path | site | branch | pool |
 |---|---|---|---|
-| `/var/www/winglib` | winglib.com (TLS) | `prod` | `php7.4-fpm-winglib.sock` (user `sergio`) |
-| `/var/www/beta.winglib` | beta.winglib.com (TLS) | `master` | `php7.4-fpm-winglib.sock` |
+| `/var/www/winglib` | winglib.com (TLS) | `master` | `php8.5-fpm-winglib.sock` (user `sergio`) |
+| `/var/www/beta.winglib` | beta.winglib.com (TLS) | `master` | `php8.5-fpm-winglib.sock` |
 
 Both checkouts are owned by `sergio`, which is also the pool user, so PHP writes
 `storage/` and `bootstrap/cache/` without sudo. Only the fpm reload needs sudo
@@ -31,24 +31,24 @@ next to them are the pre-change copies.
 
 ## Deploy
 
-`deploy.sh` in the checkout, as `sergio`, from the branch that site deploys:
-`artisan down`, `git pull --ff-only`, `clear-compiled`, `optimize`,
-`config:clear`, `route:clear`, `view:clear`, `cache:clear`,
-`systemctl reload php7.4-fpm`, and an `EXIT` trap that brings the app back up.
-`config:cache` is deliberately absent: on the 5.1 line `config/services.php`
-builds the OAuth redirect URIs from `$_SERVER[SERVER_NAME]`, which is unset in CLI
-and would be cached as an empty host.
+`deploy.sh` in the checkout, as `sergio`, from `master` (both sites now):
+`artisan down`, `git pull --ff-only`, `rm -f bootstrap/cache/*.php`,
+`artisan optimize`, `systemctl reload php8.5-fpm`, and an `EXIT` trap that brings
+the app back up. The cache drop is not optional: a checkout that came from an
+older Laravel keeps `bootstrap/cache/packages.php` and `services.php` for the old
+provider list, the repository ignores both, and the first boot of the new code
+died with `Class "Barryvdh\Debugbar\ServiceProvider" not found` until they went.
 
 Dependencies, only when `composer.json`/`composer.lock` change:
 
 ```
-/home/sergio/bin/composer1.phar install --no-dev --no-interaction --no-scripts --optimize-autoloader
+/usr/bin/php8.5 /usr/bin/composer install --no-dev --no-interaction --no-scripts --optimize-autoloader
 ```
 
-Composer 1 is required: Composer 2 writes `vendor/composer/installed.json` in a
-format Laravel 5.5 cannot read (`PackageManifest`: `Undefined index: name`).
-`--no-scripts` stops the post-install hooks from regenerating `_ide_helper.php`
-inside the checkout.
+Composer runs under php8.5 because the lock carries Symfony 8, which the host's
+default 8.2 CLI refuses to install; `--no-scripts` keeps the post-install hooks
+from regenerating `_ide_helper.php` inside the checkout, so `artisan
+package:discover` runs as its own step.
 
 ## TLS
 
@@ -89,16 +89,63 @@ again since the repair; the pre-repair table files are in
 `OFF` on this server, so the dumps pass `--skip-events`; `SHOW EVENTS` and
 `mysqldump --events` fail with `ERROR 1577` otherwise.
 
+## Upgrade to Laravel 13.40.0 (2026-11-04)
+
+`master` moved from Laravel 5.5 on PHP 7.4 to Laravel 13.40.0 on PHP 8.5 in one
+commit per hop, each walked against the official upgrade guide of its major, and
+each verified against a characterisation suite that was written on the 5.5
+behaviour first (48 tests, 178 assertions):
+
+| hop | version | PHP stage | what came with it |
+|---|---|---|---|
+| 6 | 6.20.45 | 7.4 | fakerphp, mockery 1.x, `laravel/ui`, Rector, the removed 5.x APIs |
+| 7 | 7.30.7 | 7.4 | `Str` and `Arr` moves, the session config env keys |
+| 8 | 8.83.29 | 7.4 | factory classes, `HasFactory`, the paginator's Tailwind default |
+| 9 | 9.52.23 | 8.2 | phpunit 9, Swiftmailer to the Symfony mailer, Larastan and Pint |
+| 10 | 10.50.4 | 8.2 | phpunit 10, the suite to Pest, `$middlewareAliases` |
+| 11 | 11.57.1 | 8.2 | laravelcollective/html to spatie/laravel-html, debugbar 4 (the Fruitcake namespace), ide-helper 3, Larastan level 5 with a baseline |
+| 12 | 12.71.0 | 8.5 | Carbon 3, Symfony 8 |
+| 13 | 13.40.0 | 8.5 | Pest 4 and phpunit 12, `PreventRequestForgery`, model metadata as attributes |
+
+`docker/compose.yaml` carries php7.4, php8.2 and php8.5 stages next to MariaDB
+10.11, so every hop ran against the engine this host serves. The toolchain the
+hops adopted: Pint over 76 files, Rector through rector-laravel's level sets,
+Larastan at level 5 with a committed baseline, and the suite itself.
+
+Beyond the hops, the rollout had to fix two things: `config/mail.php` still had
+the 5.5 layout, which Laravel 9 and later no longer read (the default mailer is
+`mail.default`, the transports live under `mail.mailers`), and prod's Mailgun
+transport needed `symfony/mailgun-mailer` with `symfony/http-client`. Both `.env`
+files now carry `MAIL_MAILER` (prod `mailgun`, beta `log`).
+
+### Rollback
+
+Until the window closes, the `prod` branch (`96dd1c6`, Laravel 5.1) and the
+`php7.4-fpm-winglib` pool are both still in place. To go back on `winglib.com`:
+`git checkout prod` in `/var/www/winglib`, reinstall the 5.1 vendor with
+`/home/sergio/bin/composer1.phar install --no-dev --no-interaction --no-scripts`,
+point the vhost back at `/run/php/php7.4-fpm-winglib.sock`, reload nginx, and run
+`php7.4 artisan up`. No database change is needed in either direction.
+
+### Findings left open
+
+- `composer audit` reports two medium XSS advisories in `components/jquery` 2.x
+  (fixed in 3.5.0). Rebuilding the bundle needs node, which this host does not
+  have; the build output is committed instead.
+- The Larastan baseline carries pre-existing findings, among them
+  `Wing::prepPanelsArray()` being unused and a dead array comparison.
+- `app/Http/Middleware/EncryptCookies.php` and `Authenticate.php` are empty shells
+  from the 5.x layout that no guide in this upgrade touches.
+
 ## Known gaps
 
-- `winglib.com` still runs the 5.1 line while `master` holds the 5.5 upgrade;
-  moving it is a deploy decision, and it changes the artisan steps.
-- Migrations: 4 applied, 0 pending on prod. The beta database is `winglibbeta`
-  (user `root` at `localhost`) and has not been migrated for the 5.5 line.
-- Sessions: prod uses `SESSION_PATH=/var/lib/php/session` (created 2026-11-03 with
-  mode `1733 root:root`, as the app expected); beta uses its own
-  `storage/framework/sessions`, because Laravel 5.5's own session GC has to list
-  the directory and `1733` forbids that to a non-owner.
+- Both sites run `master`; the `prod` branch and the `php7.4` pool stay in place
+  until the rollback window closes (the upgrade section has the way back).
+- Migrations: 4 applied, 0 pending on prod and on `winglibbeta`. The upgrade added
+  none, so the cutover needed no schema change.
+- Sessions: both sites write `storage/framework/sessions` now, which is Laravel's
+  own path from 5.5 on. `SESSION_PATH` in prod's `.env` is a 5.1 key that nothing
+  reads any more. The cutover therefore logged everyone out once.
 - Environments: beta runs `APP_ENV=staging`, `APP_DEBUG=false`; prod runs
   `APP_ENV=prod`, `APP_DEBUG=false`. Debugbar follows `app.debug`, so it is off on
   both.
