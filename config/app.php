@@ -9,6 +9,7 @@ use Creativeorange\Gravatar\Facades\Gravatar;
 use Creativeorange\Gravatar\GravatarServiceProvider;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Inspiring;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Blade;
@@ -196,7 +197,7 @@ return [
 
     'aliases' => [
 
-        'App' => Illuminate\Support\Facades\App::class,
+        'App' => App::class,
         'Artisan' => Artisan::class,
         'Auth' => Auth::class,
         'Blade' => Blade::class,

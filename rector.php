@@ -18,5 +18,5 @@ return RectorConfig::configure()
     // (LaravelSetList::COMPOSER_BASED) does not exist in rector-laravel 2.5.0, the version the
     // PHP 7.4 stage resolves.
     ->withSets([
-        LaravelLevelSetList::UP_TO_LARAVEL_110,
+        LaravelLevelSetList::UP_TO_LARAVEL_120,
     ]);
