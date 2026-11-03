@@ -127,6 +127,11 @@ Until the window closes, the `prod` branch (`96dd1c6`, Laravel 5.1) and the
 point the vhost back at `/run/php/php7.4-fpm-winglib.sock`, reload nginx, and run
 `php7.4 artisan up`. No database change is needed in either direction.
 
+The window closes on **2026-11-11**: after that date the `prod` branch, the
+`php7.4-fpm-winglib` pool and the `prod.env.bak-20261103-upgrade` /
+`winglib.conf.bak-20261103-upgrade` backups lose their rollback role and can be
+removed.
+
 ### Findings left open
 
 - `composer audit` reports two medium XSS advisories in `components/jquery` 2.x
