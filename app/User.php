@@ -1,6 +1,6 @@
 <?php
 
-namespace app;
+namespace App;
 
 use Gravatar;
 use Illuminate\Auth\Authenticatable;

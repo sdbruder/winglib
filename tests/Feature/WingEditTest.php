@@ -34,7 +34,8 @@ class WingEditTest extends TestCase
         $response = $this->actingAs($other)->get('/wings/'.$wing->id.'/edit');
 
         $response->assertStatus(302);
-        $response->assertSessionHas('flash_notification.message');
+        $response->assertSessionHas('flash_notification');
+        $this->get('/')->assertSee('This wing is not yours or you are not logged in.');
 
         $this->deleteWingImage($wing->image_file);
     }
@@ -46,7 +47,8 @@ class WingEditTest extends TestCase
         $response = $this->get('/wings/'.$wing->id.'/edit');
 
         $response->assertStatus(302);
-        $response->assertSessionHas('flash_notification.message');
+        $response->assertSessionHas('flash_notification');
+        $this->get('/')->assertSee('This wing is not yours or you are not logged in.');
 
         $this->deleteWingImage($wing->image_file);
     }

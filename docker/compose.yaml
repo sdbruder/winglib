@@ -10,6 +10,12 @@ x-app: &app
   environment:
     HOME: /tmp
     COMPOSER_HOME: /composer
+    # Composer 2.11 refuses to install any version that carries a security advisory, and every
+    # Laravel major between 6 and 10 is end of life and flagged. Walking through exactly those
+    # majors is what this stack is for, and nothing is deployed until the last hop is green, so
+    # the block is off here. It lives in the container, never in composer.json, so the repository
+    # and the server keep the default. `composer audit` still reports what each stage carries.
+    COMPOSER_POLICY_ADVISORIES_BLOCK: "false"
     DB_HOST: db
     DB_DATABASE: winglib_test
     DB_USERNAME: root

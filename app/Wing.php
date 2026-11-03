@@ -1,8 +1,9 @@
 <?php
 
-namespace app;
+namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 define('URL_SEPARATOR', '/');
 
@@ -138,7 +139,7 @@ class Wing extends Model
                 ];
             }
             if ( ! $wing->slug ) {
-                $slug_str = str_slug($wing->name);
+                $slug_str = Str::slug($wing->name);
                 $latest = Wing::whereRaw("slug_str = '{$slug_str}'")->latest("slug_id")->get()->first();
                 if ($latest) {
                     $slug_id = $latest['slug_id'] + 1;

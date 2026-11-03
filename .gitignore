@@ -21,3 +21,5 @@ tags
 public/fonts
 envs/*
 packages/**
+
+.phpunit.result.cache

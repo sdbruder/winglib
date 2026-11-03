@@ -42,8 +42,9 @@ class WingForkTest extends TestCase
         $response = $this->actingAs($owner)->get('/wings/'.$original->id.'/forkit');
 
         $response->assertStatus(302);
-        $response->assertSessionHas('flash_notification.message');
+        $response->assertSessionHas('flash_notification');
         $this->assertSame(1, Wing::count());
+        $this->get('/')->assertSee('You need to be logged in and');
 
         $this->deleteWingImage($original->image_file);
     }
@@ -55,8 +56,9 @@ class WingForkTest extends TestCase
         $response = $this->get('/wings/'.$original->id.'/forkit');
 
         $response->assertStatus(302);
-        $response->assertSessionHas('flash_notification.message');
+        $response->assertSessionHas('flash_notification');
         $this->assertSame(1, Wing::count());
+        $this->get('/')->assertSee('You need to be logged in and');
 
         $this->deleteWingImage($original->image_file);
     }

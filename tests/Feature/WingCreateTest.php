@@ -27,8 +27,10 @@ class WingCreateTest extends TestCase
         ]);
 
         $response->assertStatus(302);
-        $response->assertSessionHas('flash_notification.message');
+        $response->assertSessionHas('flash_notification');
         $this->assertDatabaseMissing('wings', ['name' => 'Test Wing Alpha']);
+
+        $this->get('/')->assertSee('You cant save a wing without a user.');
     }
 
     public function test_a_user_stores_a_wing_with_its_image_and_panels()
