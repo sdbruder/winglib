@@ -15,7 +15,8 @@
         "laravel/socialite": "^5.0",
         "laravel/tinker": "^3.0",
         "laravel/ui": "^4.0",
-        "spatie/laravel-html": "^3.13"
+        "spatie/laravel-html": "^3.13",
+        "symfony/mailgun-mailer": "^8.1"
     },
     "require-dev": {
         "driftingly/rector-laravel": "^2.5",
