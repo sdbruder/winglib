@@ -18,7 +18,7 @@ use RuntimeException;
 class WingDrawing
 {
     /** The canvas the editor posts, and the size of every stored image. */
-    private const WIDTH = 940;
+    public const WIDTH = 940;
 
     private const HEIGHT = 400;
 

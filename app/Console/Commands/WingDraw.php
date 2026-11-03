@@ -15,7 +15,8 @@ use RuntimeException;
     {wing? : the id of the wing to redraw}
     {--missing : redraw the wings whose image file is not on disk}
     {--all : redraw every wing}
-    {--force : overwrite images that are still on disk}')]
+    {--force : overwrite images that are still on disk}
+    {--width=940 : the canvas width; below 940 the drawing goes to a -<width> sibling}')]
 #[Description('Rebuild wing images from the stored measurements')]
 class WingDraw extends Command
 {
@@ -24,7 +25,8 @@ class WingDraw extends Command
      */
     public function handle(): int
     {
-        $wings = $this->selectWings();
+        $width = max(90, (int) $this->option('width'));
+        $wings = $this->selectWings($width);
 
         if ($wings === null) {
             return self::FAILURE;
@@ -41,7 +43,7 @@ class WingDraw extends Command
         $skipped = 0;
 
         foreach ($wings as $wing) {
-            $path = $this->pathFor($wing);
+            $path = $this->pathFor($wing, $width);
 
             if (File::exists($path) && ! $this->option('force')) {
                 $this->line(sprintf('wing %d %s: on disk already', $wing->id, $wing->slug));
@@ -51,7 +53,8 @@ class WingDraw extends Command
             }
 
             try {
-                $png = WingDrawing::png($wing);
+                // A thumbnail carries no measure labels: at that size they only smear.
+                $png = WingDrawing::png($wing, $width, $width < WingDrawing::WIDTH ? false : null);
             } catch (RuntimeException $exception) {
                 $this->warn(sprintf('wing %d %s: skipped, %s', $wing->id, $wing->slug, $exception->getMessage()));
                 $skipped++;
@@ -62,7 +65,7 @@ class WingDraw extends Command
             File::ensureDirectoryExists(dirname($path));
             File::put($path, $png);
 
-            $this->line(sprintf('wing %d %s: drew %s (%d bytes)', $wing->id, $wing->slug, $wing->image_file, strlen($png)));
+            $this->line(sprintf('wing %d %s: drew %s (%d bytes)', $wing->id, $wing->slug, $wing->imageVariant($width), strlen($png)));
             $drawn++;
         }
 
@@ -74,7 +77,7 @@ class WingDraw extends Command
     /**
      * @return Collection<int, Wing>|null
      */
-    private function selectWings(): ?Collection
+    private function selectWings(int $width): ?Collection
     {
         $id = $this->argument('wing');
         $missing = (bool) $this->option('missing');
@@ -101,15 +104,15 @@ class WingDraw extends Command
         $wings = Wing::query()->orderBy('id')->get();
 
         if ($missing) {
-            $wings = $wings->reject(fn (Wing $wing) => $this->hasFile($wing));
+            $wings = $wings->reject(fn (Wing $wing) => $this->hasFile($wing, $width));
         }
 
         return $wings->values();
     }
 
-    private function hasFile(Wing $wing): bool
+    private function hasFile(Wing $wing, int $width): bool
     {
-        return $wing->image_file !== '' && File::exists(storage_path('app'.$wing->image_file));
+        return $wing->image_file !== '' && File::exists(storage_path('app'.$wing->imageVariant($width)));
     }
 
     /**
@@ -117,18 +120,14 @@ class WingDraw extends Command
      * layout createImage uses. saveQuietly keeps the saving hook from rebuilding the panels
      * and the slug from attributes this command never touches.
      */
-    private function pathFor(Wing $wing): string
+    private function pathFor(Wing $wing, int $width): string
     {
-        if ($wing->image_file !== '') {
-            return storage_path('app'.$wing->image_file);
+        if ($wing->image_file === '') {
+            $subdir = substr(microtime(), 4, 2);
+            $wing->image_file = '/wingimg/'.$subdir.'/'.uniqid('').'.png';
+            $wing->saveQuietly();
         }
 
-        $subdir = substr(microtime(), 4, 2);
-        $url = '/wingimg/'.$subdir.'/'.uniqid('').'.png';
-
-        $wing->image_file = $url;
-        $wing->saveQuietly();
-
-        return storage_path('app'.$url);
+        return storage_path('app'.$wing->imageVariant($width));
     }
 }

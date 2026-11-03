@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Support\WingDrawing;
 use Illuminate\Database\Eloquent\Attributes\Appends;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -212,6 +213,19 @@ class Wing extends Model
         $base64_str = substr($base64_image, strpos($base64_image, ',') + 1);
         // decode base64 string and write it down.
         file_put_contents($image_filename, base64_decode($base64_str));
+    }
+
+    /**
+     * The image_file beside this one for a smaller canvas, e.g. /wingimg/52/x-90.png. The
+     * drawing command writes those, and the views use them where they show a thumbnail.
+     */
+    public function imageVariant(int $width): string
+    {
+        if ($this->image_file === '' || $width >= WingDrawing::WIDTH) {
+            return (string) $this->image_file;
+        }
+
+        return preg_replace('/\.png$/', '-'.$width.'.png', $this->image_file) ?? $this->image_file;
     }
 
     public function unit($what)
