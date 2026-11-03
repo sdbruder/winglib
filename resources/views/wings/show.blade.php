@@ -96,7 +96,7 @@
                         </div>
                     </div>
                     <div class="media-right media-middle">
-                        <img class="media-object img-responsive" src="{{$wing->image_file}}" width="940">
+                        <img class="media-object" src="{{$wing->image_file}}" width="940">
                     </div>
                 </div>
             </div>
