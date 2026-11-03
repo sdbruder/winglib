@@ -52,7 +52,7 @@
                         <div class="media" onclick="document.location = '/wing/{{$w->slug}}';">
                             <div class="media-left">
                                 <a href="/wing/{{$w->slug}}">
-                                    <img class="media-object" src="{{$w->image_file}}" width="90px">
+                                    <img class="media-object" src="{{$w->imageVariant(180)}}" width="90" height="38">
                                 </a>
                             </div>
                             <div class="media-body">
@@ -74,7 +74,7 @@
                         <div class="media" onclick="document.location = '/wing/{{$w->slug}}';">
                             <div class="media-left">
                                 <a href="/wing/{{$w->slug}}">
-                                    <img class="media-object" src="{{$w->image_file}}" width="90px">
+                                    <img class="media-object" src="{{$w->imageVariant(180)}}" width="90" height="38">
                                 </a>
                             </div>
                             <div class="media-body">
@@ -96,7 +96,7 @@
                         <div class="media" onclick="document.location = '/wing/{{$w->slug}}';">
                             <div class="media-left">
                                 <a href="/wing/{{$w->slug}}">
-                                    <img class="media-object" src="{{$w->image_file}}" width="90px">
+                                    <img class="media-object" src="{{$w->imageVariant(180)}}" width="90" height="38">
                                 </a>
                             </div>
                             <div class="media-body">

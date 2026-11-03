@@ -3,6 +3,15 @@
 use App\User;
 use App\Wing;
 
+it('the library serves the thumbnail beside each image', function () {
+    $user = User::factory()->create();
+    $wing = $this->wingOwnedBy($user);
+
+    $this->get('/wings')->assertSee($wing->imageVariant(282), false);
+
+    $this->deleteWingImage($wing->image_file);
+});
+
 it('the library lists ten wings per page', function () {
     $user = User::factory()->create();
     Wing::factory()->count(12)->create(['user_id' => $user->id]);
