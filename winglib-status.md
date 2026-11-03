@@ -6,11 +6,7 @@ Host: `host.bruder.com.br` (Hetzner `ubuntu-4gb-nbg1-1`), user `sergio`.
 
 | remote | url | notes |
 |---|---|---|
-| `origin` | `git@github.com:sdbruder/winglib.git` | primary since 2026-11-03 |
-| `bitbucket` | `ssh://git@ssh.bitbucket.org/sdbruder/winglib.git` | fallback, kept for now |
-
-Bitbucket moved SSH to `ssh.bitbucket.org` on 2026-11-12; the old host
-`bitbucket.org` is no longer in any `known_hosts`, so pulls from it fail.
+| `origin` | `git@github.com:sdbruder/winglib.git` | the only remote; GitHub is authoritative |
 
 | branch | head | content |
 |---|---|---|
@@ -19,7 +15,7 @@ Bitbucket moved SSH to `ssh.bitbucket.org` on 2026-11-12; the old host
 | `dev`, `hotfix` | Laravel 5.5-era | untouched |
 
 `prod`'s tip is an ancestor of `master`; `master` additionally carries the whole
-5.1 → 5.5 upgrade. Bitbucket trails both branches by a few commits.
+5.1 → 5.5 upgrade.
 
 ## Server layout
 
