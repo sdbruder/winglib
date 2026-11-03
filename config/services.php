@@ -39,16 +39,16 @@ return [
     'facebook' => [
         'client_id'     => env('FACEBOOK_ID'),
         'client_secret' => env('FACEBOOK_SECRET'),
-        'redirect'      => 'http://'.env('APP_URL').'/auth/facebook/callback'
+        'redirect'      => rtrim(config('app.url'), '/').'/auth/facebook/callback'
     ],
     'google' => [
         'client_id'     => env('GOOGLE_ID'),
         'client_secret' => env('GOOGLE_SECRET'),
-        'redirect'      => 'http://'.env('APP_URL').'/auth/google/callback'
+        'redirect'      => rtrim(config('app.url'), '/').'/auth/google/callback'
     ],
     'twitter' => [
         'client_id'     => env('TWITTER_ID'),
         'client_secret' => env('TWITTER_SECRET'),
-        'redirect'      => 'http://'.env('APP_URL').'/auth/twitter/callback'
+        'redirect'      => rtrim(config('app.url'), '/').'/auth/twitter/callback'
     ]
 ];
