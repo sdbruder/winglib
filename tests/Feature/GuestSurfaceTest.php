@@ -24,3 +24,11 @@ it('redirects a guest json request to the login page', function () {
 
     $this->getJson('/wings/'.$wing->id.'/edit')->assertStatus(302);
 });
+
+it('sends a signed in user away from the login page', function () {
+    // The guest alias is App\Http\Middleware\RedirectIfAuthenticated, which carried one uncovered
+    // mutant: dropping its early return would show the login form to someone already signed in.
+    $user = User::factory()->create();
+
+    $this->actingAs($user)->get('/auth/login')->assertRedirect('/');
+});
