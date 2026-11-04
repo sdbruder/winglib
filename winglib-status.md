@@ -484,6 +484,43 @@ Three findings from this, none acted on:
    refers to.
 
 
+## The LoginController round
+
+At 14.8 % covered, the whole `handleProviderCallback` body was untested: the redirect
+tests reach `redirectToProvider`, and the callback needs a driver whose `user()` returns
+something, which no test had faked. Four tests in `tests/Feature/SocialLoginTest.php`
+mock `Socialite::driver()` and take each branch:
+
+| branch | pinned by |
+|---|---|
+| a new provider user | the row is created with provider, provider_id, username, token and a null token_secret, and the session is authenticated |
+| a returning provider_id | the existing row is logged in and `count()` stays 1 - the table has a unique index on `(provider, provider_id)`, so a second insert would fail rather than duplicate |
+| a token secret (Twitter shape) | `token_secret` is stored; the anonymous class in that test is what makes `(array) $u` carry the key |
+| no user returned | 404 |
+
+Hand-checked, five mutations applied and reverted: replacing the `tokenSecret` read with
+`null`, dropping `'token_secret'` from the create array, removing `Auth::login`, removing
+the `abort('404')`, and inverting the returning-user lookup - every one fails the suite.
+
+All 28 of the class's uncovered mutants left with them, and the tests keep to PHP 7.4
+syntax (no constructor property promotion) so the file still parses on the hop containers.
+
+| run | uncovered | tested | score | suite |
+|---|---|---|---|---|
+| after the coverage-gap round | 198 | 1308 | 86.85 % | 81 / 324 |
+| after the LoginController round | **170** | **1336** | **88.71 %** | 85 / 342 |
+
+What is left of the 170, from the report:
+
+- `Wing` 71 and `WingDrawing` 31 and `User` 13: declarations. Pest cannot score them and
+  no test can move them; the load-bearing ones are hand-checked above.
+- `Kernel` 17, `Handler` 12, `Authenticate` 6, the three providers 7, three stragglers:
+  framework glue, left alone. `Authenticate` stays uncovered even though the guest test
+  now exercises it, which is the same declaration/attribution effect.
+- `WingsController` 9: the guard at 160 and the image lines 161, 165 - the next round.
+- `WingImages` 2, `PasswordController` 1, `RedirectIfAuthenticated` 1, `UsersController` 1.
+
+
 ## The `wings:draw` round
 
 Four branches of the command had no test: the unknown id (102-104), the empty selection
