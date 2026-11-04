@@ -12,6 +12,19 @@ it('serves the user settings page', function () {
         ->assertSee('User settings');
 });
 
+it('serves the password reset request form', function () {
+    // Found while verifying the beta deploy: GET /password/reset answered 500 with
+    // "View [auth.passwords.email] not found", because Laravel's SendsPasswordResetEmails trait
+    // renders that name while this app's template is auth/password.blade.php. The page had no test,
+    // which is why nothing caught it - and line coverage could not either, since the view() call
+    // lives in the vendor trait.
+    $this->get('/password/reset')
+        ->assertOk()
+        ->assertSee('Password reset')
+        ->assertSee('password/email', false)
+        ->assertSee('name="email"', false);
+});
+
 it('sends a guest away from the edit page, json client included', function () {
     // These routes do not use the auth middleware: every wing action guards itself with
     // Auth::user(), which is why the framework's JSON handling never engages here and why

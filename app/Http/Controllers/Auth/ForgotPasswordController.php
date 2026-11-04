@@ -21,6 +21,21 @@ class ForgotPasswordController extends Controller
     use SendsPasswordResetEmails;
 
     /**
+     * Show the form that requests a reset link.
+     *
+     * The trait renders auth.passwords.email, a name this app has no template for - its own is
+     * auth/password - so GET /password/reset answered 500 with "View [auth.passwords.email] not
+     * found" on beta until this override. Line coverage never showed it: the view() call the trait
+     * makes lives in vendor, while this controller's own lines were all executed.
+     *
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function showLinkRequestForm()
+    {
+        return view('auth.password');
+    }
+
+    /**
      * Create a new controller instance.
      *
      * @return void
