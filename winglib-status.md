@@ -337,3 +337,61 @@ To finish the run: `--parallel` would need a database per process (this suite sh
 `winglib_test`, and `RefreshDatabase` runs `migrate:fresh` in each worker), so either
 set that up or accept repeated time-boxed serial runs. Whether the mutation cache
 resumes between runs is not yet verified.
+
+## Mutation testing, finished: 64.4 % -> 81.2 %
+
+`--parallel` needed no per-process database after all: Pest's Laravel plugin appends the
+worker's `TEST_TOKEN` to the configured name and creates `winglib_test_test_1..8` itself,
+so the whole app is measured in one 63 s run (1539 mutants) instead of several 45 minute
+serial ones. Serial is roughly 300 times slower, and the per-mutation detail it prints is
+what a parallel run does not: parallel reports only the uncovered mutants and the slowest
+tests.
+
+Whole app, parallel, 8 processes:
+
+| run | uncovered | tested | score |
+|---|---|---|---|
+| baseline | 548 | 991 | 64.39 % |
+| after | 290 | 1249 | **81.16 %** |
+
+The 548 uncovered clustered in `WingDrawing` (318): `panel()`'s measure block (lines
+320-379) and the whole of `centerOfGravity()` (406-427) were never executed, because
+`Wing::saved` only draws when the wing already has an image and the factories set none.
+Four tests in `tests/Unit/WingDrawingTest.php` now cover those paths and assert their
+geometry: the cg ball's ink box and the MAC line, the measure lines with their ticks and
+the labels' ink bands, the arc's start, and - the decisive part - a fixture 440 wide by
+300 tall where `min(880/880, 340/300) = 1` makes one model unit one pixel. That is the
+only way a one unit change in `GAP`, `TICK`, `LINE`, `CHORD_GAP` or `CG_GAP` can be seen
+at all; at the other fixtures' zoom of 0.708 such a change is sub pixel and every
+assertion misses it.
+
+Hand-checked kills, through `/tmp/verify-kills.sh` (8 mutants applied and reverted: the
+five constants, the arc radius ternary, the cg diameter `max -> min`, `num()`'s `rtrim`):
+2 of 8 were killed before these tests and 7 of 8 after. `num()`'s formatting mutant still
+survives, because a label is observable only as pixels and both `600` and `600.00` leave
+ink in the band.
+
+What is left uncovered, and why:
+
+- `Wing` 97 - the save hooks, `duplicateImage`, `saveImage`, `refreshImageVariants` and
+  `imageVariant`; the next cluster worth a test.
+- `WingDrawing` 60 - surviving arithmetic in `readPanels()` and `withCenterOfGravity()`.
+- `WingDraw` 29 and `Inspire` 7 - command internals. `Inspire` is Laravel's demo command
+  with no caller, so deleting it is cheaper than testing it.
+- `Kernel` 17, `Handler` 12, `Authenticate` 6, `BroadcastServiceProvider` 5 - framework
+  glue, deliberately not tested.
+
+Two findings for the owner to decide on, both surfaced by the drawing tests:
+
+1. `app/Http/Controllers/UsersController.php` carries seven empty resource methods
+   (`index`, `create`, `store`, `show`, `edit`, `update`, `destroy`) and an unused
+   `Illuminate\Http\Request` import. Nothing routes to them. Delete the methods, or the
+   class.
+2. The rotated label strips are composited with `imagecopy`, so their transparent pixels
+   overwrite what is under them: a column through a label shows a gap in the line it
+   crosses. Every stored image looks like that today, so changing it changes existing
+   images - a product decision, not a silent fix.
+
+Reproduce: `~/.omp/agent/bin/zj-run.sh mutate2 . /tmp/mut2.sh`, or in the container
+`timeout 5400 php vendor/bin/pest --mutate --everything --parallel --processes=8 --profile`.
+
