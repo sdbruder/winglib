@@ -521,6 +521,30 @@ What is left of the 170, from the report:
 - `WingImages` 2, `PasswordController` 1, `RedirectIfAuthenticated` 1, `UsersController` 1.
 
 
+## The WingsController round
+
+`destroy()` had no test at all, which is where the class's 9 uncovered mutants were: the
+compound ownership guard (160), the delete (161) and the flash message (165). Four tests
+in `tests/Feature/WingDestroyTest.php` cover the owner deleting, another user being
+refused with the message a user actually sees on the page the redirect lands on, a guest
+being stopped by the middleware, and an unknown id.
+
+Hand-checked with five mutations: `and` to `or`, `==` to `!=`, negating the guard,
+removing `$wing->delete()` and dropping half the flash message all fail the suite. The
+first three had to be aimed at the *second* of two identical guards - `edit()` carries the
+same line, and mutating that one proved nothing about `destroy()`, which is worth knowing
+before trusting a hand-check on this file.
+
+| run | uncovered | tested | score | suite |
+|---|---|---|---|---|
+| after the LoginController round | 170 | 1336 | 88.71 % | 85 / 342 |
+| after the WingsController round | **161** | **1345** | **89.31 %** | 89 / 351 |
+
+Of the 161 left, only **4 are application code**: `WingImages` 2, `RedirectIfAuthenticated`
+1, `PasswordController` 1. The other 157 are the declaration mutants (Wing 71,
+WingDrawing 31, User 13) and framework glue (Kernel 17, Handler 12, Authenticate 6,
+providers 7) that no test can move, so the practical ceiling is about 89.6 %.
+
 ## The `wings:draw` round
 
 Four branches of the command had no test: the unknown id (102-104), the empty selection
