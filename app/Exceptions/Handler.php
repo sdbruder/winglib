@@ -51,6 +51,14 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
+        // The app's unauthenticated() is from the pre-11 layout and the framework no longer
+        // calls it, which is why a guest JSON request was answered with a redirect to the home
+        // page instead of a 401. Route the exception through it here so that the JSON branch is
+        // what a JSON client gets, and a guest with a browser gets the login page.
+        if ($exception instanceof AuthenticationException) {
+            return $this->unauthenticated($request, $exception);
+        }
+
         return parent::render($request, $exception);
     }
 

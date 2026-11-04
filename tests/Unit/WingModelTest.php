@@ -1,6 +1,23 @@
 <?php
 
+use App\User;
 use App\Wing;
+
+it('a user likes the wings the pivot table points at', function () {
+    // User::likes() had no caller at all: only the wing side of the relation was ever exercised,
+    // through the likeit route.
+    $user = User::factory()->create();
+    $wing = $this->wingOwnedBy($user);
+
+    expect($user->likes)->toHaveCount(0);
+
+    $user->likes()->attach($wing->id);
+
+    expect($user->fresh()->likes)->toHaveCount(1);
+    expect($user->fresh()->likes->first()->id)->toBe($wing->id);
+
+    $this->deleteWingImage($wing->image_file);
+});
 
 it('accepts every field the forms post, and refuses the ones they do not', function () {
     // The Fillable attribute is what lets the create, edit and fork forms persist their fields.
