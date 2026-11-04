@@ -137,8 +137,10 @@ removed.
 - `composer audit` reports two medium XSS advisories in `components/jquery` 2.x
   (fixed in 3.5.0). Rebuilding the bundle needs node, which this host does not
   have; the build output is committed instead.
-- The Larastan baseline carries pre-existing findings, among them
-  `Wing::prepPanelsArray()` being unused and a dead array comparison.
+- The Larastan baseline carries pre-existing findings, among them a dead array
+  comparison. The `Wing::prepPanelsArray()` entry that used to be listed here is
+  gone: the method had no caller and was deleted on 2026-11-04, and the baseline
+  shrank by that entry and six more in the same change.
 - `app/Http/Middleware/EncryptCookies.php` and `Authenticate.php` are empty shells
   from the 5.x layout that no guide in this upgrade touches.
 
