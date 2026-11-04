@@ -297,3 +297,11 @@ Decided with the user, and the smoke test earned its keep:
   answer 200, and no Bootstrap or jQuery error appears.
 - Both edits are surgical edits to the committed bundle, because neither `gulpfile.js`
   nor its Elixir/Gulp 3 build can run today. The previous file stays in git history.
+
+Deployed to both sites at `0443a4e`, each after
+`composer install --no-dev --no-scripts --optimize-autoloader`. Verified in a browser
+with caching disabled on `/`, `/wings`, one wing page and `/auth/login` on both sites:
+jQuery 3.7.1, Bootstrap 3.4.1, six of six plugins attached, no broken image, both
+assets `200`, and no Bootstrap or jQuery error. Prod served `/js/all.js` at 198018
+bytes and `/js/jquery-3.7.1.min.js` at 87533 bytes - the sizes built locally - and the
+wing thumbnails written by the earlier fix are still in place.
