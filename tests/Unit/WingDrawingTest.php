@@ -96,9 +96,13 @@ it('draws the measures above a wing that sweeps forward', function () {
     expect($withRows)->not->toBeEmpty();
     expect($withoutRows)->not->toBeEmpty();
 
-    // The span line hangs gap 5 above a leading edge that is itself 300 * 20 / 600 = 10 above the
-    // origin at that column, so with the measures the ink starts above where it starts without.
-    expect(min($withRows))->toBeLessThan(min($withoutRows));
+    // The else branch hangs its span line at sweep - gap, i.e. 25 above the origin, and holds its
+    // label four pixels above that. Column 300 is inside both, and the plain render has nothing
+    // higher than the leading edge, which crosses that column ten above the origin.
+    $spanLineRow = (int) round(30.0 + $zoom * -25);
+
+    expect(drawingInkRows($with, $column))->toContain($spanLineRow);
+    expect(drawingInkRows($without, $column))->not->toContain($spanLineRow);
 });
 
 it('draws the panels where the canvas geometry puts them', function () {
