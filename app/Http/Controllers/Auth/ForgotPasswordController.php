@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 
 class ForgotPasswordController extends Controller
@@ -28,7 +29,7 @@ class ForgotPasswordController extends Controller
      * found" on beta until this override. Line coverage never showed it: the view() call the trait
      * makes lives in vendor, while this controller's own lines were all executed.
      *
-     * @return \Illuminate\Contracts\View\View
+     * @return View
      */
     public function showLinkRequestForm()
     {

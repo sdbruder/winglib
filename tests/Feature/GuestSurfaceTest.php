@@ -25,6 +25,16 @@ it('serves the password reset request form', function () {
         ->assertSee('name="email"', false);
 });
 
+it('serves the password reset form the email links to', function () {
+    // Same bug class, found by curling the link that a reset email carries: the trait
+    // ResetsPasswords renders auth.passwords.reset, while this app's template is auth/reset.
+    $this->get('/password/reset/a-token')
+        ->assertOk()
+        ->assertSee('name="token"', false)
+        ->assertSee('value="a-token"', false)
+        ->assertSee('name="password_confirmation"', false);
+});
+
 it('sends a guest away from the edit page, json client included', function () {
     // These routes do not use the auth middleware: every wing action guards itself with
     // Auth::user(), which is why the framework's JSON handling never engages here and why
