@@ -134,15 +134,22 @@ removed.
 
 ### Findings left open
 
-- `composer audit` reports two medium XSS advisories in `components/jquery` 2.x
-  (fixed in 3.5.0). Rebuilding the bundle needs node, which this host does not
-  have; the build output is committed instead.
+- `composer audit` reports **no** advisories as of 2026-11-04. The two medium XSS ones in
+  `components/jquery` 2.x recorded here earlier are gone, and the committed bundle carries
+  jQuery 3.7.1. That composer package survives only as `gulpfile.js`'s copy source, and
+  that build cannot run on this host (no node), so the build output stays committed.
 - The Larastan baseline carries pre-existing findings, among them a dead array
   comparison. The `Wing::prepPanelsArray()` entry that used to be listed here is
   gone: the method had no caller and was deleted on 2026-11-04, and the baseline
   shrank by that entry and six more in the same change.
-- `app/Http/Middleware/EncryptCookies.php` and `Authenticate.php` are empty shells
-  from the 5.x layout that no guide in this upgrade touches.
+- The 5.x middleware leftovers are gone. `EncryptCookies.php` *was* an empty subclass, but
+  its `$except` list was empty too, so switching the Kernel's web group to
+  `Illuminate\Cookie\Middleware\EncryptCookies` changed nothing and it was deleted.
+  `Authenticate.php` was **not** an empty shell, contrary to what this entry said: it was a
+  full 5.x copy with a real `handle()` returning 401 for ajax requests, and the Kernel
+  never registered it - the `auth` alias already resolved to
+  `Illuminate\Auth\Middleware\Authenticate`. It is deleted, and so is the dead
+  `Auth\PasswordController` (no route, no caller).
 
 ## Wing images
 
@@ -541,6 +548,16 @@ before trusting a hand-check on this file.
 |---|---|---|---|---|
 | after the LoginController round | 170 | 1336 | 88.71 % | 85 / 342 |
 | after the WingsController round | **161** | **1345** | **89.31 %** | 89 / 351 |
+| after the last application mutants | **151** | **1348** | **89.93 %** | 91 / 355 |
+
+The last three mutants - `wings:images`' blank `image_file` branch and
+`RedirectIfAuthenticated`'s early return - are pinned, and the three dead classes are
+deleted, which removes their mutants from the count rather than scoring them.
+
+That is the ceiling. The remaining 151 are `Wing` 71, `WingDrawing` 31, `Kernel` 17,
+`User` 13, `Handler` 12 and the providers 7 - every one a declaration or framework glue
+that Pest cannot attribute coverage to. The number can only move by deleting more such
+code, not by writing tests.
 
 Of the 161 left, only **4 are application code**: `WingImages` 2, `RedirectIfAuthenticated`
 1, `PasswordController` 1. The other 157 are the declaration mutants (Wing 71,
