@@ -2,6 +2,37 @@
 
 use App\Wing;
 
+it('accepts every field the forms post, and refuses the ones they do not', function () {
+    // The Fillable attribute is what lets the create, edit and fork forms persist their fields.
+    // Mutation testing reported every one of its entries as unkillable, because no test mass
+    // assigns them; this list is the forms' own field set, not a copy of the attribute.
+    $fields = [
+        'slug' => 'a-wing', 'user_id' => 7, 'name' => 'A Wing', 'description' => 'text',
+        'image_file' => '/wingimg/aa/f.png', 'unitsystem' => 'metric', 'cgpos' => 12.5,
+        'weight' => 900, 'drawvalues' => 1, 'rootchord' => 340, 'totalspan' => 1200,
+        'panels' => [], 'wingarea' => 55.5, 'macdist' => 26.1, 'maclength' => 30.2,
+        'cg' => 12, 'wingload' => 40.4,
+    ];
+
+    foreach (range(1, 6) as $panel) {
+        $fields["panel{$panel}span"] = (float) $panel;
+        $fields["panel{$panel}chord"] = 10.0;
+        $fields["panel{$panel}sweep"] = 0.0;
+        $fields["panel{$panel}angle"] = 0.0;
+    }
+
+    $wing = new Wing;
+    $wing->fill($fields);
+
+    expect(array_keys($wing->getAttributes()))->toBe(array_keys($fields));
+
+    $wing->fill(['id' => 99, 'created_at' => '2026-01-01 00:00:00', 'slug_str' => 'kept']);
+
+    expect($wing->getAttributes())->not->toHaveKey('id');
+    expect($wing->getAttributes())->not->toHaveKey('created_at');
+    expect($wing->getAttributes())->not->toHaveKey('slug_str');
+});
+
 it('the slug comes from the name', function () {
     $wing = $this->createWing(['name' => 'Test Wing Alpha']);
 

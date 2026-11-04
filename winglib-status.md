@@ -381,16 +381,21 @@ What is left uncovered, and why:
 - `Kernel` 17, `Handler` 12, `Authenticate` 6, `BroadcastServiceProvider` 5 - framework
   glue, deliberately not tested.
 
-Two findings for the owner to decide on, both surfaced by the drawing tests:
+Two findings the drawing tests surfaced, both checked with the owner:
 
-1. `app/Http/Controllers/UsersController.php` carries seven empty resource methods
-   (`index`, `create`, `store`, `show`, `edit`, `update`, `destroy`) and an unused
-   `Illuminate\Http\Request` import. Nothing routes to them. Delete the methods, or the
-   class.
-2. The rotated label strips are composited with `imagecopy`, so their transparent pixels
-   overwrite what is under them: a column through a label shows a gap in the line it
-   crosses. Every stored image looks like that today, so changing it changes existing
-   images - a product decision, not a silent fix.
+1. `app/Http/Controllers/UsersController.php`'s seven empty resource methods
+   (`index`, `create`, `store`, `show`, `edit`, `update`, `destroy`) and its unused
+   `Illuminate\Http\Request` import, which nothing routed to - deleted, and
+   `app/Console/Commands/Inspire.php` with them: Laravel's demo command, no caller, 7
+   uncovered mutants. `phpstan-baseline.neon` shrank by the 7 `return.missing` entries
+   those methods held, in the same change, which is what `ignore.unmatched` demands.
+2. Checking `WingDrawing::text()` for the gap a column shows at x 470 rows
+   64-78 found no bug. That gap is not the label strip erasing the line under it: with
+   alpha blending on, `imagecopy` composites the strip correctly, and the gap is the cg
+   ball painted over the left edge - it is 13 px across, centred at (470, 71). The sparse
+   rows lower down are the rotated glyph strokes themselves. Measured by replacing the
+   composite with a hand written per pixel loop: the rendered columns came out identical,
+   so the original stands.
 
 Reproduce: `~/.omp/agent/bin/zj-run.sh mutate2 . /tmp/mut2.sh`, or in the container
 `timeout 5400 php vendor/bin/pest --mutate --everything --parallel --processes=8 --profile`.
