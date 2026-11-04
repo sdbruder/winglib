@@ -15,6 +15,28 @@ function variantPaths(Wing $wing): array
     return $paths;
 }
 
+it('keeps the thumbnails when a wing cannot be drawn', function () {
+    // refreshImageVariants() swallows a drawing failure so a save that cannot produce a thumbnail
+    // still succeeds; that catch is lines 259-260 and no test reached it. A wing whose panels have
+    // no span is the case: the drawing refuses it and the thumbnails must stay as they were.
+    $user = User::factory()->create();
+    $wing = $this->wingOwnedBy($user);
+    $path = storage_path('app'.$wing->imageVariant(180));
+    $before = File::get($path);
+
+    foreach (range(1, 6) as $panel) {
+        foreach (['span', 'chord', 'sweep', 'angle'] as $field) {
+            $wing->{"panel{$panel}{$field}"} = 0;
+        }
+    }
+
+    $wing->save();
+
+    expect(File::get($path))->toBe($before);
+
+    $this->deleteWingImage($wing->image_file);
+});
+
 it('writes the two widths the views ask for, by their names', function () {
     // home.blade.php asks for the 180 thumbnail and index.blade.php for the 282 one, while the
     // other tests here read Wing::IMAGE_VARIANTS and so move with a change to it. A mutation that

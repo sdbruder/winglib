@@ -70,6 +70,29 @@ function drawingInkBounds($image): array
     return $bounds;
 }
 
+it('draws a wing whose panel has a span but no chords', function () {
+    // A span with no chords and no root chord leaves the computed height at zero, which render()
+    // clamps to one pixel, and makes withCenterOfGravity skip the panel outright. Lines 104 and
+    // 232 were the drawing's only two uncovered lines.
+    $wing = drawingWing(['rootchord' => 0.0, 'drawvalues' => 0]);
+    $wing->panels = [
+        1 => ['span' => '600', 'chord' => '0', 'sweep' => '0', 'angle' => '0'],
+        2 => ['span' => '', 'chord' => '', 'sweep' => '', 'angle' => ''],
+        3 => ['span' => '', 'chord' => '', 'sweep' => '', 'angle' => ''],
+        4 => ['span' => '', 'chord' => '', 'sweep' => '', 'angle' => ''],
+        5 => ['span' => '', 'chord' => '', 'sweep' => '', 'angle' => ''],
+        6 => ['span' => '', 'chord' => '', 'sweep' => '', 'angle' => ''],
+    ];
+
+    $image = imagecreatefromstring(WingDrawing::png($wing));
+
+    expect(imagesx($image))->toBe(940)->and(imagesy($image))->toBe(400);
+
+    // The panel is skipped by the area weighting, so the whole wing measures zero, but the cg
+    // marker is still drawn at the origin.
+    expect(drawingCgBounds($image)['right'])->toBeGreaterThan(0);
+});
+
 it('draws the measures above a wing that sweeps forward', function () {
     // Every other fixture sweeps backwards, so draw_panel takes its else branch - the span line
     // above the *leading* edge rather than the swept one, and the arc from the angle back to zero -
