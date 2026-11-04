@@ -559,10 +559,9 @@ That is the ceiling. The remaining 151 are `Wing` 71, `WingDrawing` 31, `Kernel`
 that Pest cannot attribute coverage to. The number can only move by deleting more such
 code, not by writing tests.
 
-Of the 161 left, only **4 are application code**: `WingImages` 2, `RedirectIfAuthenticated`
-1, `PasswordController` 1. The other 157 are the declaration mutants (Wing 71,
-WingDrawing 31, User 13) and framework glue (Kernel 17, Handler 12, Authenticate 6,
-providers 7) that no test can move, so the practical ceiling is about 89.6 %.
+(This paragraph used to list the four application mutants still uncovered at the 161 stage:
+`WingImages` 2, `RedirectIfAuthenticated` 1 and the dead `PasswordController` 1. All four
+are dealt with above, which is why the row before this one is 151 and not 161.)
 
 ## The `wings:draw` round
 
