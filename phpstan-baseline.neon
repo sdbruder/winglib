@@ -103,50 +103,8 @@ parameters:
 			path: app/Http/Controllers/HomeController.php
 
 		-
-			message: '#^Method App\\Http\\Controllers\\UsersController\:\:create\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: app/Http/Controllers/UsersController.php
-
-		-
-			message: '#^Method App\\Http\\Controllers\\UsersController\:\:destroy\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: app/Http/Controllers/UsersController.php
-
-		-
-			message: '#^Method App\\Http\\Controllers\\UsersController\:\:edit\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: app/Http/Controllers/UsersController.php
-
-		-
-			message: '#^Method App\\Http\\Controllers\\UsersController\:\:index\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: app/Http/Controllers/UsersController.php
-
-		-
 			message: '#^Method App\\Http\\Controllers\\UsersController\:\:settings\(\) should return Illuminate\\Http\\Response but returns Illuminate\\View\\View\.$#'
 			identifier: return.type
-			count: 1
-			path: app/Http/Controllers/UsersController.php
-
-		-
-			message: '#^Method App\\Http\\Controllers\\UsersController\:\:show\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: app/Http/Controllers/UsersController.php
-
-		-
-			message: '#^Method App\\Http\\Controllers\\UsersController\:\:store\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: app/Http/Controllers/UsersController.php
-
-		-
-			message: '#^Method App\\Http\\Controllers\\UsersController\:\:update\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
-			identifier: return.missing
 			count: 1
 			path: app/Http/Controllers/UsersController.php
 
