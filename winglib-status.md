@@ -434,7 +434,36 @@ the whole app re-measures as:
 | baseline | 548 | 991 | 64.39 % | 66 / 240 |
 | after the drawing round | 290 | 1249 | 81.16 % | 70 / 293 |
 | after the Wing round | 283 | 1249 | 81.53 % | 72 / 301 |
-| after the forward sweep and the deletion | **231** | **1275** | **84.66 %** | 73 / 305 |
+| after the forward sweep and the deletion | 231 | 1275 | 84.66 % | 73 / 305 |
+| after the `wings:draw` round | **202** | **1304** | **86.59 %** | 77 / 317 |
+
+## The `wings:draw` round
+
+Four branches of the command had no test: the unknown id (102-104), the empty selection
+(35-37), a wing that throws out of the drawing (60-63) and a wing with no image file yet
+(132-134). Four tests in `tests/Feature/WingDrawCommandTest.php` cover them, and the
+class's 29 mutants all left the uncovered list at once - it was the last whole class with
+untested executable code.
+
+Hand-checked, same way as before: `$skipped++` to `$skipped--`, the catch's `continue`
+to `break`, removing either message, and removing `saveQuietly()` each fail the suite.
+The third wing in the skip test exists for exactly that: `--all` orders by id, so leaving
+the loop early has to show as a smaller drawn count rather than an identical report.
+
+One mutant survives by construction: `substr(microtime(), 4, 2)` with a shifted offset
+still yields two digits, and no assertion on the path can tell which two.
+
+Still uncovered, and where the next round goes:
+
+- `Wing` 71: all declarations - the `#[Fillable]`/`#[Appends]` lists and `IMAGE_VARIANTS`.
+- `LoginController` 28: its validation arrays and guard branches (68-95), covered on the
+  happy paths only.
+- `WingDrawing` 34: 31 are constants and property defaults; 2 real lines, `$height = 1`
+  (104) and the cg skip (232), which one fixture with a span but no chords reaches.
+- `User` 13: 10 declarations, 1 return (87).
+- `WingsController` 9: the guard at 160 and the image/report lines 161, 165.
+- `Kernel` 17, `Handler` 12, `Authenticate` 6, the three providers 7, and three
+  stragglers: framework glue, left alone.
 
 Open questions, in place of the recommendation I first wrote here:
 
