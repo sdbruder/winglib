@@ -135,3 +135,23 @@ it('refuses a wing with no panels', function () {
 
     expect(fn () => WingDrawing::png($wing))->toThrow(RuntimeException::class, 'no panels');
 });
+
+it('renders a wing whose attributes have to fall back', function () {
+    // Mutation testing kept surviving on the reads of unitsystem, drawvalues, cgpos and rootchord
+    // in readPanels(), because every other test states those attributes outright. A wing saved
+    // from a form that did not post them carries no attribute at all, and that is the case the
+    // create and fork paths render with, so pin it: the fallbacks must give the same drawing as a
+    // wing that states the same values.
+    $partial = drawingWing();
+    unset($partial['unitsystem'], $partial['cgpos'], $partial['drawvalues'], $partial['rootchord']);
+
+    $stated = drawingWing(['cgpos' => 0.0, 'drawvalues' => 0, 'rootchord' => 0.0]);
+    unset($stated['unitsystem']);
+
+    $fromFallbacks = WingDrawing::png($partial);
+    $fromStated = WingDrawing::png($stated);
+
+    expect($fromFallbacks)->toStartWith("\x89PNG");
+    expect($fromStated)->toStartWith("\x89PNG");
+    expect($fromFallbacks)->toBe($fromStated);
+});

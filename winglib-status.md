@@ -305,3 +305,35 @@ jQuery 3.7.1, Bootstrap 3.4.1, six of six plugins attached, no broken image, bot
 assets `200`, and no Bootstrap or jQuery error. Prod served `/js/all.js` at 198018
 bytes and `/js/jquery-3.7.1.min.js` at 87533 bytes - the sizes built locally - and the
 wing thumbnails written by the earlier fix are still in place.
+
+### Mutation testing (2026-11-04)
+
+`composer mutate` runs Pest's mutation testing. It needs a coverage driver, so the
+php >= 8 stages of `docker/Dockerfile` build and enable pcov.
+
+Scope note: `--covered-only` yields **zero** mutations in this suite. It keys off
+`covers()`/`mutates()` declarations in the tests, and there are none, so the scope that
+works is `--everything`.
+
+Coverage is 77.6 % over `app/`: `Support/WingDrawing` 69.3 %, `Wing` 93.0 %,
+`HomeController` and `WingRequest` 100 %, while `UsersController`, `Authenticate` and
+`BroadcastServiceProvider` sit at 0 %. A mutant costs about 0.7 s on a thin class and
+about 6 s on the drawing class, because Pest re-runs the tests covering it.
+
+The first full run was time-boxed to 45 minutes and reached 8 files, deciding 441
+mutants: **270 killed, 171 survived - 61.2 %**. The bulk was `Wing` (382 mutants),
+`WingDrawing` had only started (165), `User` 28, the providers 14. The survivors
+clustered in `WingDrawing::readPanels()` lines 164-166, the reads that fall back to
+defaults, because every other test states `unitsystem`, `drawvalues`, `cgpos` and
+`rootchord` outright and nothing exercised a wing that lacks them - the exact case the
+create and fork paths render with.
+
+`tests/Unit/WingDrawingTest.php` now covers it: a wing whose attributes are unset must
+draw the same image as one that states the fallback values, and the render must carry
+the PNG signature. Checked by hand - with the survived `?? false` to `?? true` mutation
+in place the new test fails, and with the real code it passes.
+
+To finish the run: `--parallel` would need a database per process (this suite shares
+`winglib_test`, and `RefreshDatabase` runs `migrate:fresh` in each worker), so either
+set that up or accept repeated time-boxed serial runs. Whether the mutation cache
+resumes between runs is not yet verified.
