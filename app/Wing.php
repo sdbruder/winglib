@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Support\WingDrawing;
+use Database\Factories\WingFactory;
 use Illuminate\Database\Eloquent\Attributes\Appends;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -98,6 +99,7 @@ define('URL_SEPARATOR', '/');
 ])]
 class Wing extends Model
 {
+    /** @use HasFactory<WingFactory> */
     use HasFactory;
 
     /**
@@ -177,6 +179,10 @@ class Wing extends Model
         });
     }
 
+    /**
+     * @param  string  $orig_image
+     * @return string
+     */
     public static function duplicateImage($orig_image)
     {
         $subdir = substr(microtime(), 4, 2);
@@ -194,6 +200,10 @@ class Wing extends Model
         return $image_url;
     }
 
+    /**
+     * @param  string  $base64_image
+     * @return string
+     */
     public static function createImage($base64_image)
     {
 
@@ -215,6 +225,10 @@ class Wing extends Model
         return $image_url;
     }
 
+    /**
+     * @param  string  $base64_image
+     * @return void
+     */
     public function saveImage($base64_image)
     {
         $image_filename = implode(DIRECTORY_SEPARATOR, [storage_path(), 'app']).$this->image_file;
@@ -266,6 +280,10 @@ class Wing extends Model
         return preg_replace('/\.png$/', '-'.$width.'.png', $this->image_file) ?? $this->image_file;
     }
 
+    /**
+     * @param  string  $what
+     * @return string
+     */
     public function unit($what)
     {
         if ($this->unitsystem == 'metric') {
@@ -287,12 +305,21 @@ class Wing extends Model
         return $units[$what];
     }
 
+    /**
+     * @param  string  $haystack
+     * @param  string  $needle
+     * @return bool
+     */
     public function endsWith($haystack, $needle)
     {
         // search forward starting from end minus needle length characters
         return $needle === '' || (($temp = strlen($haystack) - strlen($needle)) >= 0 && strpos($haystack, $needle, $temp) !== false);
     }
 
+    /**
+     * @param  string  $value
+     * @return string
+     */
     public function clearDotZeroes($value)
     {
         if ($this->endsWith($value, '.00')) {
@@ -302,6 +329,9 @@ class Wing extends Model
         return $value;
     }
 
+    /**
+     * @return Attribute<string, never>
+     */
     protected function cGPos(): Attribute
     {
         return Attribute::make(get: function () {
@@ -309,6 +339,9 @@ class Wing extends Model
         });
     }
 
+    /**
+     * @return Attribute<float, never>
+     */
     protected function panel1Span(): Attribute
     {
         return Attribute::make(get: function () {
@@ -316,6 +349,9 @@ class Wing extends Model
         });
     }
 
+    /**
+     * @return Attribute<float, never>
+     */
     protected function panel1Chord(): Attribute
     {
         return Attribute::make(get: function () {
@@ -323,6 +359,9 @@ class Wing extends Model
         });
     }
 
+    /**
+     * @return Attribute<float, never>
+     */
     protected function panel1Sweep(): Attribute
     {
         return Attribute::make(get: function () {
@@ -330,6 +369,9 @@ class Wing extends Model
         });
     }
 
+    /**
+     * @return Attribute<float, never>
+     */
     protected function panel1Angle(): Attribute
     {
         return Attribute::make(get: function () {
@@ -337,6 +379,9 @@ class Wing extends Model
         });
     }
 
+    /**
+     * @return Attribute<float, never>
+     */
     protected function panel2Span(): Attribute
     {
         return Attribute::make(get: function () {
@@ -344,6 +389,9 @@ class Wing extends Model
         });
     }
 
+    /**
+     * @return Attribute<float, never>
+     */
     protected function panel2Chord(): Attribute
     {
         return Attribute::make(get: function () {
@@ -351,6 +399,9 @@ class Wing extends Model
         });
     }
 
+    /**
+     * @return Attribute<float, never>
+     */
     protected function panel2Sweep(): Attribute
     {
         return Attribute::make(get: function () {
@@ -358,6 +409,9 @@ class Wing extends Model
         });
     }
 
+    /**
+     * @return Attribute<float, never>
+     */
     protected function panel2Angle(): Attribute
     {
         return Attribute::make(get: function () {
@@ -365,6 +419,9 @@ class Wing extends Model
         });
     }
 
+    /**
+     * @return Attribute<float, never>
+     */
     protected function panel3Span(): Attribute
     {
         return Attribute::make(get: function () {
@@ -372,6 +429,9 @@ class Wing extends Model
         });
     }
 
+    /**
+     * @return Attribute<float, never>
+     */
     protected function panel3Chord(): Attribute
     {
         return Attribute::make(get: function () {
@@ -379,6 +439,9 @@ class Wing extends Model
         });
     }
 
+    /**
+     * @return Attribute<float, never>
+     */
     protected function panel3Sweep(): Attribute
     {
         return Attribute::make(get: function () {
@@ -386,6 +449,9 @@ class Wing extends Model
         });
     }
 
+    /**
+     * @return Attribute<float, never>
+     */
     protected function panel3Angle(): Attribute
     {
         return Attribute::make(get: function () {
@@ -393,6 +459,9 @@ class Wing extends Model
         });
     }
 
+    /**
+     * @return Attribute<float, never>
+     */
     protected function panel4Span(): Attribute
     {
         return Attribute::make(get: function () {
@@ -400,6 +469,9 @@ class Wing extends Model
         });
     }
 
+    /**
+     * @return Attribute<float, never>
+     */
     protected function panel4Chord(): Attribute
     {
         return Attribute::make(get: function () {
@@ -407,6 +479,9 @@ class Wing extends Model
         });
     }
 
+    /**
+     * @return Attribute<float, never>
+     */
     protected function panel4Sweep(): Attribute
     {
         return Attribute::make(get: function () {
@@ -414,6 +489,9 @@ class Wing extends Model
         });
     }
 
+    /**
+     * @return Attribute<float, never>
+     */
     protected function panel4Angle(): Attribute
     {
         return Attribute::make(get: function () {
@@ -421,6 +499,9 @@ class Wing extends Model
         });
     }
 
+    /**
+     * @return Attribute<float, never>
+     */
     protected function panel5Span(): Attribute
     {
         return Attribute::make(get: function () {
@@ -428,6 +509,9 @@ class Wing extends Model
         });
     }
 
+    /**
+     * @return Attribute<float, never>
+     */
     protected function panel5Chord(): Attribute
     {
         return Attribute::make(get: function () {
@@ -435,6 +519,9 @@ class Wing extends Model
         });
     }
 
+    /**
+     * @return Attribute<float, never>
+     */
     protected function panel5Sweep(): Attribute
     {
         return Attribute::make(get: function () {
@@ -442,6 +529,9 @@ class Wing extends Model
         });
     }
 
+    /**
+     * @return Attribute<float, never>
+     */
     protected function panel5Angle(): Attribute
     {
         return Attribute::make(get: function () {
@@ -449,6 +539,9 @@ class Wing extends Model
         });
     }
 
+    /**
+     * @return Attribute<float, never>
+     */
     protected function panel6Span(): Attribute
     {
         return Attribute::make(get: function () {
@@ -456,6 +549,9 @@ class Wing extends Model
         });
     }
 
+    /**
+     * @return Attribute<float, never>
+     */
     protected function panel6Chord(): Attribute
     {
         return Attribute::make(get: function () {
@@ -463,6 +559,9 @@ class Wing extends Model
         });
     }
 
+    /**
+     * @return Attribute<float, never>
+     */
     protected function panel6Sweep(): Attribute
     {
         return Attribute::make(get: function () {
@@ -470,6 +569,9 @@ class Wing extends Model
         });
     }
 
+    /**
+     * @return Attribute<float, never>
+     */
     protected function panel6Angle(): Attribute
     {
         return Attribute::make(get: function () {
@@ -480,7 +582,7 @@ class Wing extends Model
     /**
      * prepare the Panels array
      *
-     * @return array return the Panels Array
+     * @return array<int, array{span: float, chord: float, sweep: float, angle: float}> return the Panels Array
      */
     private function prepPanelsArray()
     {
@@ -505,7 +607,7 @@ class Wing extends Model
     /**
      * A wing is owned by an user
      *
-     * @return BelongsTo
+     * @return BelongsTo<User, $this>
      */
     public function user()
     {
@@ -515,7 +617,7 @@ class Wing extends Model
     /**
      * A wing was liked by many users (many to many)
      *
-     * @return BelongsToMany
+     * @return BelongsToMany<User, $this>
      */
     public function likedBy()
     {

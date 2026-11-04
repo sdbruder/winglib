@@ -1,7 +1,24 @@
 includes:
     - phpstan-baseline.neon
+    - vendor/spaze/phpstan-disallowed-calls/disallowed-dangerous-calls.neon
+    - vendor/spaze/phpstan-disallowed-calls/disallowed-execution-calls.neon
 
 parameters:
-    level: 5
+    level: 6
     paths:
         - app
+        - config
+        - database
+        - routes
+    # PHPStan's parallel workers die in the project container with exit code 255, which turns a run
+    # into "Result is incomplete" with zero reported errors. Serial analysis here takes seconds.
+    parallel:
+        maximumNumberOfProcesses: 1
+    # env() is allowed in config/ only: once the config is cached (artisan optimize runs on every
+    # deploy) env() returns null everywhere else, which fails silently in production.
+    disallowedFunctionCalls:
+        -
+            function: 'env()'
+            message: 'read configuration through config(); env() returns null once the config is cached'
+            allowIn:
+                - config/*

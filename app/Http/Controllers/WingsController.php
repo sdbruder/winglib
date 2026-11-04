@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\WingRequest;
 use App\Wing;
 use Flash;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
@@ -14,6 +15,7 @@ class WingsController extends Controller
     /**
      * Fork a wing already registered making a copy of it for the current user.
      *
+     * @param  string  $id
      * @return Response
      */
     public function forkIt($id)
@@ -169,6 +171,8 @@ class WingsController extends Controller
 
     /**
      * Ajax Like it: insert / delete a relationship in users_likes_wings
+     *
+     * @return JsonResponse
      */
     public function likeit(Request $request)
     {

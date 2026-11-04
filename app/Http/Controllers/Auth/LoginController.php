@@ -44,6 +44,7 @@ class LoginController extends Controller
     /**
      * Redirect the user to the Facebook authentication page.
      *
+     * @param  string  $driver
      * @return Response
      */
     public function redirectToProvider($driver)
@@ -58,6 +59,7 @@ class LoginController extends Controller
     /**
      * Obtain the user information from Facebook.
      *
+     * @param  string  $driver
      * @return Response
      */
     public function handleProviderCallback($driver)

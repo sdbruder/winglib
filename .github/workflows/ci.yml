@@ -1,0 +1,58 @@
+name: ci
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    services:
+      mariadb:
+        image: mariadb:10.11
+        env:
+          MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: "1"
+          MARIADB_DATABASE: winglib_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
+          --health-interval=5s --health-timeout=5s --health-retries=20
+    env:
+      DB_CONNECTION: mysql
+      DB_HOST: 127.0.0.1
+      DB_PORT: 3306
+      DB_DATABASE: winglib_test
+      DB_USERNAME: root
+      DB_PASSWORD: ""
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.5"
+          extensions: pdo_mysql, gd, mbstring, xml, curl, zip, bcmath
+          coverage: none
+
+      - run: composer validate --strict
+
+      # --no-scripts: post-install-cmd regenerates the ide-helper, which needs an APP_KEY, and the
+      # key cannot exist until vendor/ is in place.
+      - run: composer install --no-interaction --prefer-dist --no-scripts
+      - run: cp .env.example .env
+      - run: php artisan key:generate
+      - run: php artisan package:discover
+
+      # lint, analyse (PHPStan level 6), unused dependencies, and the Pest suite
+      - run: composer check
+
+      # Never a gate until decided: components/jquery 2.2.4 carries CVE-2020-11022 and
+      # CVE-2020-11023, which also blocks roave/security-advisories from being installed.
+      - name: composer audit (reporting only)
+        continue-on-error: true
+        run: composer audit

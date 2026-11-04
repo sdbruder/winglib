@@ -19,12 +19,6 @@ parameters:
 			path: app/Exceptions/Handler.php
 
 		-
-			message: '#^PHPDoc type array of property App\\Exceptions\\Handler\:\:\$dontReport is not covariant with PHPDoc type array\<int, class\-string\<Throwable\>\> of overridden property Illuminate\\Foundation\\Exceptions\\Handler\:\:\$dontReport\.$#'
-			identifier: property.phpDocType
-			count: 1
-			path: app/Exceptions/Handler.php
-
-		-
 			message: '#^Access to an undefined property Laravel\\Socialite\\Contracts\\User\:\:\$avatar\.$#'
 			identifier: property.notFound
 			count: 1
@@ -157,12 +151,6 @@ parameters:
 			path: app/Http/Controllers/UsersController.php
 
 		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
-			identifier: property.notFound
-			count: 3
-			path: app/Http/Controllers/WingsController.php
-
-		-
 			message: '#^Method App\\Http\\Controllers\\WingsController\:\:create\(\) should return Illuminate\\Http\\Response but returns Illuminate\\View\\View\.$#'
 			identifier: return.type
 			count: 1
@@ -227,36 +215,6 @@ parameters:
 			identifier: assign.propertyType
 			count: 1
 			path: app/Http/Controllers/WingsController.php
-
-		-
-			message: '#^PHPDoc type array of property App\\Http\\Kernel\:\:\$middleware is not covariant with PHPDoc type array\<int, string\> of overridden property Illuminate\\Foundation\\Http\\Kernel\:\:\$middleware\.$#'
-			identifier: property.phpDocType
-			count: 1
-			path: app/Http/Kernel.php
-
-		-
-			message: '#^PHPDoc type array of property App\\Http\\Kernel\:\:\$middlewareAliases is not covariant with PHPDoc type array\<string, string\> of overridden property Illuminate\\Foundation\\Http\\Kernel\:\:\$middlewareAliases\.$#'
-			identifier: property.phpDocType
-			count: 1
-			path: app/Http/Kernel.php
-
-		-
-			message: '#^PHPDoc type array of property App\\Http\\Kernel\:\:\$middlewareGroups is not covariant with PHPDoc type array\<string, array\<int, string\>\> of overridden property Illuminate\\Foundation\\Http\\Kernel\:\:\$middlewareGroups\.$#'
-			identifier: property.phpDocType
-			count: 1
-			path: app/Http/Kernel.php
-
-		-
-			message: '#^PHPDoc type array of property App\\Http\\Middleware\\EncryptCookies\:\:\$except is not covariant with PHPDoc type array\<int, string\> of overridden property Illuminate\\Cookie\\Middleware\\EncryptCookies\:\:\$except\.$#'
-			identifier: property.phpDocType
-			count: 1
-			path: app/Http/Middleware/EncryptCookies.php
-
-		-
-			message: '#^PHPDoc type array of property App\\Providers\\EventServiceProvider\:\:\$listen is not covariant with PHPDoc type array\<string, array\<int, string\>\> of overridden property Illuminate\\Foundation\\Support\\Providers\\EventServiceProvider\:\:\$listen\.$#'
-			identifier: property.phpDocType
-			count: 1
-			path: app/Providers/EventServiceProvider.php
 
 		-
 			message: '#^Called ''first'' on Laravel collection, but could have been retrieved as a query\.$#'

@@ -439,7 +439,6 @@ class WingDrawing
         $top = $rotated ? $this->y($y) - (int) round($height / 2) : $this->y($y) - $baseline;
 
         imagecopy($this->image, $strip, $left, $top, 0, 0, $width, $height);
-        imagedestroy($strip);
     }
 
     /** JavaScript prints 600, 26.57 and 0.7 where PHP prints 600.00, 26.57 and 0.70. */

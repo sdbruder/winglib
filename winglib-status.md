@@ -236,3 +236,40 @@ a thumbnail and saving the wing that owns it:
 The home page answered `200` before and after on both sites. The delete and the
 save ran through `php8.5 artisan tinker`; the server's bare `php` is 8.2 and fails
 the Composer platform check, so hand-run commands on this host must say `php8.5`.
+
+## Code quality after the upgrade (2026-11-04)
+
+The toolchain that carried the nine hops now runs on demand and on every push.
+`composer check` runs Pint, PHPStan, composer-unused and the Pest suite, and
+`.github/workflows/ci.yml` runs it on PHP 8.5 against MariaDB 10.11.
+
+- PHPStan moved from level 5 to level 6, and the analysed paths grew from `app`
+  to `app`, `config`, `database` and `routes`. The 60 level 6 findings were fixed
+  with docblocks only, with no behaviour change; 7 baseline entries went stale and
+  were deleted, and none were added.
+- New dev tools: `laravel/boost` (the MCP server), `phpstan/phpstan-deprecation-rules`,
+  `spaze/phpstan-disallowed-calls` (its dangerous and execution sets, plus `env()`
+  outside `config/`), and `icanhazstring/composer-unused`. `composer audit` reports
+  in CI without gating, for the reason below.
+- `.mcp.json` registers `php artisan boost:mcp`, so an MCP client can read this
+  app's version-specific docs, schema, log and last error.
+- PHPStan runs serially (`parallel.maximumNumberOfProcesses: 1`): in the project
+  container its workers die with exit code 255, which turns a run into
+  "Result is incomplete" with zero reported errors.
+- `imagedestroy()` is deprecated in PHP 8.5; its one call site is gone.
+- `composer-unused` needed six justified ignores to be usable: `laravel-ide-helper`,
+  `gravatar` and `flash` are reached through Laravel conventions, `spatie/laravel-html`
+  through Blade, `components/jquery` through `gulpfile.js` (outside the scan), and
+  `fruitcake/laravel-debugbar` is an artefact of the lock file, whose `barryvdh`
+  entry still carries the old repository URL.
+
+### Open: jQuery 2.1.4 reaches every browser
+
+`composer audit` reports two medium XSS advisories (CVE-2020-11022, CVE-2020-11023)
+against `components/jquery` 2.2.4, and `roave/security-advisories` refuses to install
+while that package is present (`conflicts with components/jquery >=1.0.3,<3.5`).
+The live exposure is larger than the advisory: every page loads `public/js/all.js`
+(`resources/views/layout.blade.php:212`) and that file bundles jQuery 2.1.4.
+`gulpfile.js` is the only consumer of the Composer package - it copies
+`vendor/components/jquery/jquery.js` into the bundle - and that Elixir/Gulp 3 build
+does not run on a current Node.

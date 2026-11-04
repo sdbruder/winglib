@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Database\Factories\UserFactory;
 use Gravatar;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\Passwords\CanResetPassword;
@@ -33,6 +34,7 @@ use Illuminate\Notifications\Notifiable;
 #[Table(name: 'users')]
 class User extends Model implements AuthenticatableContract, AuthorizableContract, CanResetPasswordContract
 {
+    /** @use HasFactory<UserFactory> */
     use Authenticatable, Authorizable, CanResetPassword, HasFactory, Notifiable;
 
     /**
@@ -68,7 +70,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     /**
      * A user can have many wings
      *
-     * @return HasMany
+     * @return HasMany<Wing, $this>
      */
     public function wings()
     {
@@ -78,7 +80,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     /**
      * A user likes many wings (many to many)
      *
-     * @return BelongsToMany
+     * @return BelongsToMany<Wing, $this>
      */
     public function likes()
     {
