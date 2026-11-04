@@ -436,6 +436,53 @@ the whole app re-measures as:
 | after the Wing round | 283 | 1249 | 81.53 % | 72 / 301 |
 | after the forward sweep and the deletion | 231 | 1275 | 84.66 % | 73 / 305 |
 | after the `wings:draw` round | **202** | **1304** | **86.59 %** | 77 / 317 |
+| after the coverage-gap round | **198** | **1308** | **86.85 %** | 81 / 324 |
+
+## Line coverage, as the complement to the mutant count
+
+`pest --coverage` (pcov, serial) over the suite says **28.9 % total**, and that figure is
+not comparable to the mutation score above - it counts a file as covered when any line
+is, and it counts all eighteen views as 0.0 %.
+
+**Blade views cannot be measured this way.** `resources/views/**` reports 0.0 % even for
+pages the feature tests render and assert on, because coverage is attributed to the
+compiled files under `storage/framework/views`. Adding `resources/views` to the
+`<source>` in `phpunit.xml` only adds eighteen misleading 0.0 % rows; that change was
+made and reverted.
+
+Where `app/` really stands, and what it means:
+
+| file | lines | reading |
+|---|---|---|
+| `LoginController` | **14.8 %** (67-86) | the largest real gap: the login paths are tested, the callback handle is not |
+| `WingsController` | 86 % (158-168) | the image guard block |
+| `Handler` | 40 % (65-69) | the `expectsJson` branch, unreachable - see below |
+| `User` | 93 % (87) | one return |
+| `WingDrawing` | 99 % (104, 232) | the height clamp and the area-weighting skip |
+| `Wing` | 98.9 % (259-260) | the catch in `refreshImageVariants` |
+| `UsersController` | **0 %** | one method, the settings page, now tested |
+| `Authenticate`, `PasswordController`, `BroadcastServiceProvider` | **0 %** | see below |
+| `Kernel` | **100 %** | yet all 17 of its mutants count as uncovered |
+
+That last row is the clearest statement of the difference: line coverage and Pest's
+uncovered-mutant count are different measurements, and a declaration can be executed
+100 % of the time and still be unscorable.
+
+Three findings from this, none acted on:
+
+1. A guest who asks for `/wings/{id}/edit` is redirected to the app root - the observed
+   `Location` is `http://localhost`, not `/auth/login` - so a protected link lands on the
+   home page instead of the login form.
+2. `Handler::unauthenticated()`'s `expectsJson()` branch returns a 401, and it is
+   unreachable from these routes: the app's `Authenticate` middleware redirects instead of
+   throwing. Either the middleware should call `$request->expectsJson()` before
+   redirecting, or that branch is dead. The new test pins only the security contract (302,
+   never the form) and not the target.
+3. `PasswordController` and `BroadcastServiceProvider` are at 0 % and have no test and, in
+   the controller's case, no route: candidates for deletion, like `Welcome.blade.php` and
+   the two `emails/*` views, which nothing but `config/auth.php`'s legacy `email` key
+   refers to.
+
 
 ## The `wings:draw` round
 
