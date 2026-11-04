@@ -400,3 +400,42 @@ Two findings the drawing tests surfaced, both checked with the owner:
 Reproduce: `~/.omp/agent/bin/zj-run.sh mutate2 . /tmp/mut2.sh`, or in the container
 `timeout 5400 php vendor/bin/pest --mutate --everything --parallel --processes=8 --profile`.
 
+## The Wing round
+
+`Wing` held 97 uncovered mutants. 71 of them are entries of the `#[Fillable]` and
+`#[Appends]` attributes, 15 are `prepPanelsArray()`, 3 the widths in `IMAGE_VARIANTS`,
+and the rest sit in the save hooks.
+
+Two tests closed the last two groups: one mass assigns every field the create, edit and
+fork forms post and asserts the model's attributes match, plus that `id`, `created_at`
+and `slug_str` stay unfillable; the other names the two thumbnail files the views ask
+for, because every existing variant test read `Wing::IMAGE_VARIANTS` and so moved with a
+change to it.
+
+The score barely moves - 290 uncovered to 283, 81.16 % to 81.53 % - and the 7 that left
+are `Inspire`'s, which was deleted. The 71 attribute mutants stay in the uncovered
+bucket because Pest attributes coverage to *executed lines*, and a declaration is never
+executed: no test can move them, whatever it asserts. Hand-checked anyway, on the real
+file, by applying each mutation and reverting it:
+
+| mutation | result |
+|---|---|
+| first `'unitsystem'` entry removed (the Fillable list) | KILLED - WingModelTest fails |
+| `IMAGE_VARIANTS` 180 -> 181 | KILLED - the named-width test fails |
+| first `'panel3angle'` entry removed (the Appends list) | KILLED - 8 WingModelTest and 3 WingImageVariantsTest cases fail |
+
+So the behaviour behind those mutants is pinned even though the tool cannot score it.
+
+Open questions, in place of the recommendation I first wrote here:
+
+1. `#[Appends]` is load-bearing - removing one entry fails eleven tests - yet `toArray()`
+   on a `Wing` raises `BadMethodCallException: Call to undefined method
+   App\Wing::getPanel1spanAttribute()`, because the appends take Laravel down the old
+   `getXAttribute` path while the panel values are `Attribute` casts. Both cannot be
+   right at once and neither the appends nor the casts should be removed on a guess: the
+   attribute is what the `saving` hook reads to drop the panel fields from the row, which
+   is why it is not dead. Worth pinning with a test for whichever of the two is intended.
+2. `prepPanelsArray()` has no caller: 15 uncovered mutants and 20 lines of dead code. Its
+   `json_encode` body duplicates what the `saving` hook builds, so it looks like a
+   leftover from before that hook existed.
+
