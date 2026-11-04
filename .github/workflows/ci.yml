@@ -51,8 +51,6 @@ jobs:
       # lint, analyse (PHPStan level 6), unused dependencies, and the Pest suite
       - run: composer check
 
-      # Never a gate until decided: components/jquery 2.2.4 carries CVE-2020-11022 and
-      # CVE-2020-11023, which also blocks roave/security-advisories from being installed.
-      - name: composer audit (reporting only)
-        continue-on-error: true
-        run: composer audit
+      # roave/security-advisories is a dev dependency, so a vulnerable version cannot be installed
+      # at all; this catches advisories published against what is already locked.
+      - run: composer audit

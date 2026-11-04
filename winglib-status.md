@@ -273,3 +273,27 @@ The live exposure is larger than the advisory: every page loads `public/js/all.j
 `gulpfile.js` is the only consumer of the Composer package - it copies
 `vendor/components/jquery/jquery.js` into the bundle - and that Elixir/Gulp 3 build
 does not run on a current Node.
+
+### Resolved: jQuery 3.7.1 and Bootstrap 3.4.1 (2026-11-04)
+
+Decided with the user, and the smoke test earned its keep:
+
+- `components/jquery` 2.2.4 -> `^3.5` (resolves 3.7.1). `composer audit` is now clean
+  and `roave/security-advisories` installs, which it could not before because it
+  `conflicts with components/jquery >=1.0.3,<3.5`. The audit step in CI is a gate now,
+  not a report.
+- `public/js/jquery-3.7.1.min.js` is vendored from the same Composer package
+  (`vendor/components/jquery/jquery.min.js`) and is loaded before the bundle.
+- The jQuery 2.1.4 block left `public/js/all.js`, which fell from 439 KB to 191 KB.
+- **The first smoke test failed**: Bootstrap 3.3.6 refuses jQuery >= 3 ("Bootstrap's
+  JavaScript requires jQuery version 1.9.1 or higher, but lower than version 3"), so
+  none of its plugins attached. Bootstrap's block inside the bundle was replaced with
+  3.4.1, fetched from npm with the registry integrity checked against the tarball's own
+  sha512. 3.4.1 is the last 3.x and also carries the CVE-2019-8331 tooltip and popover
+  XSS fix.
+- Verified in a browser with caching disabled on `/`, `/wings` and `/auth/login`:
+  `jQuery.fn.jquery` is 3.7.1, `jQuery.fn.modal.Constructor.VERSION` is 3.4.1, and
+  modal, tooltip, dropdown, collapse, tab and popover are all attached; both assets
+  answer 200, and no Bootstrap or jQuery error appears.
+- Both edits are surgical edits to the committed bundle, because neither `gulpfile.js`
+  nor its Elixir/Gulp 3 build can run today. The previous file stays in git history.
