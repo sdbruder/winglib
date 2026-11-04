@@ -412,11 +412,11 @@ and `slug_str` stay unfillable; the other names the two thumbnail files the view
 for, because every existing variant test read `Wing::IMAGE_VARIANTS` and so moved with a
 change to it.
 
-The score barely moves - 290 uncovered to 283, 81.16 % to 81.53 % - and the 7 that left
-are `Inspire`'s, which was deleted. The 71 attribute mutants stay in the uncovered
-bucket because Pest attributes coverage to *executed lines*, and a declaration is never
-executed: no test can move them, whatever it asserts. Hand-checked anyway, on the real
-file, by applying each mutation and reverting it:
+The Wing round's own tests move little on their own - 290 uncovered to 283, 81.16 % to
+81.53 %, and the 7 that left are `Inspire`'s, which was deleted. The 71 attribute
+mutants stay in the uncovered bucket because Pest attributes coverage to *executed
+lines*, and a declaration is never executed: no test can move them, whatever it asserts.
+Hand-checked anyway, on the real file, by applying each mutation and reverting it:
 
 | mutation | result |
 |---|---|
@@ -425,6 +425,16 @@ file, by applying each mutation and reverting it:
 | first `'panel3angle'` entry removed (the Appends list) | KILLED - 8 WingModelTest and 3 WingImageVariantsTest cases fail |
 
 So the behaviour behind those mutants is pinned even though the tool cannot score it.
+
+With the forward-sweep fixture in, and `prepPanelsArray()` and its 15 mutants deleted,
+the whole app re-measures as:
+
+| run | uncovered | tested | score | suite |
+|---|---|---|---|---|
+| baseline | 548 | 991 | 64.39 % | 66 / 240 |
+| after the drawing round | 290 | 1249 | 81.16 % | 70 / 293 |
+| after the Wing round | 283 | 1249 | 81.53 % | 72 / 301 |
+| after the forward sweep and the deletion | **231** | **1275** | **84.66 %** | 73 / 305 |
 
 Open questions, in place of the recommendation I first wrote here:
 
@@ -435,7 +445,23 @@ Open questions, in place of the recommendation I first wrote here:
    right at once and neither the appends nor the casts should be removed on a guess: the
    attribute is what the `saving` hook reads to drop the panel fields from the row, which
    is why it is not dead. Worth pinning with a test for whichever of the two is intended.
-2. `prepPanelsArray()` has no caller: 15 uncovered mutants and 20 lines of dead code. Its
-   `json_encode` body duplicates what the `saving` hook builds, so it looks like a
-   leftover from before that hook existed.
+2. `prepPanelsArray()` is deleted, with the `method.unused` baseline entry that had already
+   recorded it: no caller anywhere, 20 lines duplicating what the `saving` hook builds.
+
+The drawing also gained a fixture no other test had - a wing that sweeps *forward*, the
+only way `draw_panel`'s else branch runs. Reaching a line is not pinning it: the first
+version of that test compared the topmost ink row of the two renders, and removing the
+branch's span line by hand left it green. Asserting that line's own row kills the
+mutation, re-checked the same way. The branch's arc is an equivalent mutant either way -
+`arc($span * $radius, $angle, 0)` and its endpoints swapped trace the same curve - so it
+stays alive whatever the test asserts.
+
+Still uncovered, and where the next round goes:
+
+- `WingDraw` 19: the `drawOne` guards (lines 35-63), the report lines (102-104) and the
+  path checks (132-134). Command internals, reachable from `artisan wing:draw`.
+- `WingDrawing` ~55: its class constants and property defaults, the same declaration class
+  Pest cannot score as the Wing attributes. `GAP`, `LINE`, `TICK`, `CHORD_GAP` and
+  `CG_GAP` are pinned anyway by the zoom-1 fixture, hand-checked above.
+- `Kernel`, `Handler`, `Authenticate`, the providers: framework glue, left alone.
 
