@@ -23,3 +23,14 @@ RUN set -eux; \
     rm -rf /var/lib/apt/lists/*
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+# pcov is the coverage driver Pest's mutation testing requires. Only the php >= 8 stages get it:
+# the 7.4 stage never runs Pest, and its Debian base cannot reach the normal apt mirrors.
+RUN set -eux; \
+    if [ "${PHP_VERSION%%.*}" -ge 8 ]; then \
+        apt-get update -qq; \
+        apt-get install -y --no-install-recommends $PHPIZE_DEPS; \
+        pecl install pcov; \
+        docker-php-ext-enable pcov; \
+        rm -rf /var/lib/apt/lists/* /tmp/pear; \
+    fi

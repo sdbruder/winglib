@@ -54,6 +54,7 @@
         "lint": "@php vendor/bin/pint --test",
         "refactor": "@php vendor/bin/rector process",
         "unused": "@php vendor/bin/composer-unused --hide-ignored --excludePackage=barryvdh/laravel-ide-helper --excludePackage=creativeorange/gravatar --excludePackage=laracasts/flash --excludePackage=spatie/laravel-html --excludePackage=components/jquery --excludePackage=fruitcake/laravel-debugbar",
+        "mutate": "@php vendor/bin/pest --mutate --everything --profile",
         "audit": "@composer audit",
         "check": [
             "@lint",
