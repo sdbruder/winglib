@@ -580,31 +580,6 @@ class Wing extends Model
     }
 
     /**
-     * prepare the Panels array
-     *
-     * @return array<int, array{span: float, chord: float, sweep: float, angle: float}> return the Panels Array
-     */
-    private function prepPanelsArray()
-    {
-        $panels = $this->panels;
-        if (gettype($panels) != 'array') {
-            $panels = [];
-        }
-        for ($p = 1; $p <= 6; $p++) {
-            if (! array_key_exists($p, $panels)) {
-                $panels[$p] = [
-                    'span' => 0.00,
-                    'chord' => 0.00,
-                    'sweep' => 0.00,
-                    'angle' => 0.00];
-            }
-        }
-        $this->attributes['panels'] = json_encode($panels);
-
-        return $panels;
-    }
-
-    /**
      * A wing is owned by an user
      *
      * @return BelongsTo<User, $this>

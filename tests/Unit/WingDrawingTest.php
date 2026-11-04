@@ -70,6 +70,37 @@ function drawingInkBounds($image): array
     return $bounds;
 }
 
+it('draws the measures above a wing that sweeps forward', function () {
+    // Every other fixture sweeps backwards, so draw_panel takes its else branch - the span line
+    // above the *leading* edge rather than the swept one, and the arc from the angle back to zero -
+    // and mutation testing never reached it. A small forward sweep keeps those lines on the canvas.
+    $wing = drawingWing(['drawvalues' => 1]);
+    $wing->panels = [
+        1 => ['span' => '600', 'chord' => '180', 'sweep' => '-20', 'angle' => '-5'],
+        2 => ['span' => '', 'chord' => '', 'sweep' => '', 'angle' => ''],
+        3 => ['span' => '', 'chord' => '', 'sweep' => '', 'angle' => ''],
+        4 => ['span' => '', 'chord' => '', 'sweep' => '', 'angle' => ''],
+        5 => ['span' => '', 'chord' => '', 'sweep' => '', 'angle' => ''],
+        6 => ['span' => '', 'chord' => '', 'sweep' => '', 'angle' => ''],
+    ];
+
+    $with = imagecreatefromstring(WingDrawing::png($wing));
+    $without = imagecreatefromstring(WingDrawing::png(drawingWing(['drawvalues' => 0])));
+
+    $zoom = min(880 / 1200, 340 / 480);
+    $column = (int) round(470.0 + $zoom * 300);
+
+    $withRows = drawingInkRows($with, $column);
+    $withoutRows = drawingInkRows($without, $column);
+
+    expect($withRows)->not->toBeEmpty();
+    expect($withoutRows)->not->toBeEmpty();
+
+    // The span line hangs gap 5 above a leading edge that is itself 300 * 20 / 600 = 10 above the
+    // origin at that column, so with the measures the ink starts above where it starts without.
+    expect(min($withRows))->toBeLessThan(min($withoutRows));
+});
+
 it('draws the panels where the canvas geometry puts them', function () {
     $image = imagecreatefromstring(WingDrawing::png(drawingWing()));
 
