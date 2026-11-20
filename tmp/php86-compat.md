@@ -34,28 +34,53 @@ Options, in order of preference:
 3. Not recommended: `config.platform.php = 8.5` hides the constraint instead of
    solving it.
 
-## The one failing test is not a PHP 8.6 change
+## The one failing test comes from the libgd 2.4 sync
 
 `Tests\Unit\WingDrawingTest > it draws the measures at their own pixel when a model unit
 is one pixel` fails at `tests/Unit/WingDrawingTest.php:453`. It expects the ink run
 `[483, 485]` on row 50; 8.6 produces `[483, 487]` — the cg line merged with a text pixel
 next to it.
 
-Deterministic (two runs per version), and caused by the FreeType version in the PHP build:
+Deterministic (two runs per version). Cause: PHP 8.6 is the first release with the
+bundled libgd synced to upstream 2.4 (php-src PR #22532, merged 2026-07-16,
++142,450/−32,475 lines, labelled "ABI break"). That sync merged libgd's new FreeType
+encoding into `gdft.c`, which changes text advances and `imagettfbbox()` boxes.
 
-| Build | GD | FreeType | `imagettfbbox(8, 0, DejaVuSans, '440 mm')` |
+`WingDrawing::text()` derives the label strip height and baseline from that bbox, so the
+labels move one row and shrink horizontally.
+
+Survey of every Herd build on this machine isolates the variable:
+
+| PHP | bundled GD | FreeType | `imagettfbbox(8,0,DejaVuSans,'440 mm')` |
 | --- | --- | --- | --- |
-| Herd php85 | bundled 2.1.0 | 2.15.0 | height 8 |
-| Herd php86 | bundled 2.4.0 | 2.14.3 | height 7 |
+| 8.0.30, 8.1.34 | 2.1.0 compatible | 2.13.2 | 46x8 |
+| 8.2.35, 8.3.36, 8.4.27, 8.5.12 | 2.1.0 compatible | 2.15.0 | 46x8 |
+| 8.6.0RC3 | **2.4.0 compatible** | 2.14.3 | **43x7** |
 
-`WingDrawing::text()` derives the label strip height and baseline from that bbox, so one
-row less of height moves every label one pixel. The test asserts exact label pixels, so it
-is tied to the rasterizer build, not to the PHP language version. Any FreeType change
-breaks it, including a Herd rebuild of 8.5.
+FreeType moves between 2.13.2 and 2.15.0 with no change in the box; only the libgd sync
+does. Glyph advances shift left, up to 3 px at size 8: ink column runs for `440 mm` at
+size 8 are `[11-15],[18-22],[36],[47]` on 8.5 and `[11-15],[17-21],[34],[44]` on 8.6.
 
-Fix direction: pin that assertion to a tolerance the label box allows (or skip when
-`gd_info()` FreeType differs), or accept the new baseline by regenerating the expected
-runs once a runtime is chosen.
+Fix direction: pin that assertion to a tolerance the label box allows, or regenerate the
+expected runs once a runtime is chosen. The value is not portable across PHP 8.6 and
+earlier, so a single expected set cannot pass on both.
+
+## Why an older PHP has the newer FreeType
+
+The PHP binary combines two independent version axes:
+
+- libgd is vendored inside the php-src tarball (`ext/gd/libgd`), so it moves only when a
+  PHP minor syncs it. That happened for 8.6, first time in years.
+- FreeType is an external library linked statically from Herd's buildroot
+  (`--with-openssl=.../buildroot`, no `libfreetype` in `otool -L`), so it moves whenever
+  Herd rebuilds, on the buildroot's own schedule.
+
+Dates: Herd's 8.6.0RC3 was built 2026-10-09; FreeType 2.15.0 shipped 2026-10-12 (with
+CVE-2026-95512 and CVE-2026-50811 fixes); Herd rebuilt 8.5.12 on 2026-10-21 and picked it
+up. Newer PHP therefore links older satellite libraries than the older PHP beside it.
+
+The sync also carries the "ABI break" label: any third-party extension compiled against
+8.5's gd headers must be rebuilt for 8.6.
 
 ## Repro
 
