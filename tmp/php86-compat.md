@@ -1,12 +1,12 @@
 # Wing Lib on PHP 8.6 — check report
 
-Date: 2026-11-20. Tested PHP 8.6.0RC3 (Herd build, `php86`).
+Date: 2026-11-20. Tested PHP 8.6.0 final (Herd build 2026-11-19, `php86`).
 
 ## Answer
 
 Runtime: yes. Development install and CI: no, blocked by one dev dependency.
 
-| Check | PHP 8.5.12 | PHP 8.6.0RC3 |
+| Check | PHP 8.5.13 | PHP 8.6.0 |
 | --- | --- | --- |
 | `composer check-platform-reqs --no-dev` | pass | **pass** |
 | `composer check-platform-reqs` (with dev) | pass | **fail: brianium/paratest** |
@@ -54,8 +54,8 @@ Survey of every Herd build on this machine isolates the variable:
 | PHP | bundled GD | FreeType | `imagettfbbox(8,0,DejaVuSans,'440 mm')` |
 | --- | --- | --- | --- |
 | 8.0.30, 8.1.34 | 2.1.0 compatible | 2.13.2 | 46x8 |
-| 8.2.35, 8.3.36, 8.4.27, 8.5.12 | 2.1.0 compatible | 2.15.0 | 46x8 |
-| 8.6.0RC3 | **2.4.0 compatible** | 2.14.3 | **43x7** |
+| 8.2.36, 8.3.37, 8.4.28, 8.5.13 | 2.1.0 compatible | 2.15.0 | 46x8 |
+| 8.6.0 | **2.4.0 compatible** | 2.15.0 | **43x7** |
 
 FreeType moves between 2.13.2 and 2.15.0 with no change in the box; only the libgd sync
 does. Glyph advances shift left, up to 3 px at size 8: ink column runs for `440 mm` at
@@ -65,9 +65,9 @@ Fix direction: pin that assertion to a tolerance the label box allows, or regene
 expected runs once a runtime is chosen. The value is not portable across PHP 8.6 and
 earlier, so a single expected set cannot pass on both.
 
-## Why an older PHP has the newer FreeType
+## Two independent version axes
 
-The PHP binary combines two independent version axes:
+The PHP binary combines two libraries that move on separate schedules:
 
 - libgd is vendored inside the php-src tarball (`ext/gd/libgd`), so it moves only when a
   PHP minor syncs it. That happened for 8.6, first time in years.
@@ -75,9 +75,10 @@ The PHP binary combines two independent version axes:
   (`--with-openssl=.../buildroot`, no `libfreetype` in `otool -L`), so it moves whenever
   Herd rebuilds, on the buildroot's own schedule.
 
-Dates: Herd's 8.6.0RC3 was built 2026-10-09; FreeType 2.15.0 shipped 2026-10-12 (with
-CVE-2026-95512 and CVE-2026-50811 fixes); Herd rebuilt 8.5.12 on 2026-10-21 and picked it
-up. Newer PHP therefore links older satellite libraries than the older PHP beside it.
+Herd's 8.6.0RC3 (built 2026-10-09) linked FreeType 2.14.3. The 8.6.0 final build
+(2026-11-19) links 2.15.0, the same as 8.5.13. The 43x7 box does not change between the
+RC and final build, so FreeType 2.15.0 is not the cause; the libgd 2.4 sync is. The
+remaining skew is between libgd 2.1.0 and 2.4.0, not FreeType.
 
 The sync also carries the "ABI break" label: any third-party extension compiled against
 8.5's gd headers must be rebuilt for 8.6.
