@@ -4,9 +4,9 @@
     <div class="container">
         <h1>Wing create</h1>
 
-        {!! Form::open(['url' => 'wings', 'class' => 'form-horizontal']); !!}
+        {{ html()->form('POST', url('wings'))->class('form-horizontal')->open() }}
         @include('wings.form', ['submitButton' => 'Create'])
-        {!! Form::close(); !!}
+        </form>
 
         @include('errors.list')
 

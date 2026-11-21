@@ -31,8 +31,6 @@ elixir(function(mix) {
         'winglib/canvas2image.js',
         'winglib/winglib.js'],  'public/js/winglib.js')
     .sass('app.scss','resources/assets/css')
-    .copy('resources/assets/css/app.css.map',
-	'public/css')
     .styles([
         'app.css',
         'sweetalert.css'

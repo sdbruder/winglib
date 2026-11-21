@@ -1,9 +1,11 @@
 <?php
 
+use Illuminate\Contracts\Http\Kernel;
+use Illuminate\Http\Request;
+
 /**
  * Laravel - A PHP Framework For Web Artisans
  *
- * @package  Laravel
  * @author   Taylor Otwell <taylorotwell@gmail.com>
  */
 
@@ -20,6 +22,21 @@
 */
 
 require __DIR__.'/../bootstrap/autoload.php';
+
+/*
+|--------------------------------------------------------------------------
+| Pre-rendered Maintenance Mode
+|--------------------------------------------------------------------------
+|
+| Laravel 8 can pre-render the maintenance mode view, so a visitor never meets
+| an error page while the application is down. `php artisan down`, which
+| deploy.sh runs before it pulls the new code, writes that file.
+|
+*/
+
+if (file_exists($maintenance = __DIR__.'/../storage/framework/maintenance.php')) {
+    require $maintenance;
+}
 
 /*
 |--------------------------------------------------------------------------
@@ -47,10 +64,10 @@ $app = require_once __DIR__.'/../bootstrap/app.php';
 |
 */
 
-$kernel = $app->make(Illuminate\Contracts\Http\Kernel::class);
+$kernel = $app->make(Kernel::class);
 
 $response = $kernel->handle(
-    $request = Illuminate\Http\Request::capture()
+    $request = Request::capture()
 );
 
 $response->send();

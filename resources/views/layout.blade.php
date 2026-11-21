@@ -209,6 +209,7 @@
     </div>
 
     <!-- Javascript stuff -->
+    <script src="/js/jquery-3.7.1.min.js"></script>
     <script src="/js/all.js"></script>
     @yield('javascript')
     @include('include.sweetalert')

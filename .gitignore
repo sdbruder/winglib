@@ -1,8 +1,10 @@
+*.code-workspace
 /vendor
 /node_modules
 Homestead.yaml
 Homestead.json
 .env
+.env.*
 /storage/app/*       
 /storage/debugbar/*  
 /storage/framework/* 
@@ -17,3 +19,7 @@ Homestead.json
 tags
 .idea/*
 public/fonts
+envs/*
+packages/**
+
+.phpunit.cache/

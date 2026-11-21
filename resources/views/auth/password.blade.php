@@ -7,15 +7,15 @@
 
         <div class="row">
             <div class="col-md-6">
-                {!! Form::open(array('url' => '/password/email')); !!}
+                {{ html()->form('POST', url('/password/email'))->open() }}
 
                 <div class="form-group">
-                    {!! Form::label('email', 'Email'); !!}
-                    {!! Form::text('email', old('email'), ['class'=>'form-control', 'placeholder'=>'Your email']);  !!}
+                    {{ html()->label('Email', 'email') }}
+                    {{ html()->text('email')->class('form-control')->placeholder('Your email') }}
                 </div>
 
-                {!! Form::submit('Send password reset link',['class' => 'btn btn-primary']); !!}
-                {!! Form::close(); !!}
+                {{ html()->submit('Send password reset link')->class('btn btn-primary') }}
+                </form>
 
                 @include('errors.list')
             </div>

@@ -7,68 +7,63 @@
     <div class="col-md-2">
         <h4>Results</h4>
         <div class="form-group">
-            {!! Form::label('wingarea', 'Wing&nbsp;Area', ['class' => 'col-sm-6 control-label']);  !!}
+            {{ html()->label('Wing&nbsp;Area', 'wingarea')->class('col-sm-6 control-label') }}
             <div class="col-sm-6">
-            {!! Form::text('wingarea', null, [
-                'class'          => 'form-control input-sm',
-                'readonly'       => '',
-                'data-toggle'    => 'popover',
-                'data-trigger'   => 'hover',
-                'data-content'   => 'dm&sup2;',
-                'data-placement' => 'left'
-                ]);  !!}
+            {{ html()->text('wingarea')
+                ->class('form-control input-sm')
+                ->isReadonly()
+                ->data('toggle', 'popover')
+                ->data('trigger', 'hover')
+                ->data('content', 'dm&sup2;')
+                ->data('placement', 'left') }}
             </div>
         </div>
         <div class="form-group">
-            {!! Form::label('macdist', 'MAC&nbsp;Dist', ['class' => 'col-sm-6 control-label']);  !!}
+            {{ html()->label('MAC&nbsp;Dist', 'macdist')->class('col-sm-6 control-label') }}
             <div class="col-sm-6">
-            {!! Form::text('macdist', null, [
-                'class'          => 'form-control input-sm data-inmm',
-                'readonly'       => '',
-                'data-toggle'    => 'popover',
-                'data-trigger'   => 'hover',
-                'data-content'   => 'mm',
-                'data-placement' => 'left'
-                ]);  !!}
+            {{ html()->text('macdist')
+                ->class('form-control input-sm data-inmm')
+                ->isReadonly()
+                ->data('toggle', 'popover')
+                ->data('trigger', 'hover')
+                ->data('content', 'mm')
+                ->data('placement', 'left') }}
             </div>
         </div>
         <div class="form-group">
-            {!! Form::label('maclength', 'MAC&nbsp;Len', ['class' => 'col-sm-6 control-label']);  !!}
+            {{ html()->label('MAC&nbsp;Len', 'maclength')->class('col-sm-6 control-label') }}
             <div class="col-sm-6">
-            {!! Form::text('maclength', null, [
-                'class'          => 'form-control input-sm data-inmm',
-                'readonly'       => '',
-                'data-toggle'    => 'popover',
-                'data-trigger'   => 'hover',
-                'data-content'   => 'mm',
-                'data-placement' => 'left'
-                ]);  !!}
+            {{ html()->text('maclength')
+                ->class('form-control input-sm data-inmm')
+                ->isReadonly()
+                ->data('toggle', 'popover')
+                ->data('trigger', 'hover')
+                ->data('content', 'mm')
+                ->data('placement', 'left') }}
             </div>
         </div>
         <div class="form-group">
-            {!! Form::label('cg', 'CG', ['class' => 'col-sm-6 control-label']);  !!}
+            {{ html()->label('CG', 'cg')->class('col-sm-6 control-label') }}
             <div class="col-sm-6">
-            {!! Form::text('cg', null, [
-                'class'          => 'form-control input-sm data-inmm',
-                'readonly'       => '',
-                'data-toggle'    => 'popover',
-                'data-trigger'   => 'hover',
-                'data-content'   => 'mm',
-                'data-placement' => 'left'
-                ]);  !!}
+            {{ html()->text('cg')
+                ->class('form-control input-sm data-inmm')
+                ->isReadonly()
+                ->data('toggle', 'popover')
+                ->data('trigger', 'hover')
+                ->data('content', 'mm')
+                ->data('placement', 'left') }}
             </div>
         </div>
         <div class="form-group">
-            {!! Form::label('wingload', 'Wing&nbsp;Load', ['class' => 'col-sm-6 control-label']);  !!}
+            {{ html()->label('Wing&nbsp;Load', 'wingload')->class('col-sm-6 control-label') }}
             <div class="col-sm-6">
-            {!! Form::text('wingload', null, [
-                'class'          => 'form-control input-sm',
-                'readonly'       => '',
-                'data-toggle'    => 'popover',
-                'data-trigger'   => 'hover',
-                'data-content'   => 'g/dm&sup2;',
-                'data-placement' => 'left'
-                ]);  !!}
+            {{ html()->text('wingload')
+                ->class('form-control input-sm')
+                ->isReadonly()
+                ->data('toggle', 'popover')
+                ->data('trigger', 'hover')
+                ->data('content', 'g/dm&sup2;')
+                ->data('placement', 'left') }}
             </div>
         </div>
     </div>
@@ -77,29 +72,26 @@
     <div class="col-md-6">
         <h4>Name and Description</h4>
         <div class="form-group">
-            {!! Form::label('name', 'Wing&nbsp;Name', ['class' => 'col-sm-3 control-label']); !!}
+            {{ html()->label('Wing&nbsp;Name', 'name')->class('col-sm-3 control-label') }}
             <div class="col-sm-9">
-                {!! Form::text('name', null, ['class'=>'form-control', 'placeholder'=>'Wing name']);  !!}
+                {{ html()->text('name')->class('form-control')->placeholder('Wing name') }}
             </div>
         </div>
         <div class="form-group">
-            {!! Form::label('description', 'Description', ['class' => 'col-sm-3 control-label']);  !!}
+            {{ html()->label('Description', 'description')->class('col-sm-3 control-label') }}
             <div class="col-sm-9">
-                {!! Form::textarea('description', null, [
-                        'rows'        => '4',
-                        'class'       => 'form-control',
-                        'placeholder' => 'description / details of the wing'
-                    ]);  !!}
+                {{-- Spatie renders a textarea value through its raw html() path, which would drop
+                     the escaping the old builder applied to the model value. --}}
+                <textarea name="description" id="description" rows="4" class="form-control"
+                    placeholder="description / details of the wing">{{ old('description', $wing->description ?? null) }}</textarea>
             </div>
         </div>
         <div class="form-group">
-            {!! Form::label('drawvalues', 'Draw', ['class' => 'col-sm-3 control-label']);  !!}
+            {{ html()->label('Draw', 'drawvalues')->class('col-sm-3 control-label') }}
             <div class="col-sm-9">
                 <div class="checkbox">
                     <label>
-                        {!! Form::checkbox('drawvalues', Null, Null, [
-                            'class' => 'redraw',
-                            'checked' => 'Checked']);  !!} Draw the measures.
+                        {{ html()->checkbox('drawvalues', true)->class('redraw') }} Draw the measures.
                     </label>
                 </div>
             </div>
@@ -108,41 +100,41 @@
     <div class="col-md-6">
         <h4>Measures</h4>
         <div class="form-group">
-            {!! Form::label('unitsystem', 'Unit&nbsp;System', ['class' => 'col-sm-3 control-label']);  !!}
+            {{ html()->label('Unit&nbsp;System', 'unitsystem')->class('col-sm-3 control-label') }}
             <div class="col-sm-9">
                 <div class="btn-group" data-toggle="buttons" id="UnitsystemRadios">
                     <label class="btn btn-primary" id="label_btn_metric">
-                        {!! Form::radio('unitsystem', 'metric', false, ['id' => 'btn_metric']); !!} Metric
+                        {{ html()->radio('unitsystem', null, 'metric')->id('btn_metric') }} Metric
                     </label>
                     <label class="btn btn-primary" id="label_btn_imperial">
-                        {!! Form::radio('unitsystem', 'imperial', false, ['id' => 'btn_imperial']); !!} Imperial
+                        {{ html()->radio('unitsystem', null, 'imperial')->id('btn_imperial') }} Imperial
                     </label>
                 </div>
             </div>
         </div>
         <div class="form-group">
-            {!! Form::label('cgpos', 'CG&nbsp;Position', ['class' => 'col-sm-3 control-label']);  !!}
+            {{ html()->label('CG&nbsp;Position', 'cgpos')->class('col-sm-3 control-label') }}
             <div class="col-sm-9">
                 <div class="input-group">
-                    {!! Form::text('cgpos', null, ['class'=>'form-control redraw']);  !!}
+                    {{ html()->text('cgpos')->class('form-control redraw') }}
                     <span class="input-group-addon nommin-addon" id="cgpos-addon">%</span>
                 </div>
             </div>
         </div>
         <div class="form-group">
-            {!! Form::label('weight', 'Weight', ['class' => 'col-sm-3 control-label']);  !!}
+            {{ html()->label('Weight', 'weight')->class('col-sm-3 control-label') }}
             <div class="col-sm-9">
                 <div class="input-group">
-                    {!! Form::text('weight', null, ['class'=>'form-control']);  !!}
+                    {{ html()->text('weight')->class('form-control') }}
                     <span class="input-group-addon nommin-addon" id="weight-addon">g</span>
                 </div>
             </div>
         </div>
         <div class="form-group">
-            {!! Form::label('rootchord', 'Root Chord', ['class' => 'col-sm-3 control-label']);  !!}
+            {{ html()->label('Root Chord', 'rootchord')->class('col-sm-3 control-label') }}
             <div class="col-sm-9">
                 <div class="input-group">
-                    {!! Form::text('rootchord', null, ['class'=>'form-control redraw']);  !!}
+                    {{ html()->text('rootchord')->class('form-control redraw') }}
                     <span class="input-group-addon" id="rootchord-addon">mm</span>
                 </div>
             </div>
@@ -156,45 +148,44 @@
             <fieldset>
             <legend>Panel {{ $p }}</legend>
             <div class="form-group">
-                {!! Form::label("panel{$p}span", 'Span', ['class' => 'col-sm-3 control-label']);  !!}
+                {{ html()->label('Span', "panel{$p}span")->class('col-sm-3 control-label') }}
                 <div class="col-sm-9">
                     <div class="input-group">
                         {{--  (($p==1) ? 600 : null)  --}}
-                        {!! Form::text("panel{$p}span", null, [
-                            'class'=>'form-control redraw recalcangle',
-                            'panel' => $p]);  !!}
+                        {{ html()->text("panel{$p}span")
+                            ->class('form-control redraw recalcangle')
+                            ->attribute('panel', $p) }}
                         <span class="input-group-addon" id="panel{{$p}}span-addon">mm</span>
                     </div>
                 </div>
             </div>
             <div class="form-group">
-                {!! Form::label("panel{$p}chord", 'Chord', ['class' => 'col-sm-3 control-label']);  !!}
+                {{ html()->label('Chord', "panel{$p}chord")->class('col-sm-3 control-label') }}
                 <div class="col-sm-9">
                     <div class="input-group">
-                        {!! Form::text("panel{$p}chord", null, [
-                            'class'=>'form-control redraw']);  !!}
+                        {{ html()->text("panel{$p}chord")->class('form-control redraw') }}
                         <span class="input-group-addon" id="panel{{$p}}chord-addon">mm</span>
                     </div>
                 </div>
             </div>
             <div class="form-group">
-                {!! Form::label("panel{$p}sweep", 'Sweep', ['class' => 'col-sm-3 control-label']);  !!}
+                {{ html()->label('Sweep', "panel{$p}sweep")->class('col-sm-3 control-label') }}
                 <div class="col-sm-9">
                     <div class="input-group">
-                        {!! Form::text("panel{$p}sweep", null, [
-                            'class' => 'form-control redraw recalcangle',
-                            'panel' => $p ]);  !!}
+                        {{ html()->text("panel{$p}sweep")
+                            ->class('form-control redraw recalcangle')
+                            ->attribute('panel', $p) }}
                         <span class="input-group-addon" id="panel{{$p}}sweep-addon">mm</span>
                     </div>
                 </div>
             </div>
             <div class="form-group">
-                {!! Form::label("panel{$p}angle", 'Angle', ['class' => 'col-sm-3 control-label']);  !!}
+                {{ html()->label('Angle', "panel{$p}angle")->class('col-sm-3 control-label') }}
                 <div class="col-sm-9">
                     <div class="input-group">
-                        {!! Form::text("panel{$p}angle", null, [
-                            'class' => 'form-control redraw recalcsweep',
-                            'panel' => $p ]);  !!}
+                        {{ html()->text("panel{$p}angle")
+                            ->class('form-control redraw recalcsweep')
+                            ->attribute('panel', $p) }}
                         <span class="input-group-addon nommin-addon" id="panel{{$p}}angle-addon">&deg;</span>
                     </div>
                 </div>
@@ -204,7 +195,7 @@
     @endfor
 </div>
 
-{!! Form::submit($submitButton, ['class' => 'btn btn-primary form-control', 'id' => 'submit_button']); !!}
+{{ html()->submit($submitButton)->class('btn btn-primary form-control')->id('submit_button') }}
 
 @section('javascript')
 @parent

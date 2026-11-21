@@ -1,52 +1,41 @@
 <?php
 
-namespace app;
+namespace App;
 
+use Database\Factories\UserFactory;
 use Gravatar;
 use Illuminate\Auth\Authenticatable;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Auth\Passwords\CanResetPassword;
-use Illuminate\Foundation\Auth\Access\Authorizable;
-use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\Hidden;
+use Illuminate\Database\Eloquent\Attributes\Table;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Foundation\Auth\Access\Authorizable;
+use Illuminate\Notifications\Notifiable;
 
-class User extends Model implements AuthenticatableContract,
-                                    AuthorizableContract,
-                                    CanResetPasswordContract
+#[Fillable([
+    'name',
+    'username',
+    'email',
+    'avatar',
+    'provider',
+    'provider_id',
+    'token',
+    'token_secret',
+    'password',
+])]
+#[Hidden(['password', 'remember_token', 'token_secret'])]
+#[Table(name: 'users')]
+class User extends Model implements AuthenticatableContract, AuthorizableContract, CanResetPasswordContract
 {
-    use Authenticatable, Authorizable, CanResetPassword;
-
-    /**
-     * The database table used by the model.
-     *
-     * @var string
-     */
-    protected $table = 'users';
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'name',
-        'username',
-        'email',
-        'avatar',
-        'provider',
-        'provider_id',
-        'token',
-        'token_secret',
-        'password',
-    ];
-
-    /**
-     * The attributes excluded from the model's JSON form.
-     *
-     * @var array
-     */
-    protected $hidden = ['password', 'remember_token', 'token_secret'];
+    /** @use HasFactory<UserFactory> */
+    use Authenticatable, Authorizable, CanResetPassword, HasFactory, Notifiable;
 
     /**
      * boot method
@@ -63,7 +52,7 @@ class User extends Model implements AuthenticatableContract,
                 $user->provider_id = $user->email;
             }
             if (empty($user->token)) {
-                $user->token = bcrypt($user->provider . '::' . $user->provider_id);
+                $user->token = bcrypt($user->provider.'::'.$user->provider_id);
             }
 
             if (($user->email) && empty($user->avatar)) {
@@ -81,7 +70,7 @@ class User extends Model implements AuthenticatableContract,
     /**
      * A user can have many wings
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany<Wing, $this>
      */
     public function wings()
     {
@@ -91,7 +80,7 @@ class User extends Model implements AuthenticatableContract,
     /**
      * A user likes many wings (many to many)
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany<Wing, $this>
      */
     public function likes()
     {

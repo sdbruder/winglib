@@ -20,7 +20,7 @@
                         <div class="media" onclick="document.location = '/wing/{{$w->slug}}';">
                             <div class="media-left media-middle">
                                 <a href="#">
-                                    <img class="media-object" src="{{$w->image_file}}" height="60px">
+                                    <img class="media-object" src="{{$w->imageVariant(282)}}" width="141" height="60">
                                 </a>
                             </div>
                             <div class="media-body row">

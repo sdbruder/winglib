@@ -1,8 +1,6 @@
 <?php
 
-namespace app\Http\Requests;
-
-use App\Http\Requests\Request;
+namespace App\Http\Requests;
 
 class WingRequest extends Request
 {
@@ -19,12 +17,12 @@ class WingRequest extends Request
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array
+     * @return array<string, string>
      */
     public function rules()
     {
         return [
-            'name' => 'required|min:5'
+            'name' => 'required|min:5',
         ];
     }
 }
