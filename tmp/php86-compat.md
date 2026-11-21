@@ -47,8 +47,9 @@ requires `^8.4`, PHPUnit 13 requires `>=8.4.1`). Production is unaffected: `--no
 skips all of this and every runtime package accepts 8.6. `composer.json` (`"php":
 "^8.2"`) already allows 8.6.
 
-CI now runs on 8.6 (`.github/workflows/ci.yml`). The production deploy script still
-pins PHP 8.5; the app is compatible with both.
+CI now runs on 8.6 (`.github/workflows/ci.yml`). `deploy.sh` reads the PHP version
+from the Nginx vhost that serves the checkout, so production stays on 8.5 and beta
+runs 8.6 without editing the script.
 
 ## The one failing test comes from the libgd 2.4 sync
 
