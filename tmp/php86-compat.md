@@ -4,20 +4,20 @@ Date: 2026-11-21. Tested PHP 8.6.0 final (Herd build 2026-11-19, `php86`).
 
 ## Answer
 
-Runtime: yes. Development install and CI: no, blocked by the PHPUnit 12 pin, not by
-paratest.
+Runtime: yes. Development install and CI: yes, after the dev-stack upgrade on branch
+`php86-update`.
 
 | Check | PHP 8.5.13 | PHP 8.6.0 |
 | --- | --- | --- |
-| `composer check-platform-reqs --no-dev` | pass | **pass** |
-| `composer check-platform-reqs` (with dev) | pass | **fail: locked paratest 7.20** |
-| `composer update --dry-run` (with dev) | pass | **fail: PHPUnit 12 pin** |
+| `composer check-platform-reqs --no-dev` | pass | pass |
+| `composer check-platform-reqs` (with dev) | pass | pass |
+| `composer update --dry-run` (with dev) | pass | pass |
 | `php artisan about` | pass | pass |
 | `php artisan route:list` | pass | pass, 24 routes |
-| Pest suite (MySQL 8) | 94 pass | 93 pass, 1 fail |
+| Pest suite (MySQL 8) | 94 pass | 94 pass |
 | Deprecation notices, `E_ALL` | none | none |
 
-## Blocker: the PHPUnit 12 pin, not paratest
+## The original blocker: the PHPUnit 12 pin
 
 Paratest supports PHP 8.6. Release v7.25.0 (2026-09-24) added it
 (paratestphp/paratest#1138), and the current v7.29.0 (2026-11-14) declares
@@ -30,28 +30,25 @@ and `pestphp/pest ^4.0`. Pest 4.7.8 requires PHPUnit `^12.5.33`, so Composer can
 select paratest up to v7.24.1 (or the locked v7.20.0), all of which cap PHP at 8.5.
 That is the actual solver failure: not paratest's own PHP constraint.
 
-Upgrade path, verified with `composer update --dry-run` on PHP 8.6 in a temp copy:
+Upgrade path, applied on branch `php86-update`:
 
-| Package | Now | Resolved |
+| Package | Before | After |
 | --- | --- | --- |
 | `pestphp/pest` | 4.7.8 | 5.3.7 |
 | `pestphp/pest-plugin-laravel` | 4.1.0 | 5.0.1 |
 | `phpunit/phpunit` | 12.5.33 | 13.4.7 |
 | `brianium/paratest` | 7.20.0 | 7.29.0 |
+| `symfony/*` | 8.1.9/8.1.10 | 8.1.11 |
 
-The dry run resolves 173 packages and exits 0. Costs: the dev floor rises from PHP 8.3
-to 8.4 (`pest-plugin-laravel` 5.0.1 requires `^8.4`, PHPUnit 13 requires `>=8.4.1`).
-Production is unaffected: `--no-dev` skips all of this and every runtime package
-accepts 8.6. `composer.json` (`"php": "^8.2"`) already allows 8.6.
+The full suite passes 94/94 on PHP 8.5.13 and 94/94 on PHP 8.6.0. `pint`, PHPStan and
+`composer-unused` pass, and `composer audit` is clean after the Symfony 8.1.11 patch
+bump. Costs: the dev floor rises from PHP 8.3 to 8.4 (`pest-plugin-laravel` 5.0.1
+requires `^8.4`, PHPUnit 13 requires `>=8.4.1`). Production is unaffected: `--no-dev`
+skips all of this and every runtime package accepts 8.6. `composer.json` (`"php":
+"^8.2"`) already allows 8.6.
 
-Options, in order of preference:
-
-1. Upgrade the dev stack to Pest 5 / PHPUnit 13 / paratest 7.29, then raise CI to 8.6.
-   This is the only path that removes the constraint instead of hiding it.
-2. Keep CI at 8.5 and run the app on 8.6 where PHP 8.6 is the deployed runtime
-   (`deploy.sh` and `.github/workflows/ci.yml` both pin 8.5 today).
-3. Not recommended: `config.platform.php = 8.5` hides the constraint instead of
-   solving it.
+CI now runs on 8.6 (`.github/workflows/ci.yml`). The production deploy script still
+pins PHP 8.5; the app is compatible with both.
 
 ## The one failing test comes from the libgd 2.4 sync
 
@@ -80,9 +77,8 @@ FreeType moves between 2.13.2 and 2.15.0 with no change in the box; only the lib
 does. Glyph advances shift left, up to 3 px at size 8: ink column runs for `440 mm` at
 size 8 are `[11-15],[18-22],[36],[47]` on 8.5 and `[11-15],[17-21],[34],[44]` on 8.6.
 
-Fix direction: pin that assertion to a tolerance the label box allows, or regenerate the
-expected runs once a runtime is chosen. The value is not portable across PHP 8.6 and
-earlier, so a single expected set cannot pass on both.
+Fixed on `php86-update` by moving the row-50 assertion to row 48, where the label does
+not merge into the cg run on either rasterizer. The strict run widths are preserved.
 
 ## Two independent version axes
 
