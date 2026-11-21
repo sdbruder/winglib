@@ -1,34 +1,53 @@
 # Wing Lib on PHP 8.6 — check report
 
-Date: 2026-11-20. Tested PHP 8.6.0 final (Herd build 2026-11-19, `php86`).
+Date: 2026-11-21. Tested PHP 8.6.0 final (Herd build 2026-11-19, `php86`).
 
 ## Answer
 
-Runtime: yes. Development install and CI: no, blocked by one dev dependency.
+Runtime: yes. Development install and CI: no, blocked by the PHPUnit 12 pin, not by
+paratest.
 
 | Check | PHP 8.5.13 | PHP 8.6.0 |
 | --- | --- | --- |
 | `composer check-platform-reqs --no-dev` | pass | **pass** |
-| `composer check-platform-reqs` (with dev) | pass | **fail: brianium/paratest** |
-| `composer update --dry-run` (with dev) | pass | **fail: no solver solution** |
+| `composer check-platform-reqs` (with dev) | pass | **fail: locked paratest 7.20** |
+| `composer update --dry-run` (with dev) | pass | **fail: PHPUnit 12 pin** |
 | `php artisan about` | pass | pass |
 | `php artisan route:list` | pass | pass, 24 routes |
 | Pest suite (MySQL 8) | 94 pass | 93 pass, 1 fail |
 | Deprecation notices, `E_ALL` | none | none |
 
-## Blocker: paratest caps PHP at 8.5
+## Blocker: the PHPUnit 12 pin, not paratest
 
-`brianium/paratest` is required by `pestphp/pest`, which is in `require-dev`. Every 7.x
-release pins `php` to `~8.3.0 || ~8.4.0 || ~8.5.0` (v7.20.0 locked here; v7.29.0 is the
-latest and has the same cap). On 8.6 Composer cannot resolve a dev install, so
-`composer install` (as the CI workflow runs it) and `composer update` both fail.
+Paratest supports PHP 8.6. Release v7.25.0 (2026-09-24) added it
+(paratestphp/paratest#1138), and the current v7.29.0 (2026-11-14) declares
+`php: ~8.4.0 || ~8.5.0 || ~8.6.0`. Its CI matrix tests 8.6 against both lowest and
+highest dependencies. There is no paratest 8.x; "8.6" is PHP support.
 
-Production installs are unaffected: `--no-dev` skips paratest and every runtime package
+The repo cannot reach those releases yet. Paratest v7.25.0 and later require
+`phpunit/phpunit ^13.3.4`, but the root `composer.json` pins `phpunit/phpunit ^12.0`
+and `pestphp/pest ^4.0`. Pest 4.7.8 requires PHPUnit `^12.5.33`, so Composer can only
+select paratest up to v7.24.1 (or the locked v7.20.0), all of which cap PHP at 8.5.
+That is the actual solver failure: not paratest's own PHP constraint.
+
+Upgrade path, verified with `composer update --dry-run` on PHP 8.6 in a temp copy:
+
+| Package | Now | Resolved |
+| --- | --- | --- |
+| `pestphp/pest` | 4.7.8 | 5.3.7 |
+| `pestphp/pest-plugin-laravel` | 4.1.0 | 5.0.1 |
+| `phpunit/phpunit` | 12.5.33 | 13.4.7 |
+| `brianium/paratest` | 7.20.0 | 7.29.0 |
+
+The dry run resolves 173 packages and exits 0. Costs: the dev floor rises from PHP 8.3
+to 8.4 (`pest-plugin-laravel` 5.0.1 requires `^8.4`, PHPUnit 13 requires `>=8.4.1`).
+Production is unaffected: `--no-dev` skips all of this and every runtime package
 accepts 8.6. `composer.json` (`"php": "^8.2"`) already allows 8.6.
 
 Options, in order of preference:
 
-1. Wait for a paratest release that accepts 8.6, then raise CI to 8.6.
+1. Upgrade the dev stack to Pest 5 / PHPUnit 13 / paratest 7.29, then raise CI to 8.6.
+   This is the only path that removes the constraint instead of hiding it.
 2. Keep CI at 8.5 and run the app on 8.6 where PHP 8.6 is the deployed runtime
    (`deploy.sh` and `.github/workflows/ci.yml` both pin 8.5 today).
 3. Not recommended: `config.platform.php = 8.5` hides the constraint instead of
@@ -87,8 +106,10 @@ The sync also carries the "ABI break" label: any third-party extension compiled 
 
 ```sh
 export PATH="/Users/sergio/Library/Application Support/Herd/bin:$PATH"
-php86 "$(which composer)" check-platform-reqs            # fails on paratest
+php86 "$(which composer)" check-platform-reqs            # fails: locked paratest 7.20 caps at 8.5
 php86 "$(which composer)" check-platform-reqs --no-dev   # passes
 DB_CONNECTION=mysql DB_HOST=localhost DB_USERNAME=root DB_PASSWORD= \
   DB_DATABASE=winglib_test php86 vendor/bin/pest
+# In a temp copy with pest ^5 and phpunit ^13:
+php86 "$(which composer)" update --dry-run               # resolves paratest 7.29.0
 ```
