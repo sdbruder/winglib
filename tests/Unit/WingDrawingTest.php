@@ -444,10 +444,11 @@ it('draws the measures at their own pixel when a model unit is one pixel', funct
     expect(array_slice(drawingInkRows($image, 917), 0, 43))->toBe(range(29, 71));
     expect(drawingInkRows(imagecreatefromstring(WingDrawing::png(drawingZoomOneWing(0))), 917))->toBe([]);
 
-    // Row 50 crosses both inset lines and the edges, and the runs are exactly one line wide each:
+    // Row 48 crosses both inset lines and the edges, and the runs are exactly one line wide each:
     // the chord line at chord gap 7 and the cg line at cg gap 14. A one pixel move in either
-    // constant moves its run off these positions.
-    $runs = drawingInkRuns($image, 50);
+    // constant moves its run off these positions. Row 48 avoids the label text that merges into
+    // the cg run at row 50 under the libgd 2.4 rasterizer in PHP 8.6.
+    $runs = drawingInkRuns($image, 48);
     expect($runs)->toContain([469, 471]);
     expect($runs)->toContain([476, 478]);
     expect($runs)->toContain([483, 485]);
