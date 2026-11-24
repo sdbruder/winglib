@@ -49,7 +49,7 @@ Options, in order of preference:
 1. Upgrade the dev stack to Pest 5 / PHPUnit 13 / paratest 7.29, then raise CI to 8.6.
    This is the only path that removes the constraint instead of hiding it.
 2. Keep CI at 8.5 and run the app on 8.6 where PHP 8.6 is the deployed runtime
-   (`deploy.sh` and `.github/workflows/ci.yml` both pin 8.5 today).
+   (`deploy.sh` reads the serving vhost; `.github/workflows/ci.yml` pins 8.5 here).
 3. Not recommended: `config.platform.php = 8.5` hides the constraint instead of
    solving it.
 
